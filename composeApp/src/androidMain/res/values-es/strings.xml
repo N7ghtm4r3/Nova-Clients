@@ -1,0 +1,13 @@
+<resources>
+    <string name="release_events">Eventos de lanzamiento</string>
+    <string name="notifications_channel_description">Notificaciones relativas a acontecimientos que se producen en las liberaciones</string>
+    <string name="new_release_has_been_created">¡Se ha creado una nueva versión!</string>
+    <string name="new_assets_are_ready_to_be_tested">Los nuevos activos están listos para ser probados</string>
+    <string name="the_release_has_been_rejected">La liberación ha sido rechazada…</string>
+    <string name="the_release_has_been_approved">El comunicado ha sido aprobado.</string>
+    <string name="the_release_has_been_promoted_to_alpha">La versión ha pasado a Alfa.</string>
+    <string name="the_release_has_been_promoted_to_beta">La versión ha pasado a Beta.</string>
+    <string name="the_release_has_been_promoted_to_latest">¡El lanzamiento se ha promocionado a Latest!</string>
+    <string name="the_release_has_been_deleted">El comunicado ha sido suprimido</string>
+    <string name="the_project_has_been_deleted">El proyecto ha sido eliminado</string>
+</resources>

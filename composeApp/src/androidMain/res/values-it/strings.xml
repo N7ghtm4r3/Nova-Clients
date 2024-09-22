@@ -1,0 +1,13 @@
+<resources>
+    <string name="release_events">Eventi della release</string>
+    <string name="notifications_channel_description">Notifiche relative agli eventi che si verificano nei rilasci</string>
+    <string name="new_release_has_been_created">È stata creata una nuova versione!</string>
+    <string name="new_assets_are_ready_to_be_tested">Nuovi asset sono pronti per essere testati</string>
+    <string name="the_release_has_been_rejected">La release è stata respinta…</string>
+    <string name="the_release_has_been_approved">La release è stata approvata!</string>
+    <string name="the_release_has_been_promoted_to_alpha">La versione è stata promossa ad Alpha!</string>
+    <string name="the_release_has_been_promoted_to_beta">La versione è stata promossa a Beta!</string>
+    <string name="the_release_has_been_promoted_to_latest">La versione è stata promossa a Latest!</string>
+    <string name="the_release_has_been_deleted">La release è stata eliminata</string>
+    <string name="the_project_has_been_deleted">Il progetto è stato eliminato</string>
+</resources>
