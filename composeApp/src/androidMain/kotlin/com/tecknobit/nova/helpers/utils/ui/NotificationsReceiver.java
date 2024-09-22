@@ -16,7 +16,8 @@ import androidx.work.*;
 import com.tecknobit.apimanager.formatters.JsonHelper;
 import com.tecknobit.nova.MainActivity;
 import com.tecknobit.nova.R;
-import com.tecknobit.nova.helpers.storage.LocalSessionHelper;
+import com.tecknobit.nova.cache.LocalSessionHelper;
+import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory;
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession;
 import com.tecknobit.novacore.helpers.NovaRequester;
 import com.tecknobit.novacore.records.NovaNotification;
@@ -180,7 +181,7 @@ public class NotificationsReceiver extends BroadcastReceiver {
          * No-any params required
          */
         public void execCheckRoutine() {
-            try(LocalSessionHelper localSessionHelper = new LocalSessionHelper(context)) {
+            try(LocalSessionHelper localSessionHelper = new LocalSessionHelper(new DatabaseDriverFactory())) {
                 for (NovaSession session : localSessionHelper.getSessions()) {
                     if(session.isHostSet()) {
                         NovaRequester requester = new NovaRequester(

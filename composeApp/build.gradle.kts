@@ -1,16 +1,15 @@
 
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Pkg
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat.*
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.UUID
+import java.util.*
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -21,7 +20,13 @@ kotlin {
         }
     }
     
-    jvm("desktop")
+    jvm("desktop") {
+        kotlin {
+            jvmToolchain {
+                languageVersion.set(JavaLanguageVersion.of(21))
+            }
+        }
+    }
     
     sourceSets {
         val desktopMain by getting
@@ -34,6 +39,7 @@ kotlin {
             implementation(libs.review.ktx)
             implementation(libs.app.update)
             implementation(libs.app.update.ktx)
+            implementation(libs.sqldelight.android.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -51,10 +57,14 @@ kotlin {
             implementation(libs.equinox.compose)
             implementation(libs.coil.compose)
             implementation(libs.coil.network.okhttp)
+            implementation(libs.sqldelight.runtime)
+            implementation("io.github.pushpalroy:jetlime:3.0.1")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.sqldelight.sqlite.driver)
+            implementation("com.tecknobit.octocatkdu:OctocatKDU:1.0.4")
         }
     }
 }
@@ -133,6 +143,14 @@ compose.desktop {
             configurationFiles.from(project.file("compose-desktop.pro"))
             version.set("7.5.0")
             obfuscate.set(true)
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("Nova") {
+            packageName.set("com.tecknobit.nova.cache")
         }
     }
 }

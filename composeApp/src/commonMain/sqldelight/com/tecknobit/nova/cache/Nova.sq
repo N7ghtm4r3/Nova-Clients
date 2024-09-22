@@ -1,0 +1,38 @@
+CREATE TABLE IF NOT EXISTS sessions(
+    id TEXT PRIMARY KEY,
+    token TEXT NOT NULL,
+    profile_pic TEXT NOT NULL,
+    name TEXT NOT NULL,
+    surname TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    host_address TEXT NOT NULL,
+    role TEXT NOT NULL,
+    is_active INTEGER AS kotlin.Boolean DEFAULT 0,
+    language TEXT NOT NULL
+);
+
+insertSession:
+INSERT INTO sessions (id, token, profile_pic, name, surname, email, password, host_address, role, language)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+setCurrentActiveSessionAsInactive:
+UPDATE sessions SET is_active = 0 WHERE is_active = 1;
+
+setNewActiveSession:
+UPDATE sessions SET is_active = 1 WHERE id = ?;
+
+getSessions:
+SELECT * FROM sessions;
+
+getSession:
+SELECT * FROM sessions WHERE id = ?;
+
+getActiveSession:
+SELECT * FROM sessions WHERE is_active = 1;
+
+deleteAllSessions:
+DELETE FROM sessions;
+
+deleteSession:
+DELETE FROM sessions WHERE id = ?;

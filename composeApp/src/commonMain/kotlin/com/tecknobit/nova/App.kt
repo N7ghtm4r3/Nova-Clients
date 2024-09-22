@@ -1,29 +1,24 @@
 package com.tecknobit.nova
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import coil3.ImageLoader
 import coil3.addLastModifiedToFileCacheKey
 import coil3.compose.LocalPlatformContext
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
+import com.tecknobit.nova.screens.NovaScreen.Companion.SPLASH_SCREEN
+import com.tecknobit.nova.screens.SplashScreen
 import com.tecknobit.nova.theme.NovaTheme
+import moe.tlaster.precompose.PreComposeApp
+import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.Navigator
+import moe.tlaster.precompose.navigation.rememberNavigator
 import nova.composeapp.generated.resources.Res
-import nova.composeapp.generated.resources.compose_multiplatform
 import nova.composeapp.generated.resources.robold
 import nova.composeapp.generated.resources.robothin
 import okhttp3.OkHttpClient
 import org.jetbrains.compose.resources.Font
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -84,18 +79,17 @@ fun App() {
         .networkCachePolicy(CachePolicy.ENABLED)
         .memoryCachePolicy(CachePolicy.ENABLED)
         .build()
-
-    NovaTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
+    PreComposeApp {
+        navigator = rememberNavigator()
+        NovaTheme {
+            NavHost(
+                navigator = navigator,
+                initialRoute = SPLASH_SCREEN
+            ) {
+                scene(
+                    route = SPLASH_SCREEN
+                ) {
+                    SplashScreen().ShowContent()
                 }
             }
         }
