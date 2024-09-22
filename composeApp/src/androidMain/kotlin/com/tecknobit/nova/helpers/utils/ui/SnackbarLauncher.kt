@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.tecknobit.nova.ui.theme.gray_background
-import com.tecknobit.nova.ui.theme.md_theme_light_primary
+import com.tecknobit.nova.theme.gray_background
+import com.tecknobit.nova.theme.md_theme_light_primary
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

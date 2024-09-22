@@ -1,7 +1,10 @@
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat.*
+
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Pkg
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.*
+import java.util.UUID
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -27,10 +30,10 @@ kotlin {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.work.runtime)
-            implementation("com.google.android.play:review:2.0.1")
-            implementation("com.google.android.play:review-ktx:2.0.1")
-            implementation("com.google.android.play:app-update:2.1.0")
-            implementation("com.google.android.play:app-update-ktx:2.1.0")
+            implementation(libs.review)
+            implementation(libs.review.ktx)
+            implementation(libs.app.update)
+            implementation(libs.app.update.ktx)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -41,13 +44,13 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            api("moe.tlaster:precompose:1.6.2")
-            implementation("com.github.N7ghtm4r3:APIManager:2.2.3")
-            implementation("com.tecknobit.novacore:novacore:1.0.1")
-            implementation("com.github.N7ghtm4r3:Equinox:1.0.3")
-            implementation("io.github.n7ghtm4r3:Equinox-Compose:1.0.1")
-            implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha07")
-            implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.0-alpha07")
+            api(libs.precompose)
+            implementation(libs.apimanager)
+            implementation(libs.novacore)
+            implementation(libs.equinox)
+            implementation(libs.equinox.compose)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.okhttp)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -83,8 +86,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_18
-        targetCompatibility = JavaVersion.VERSION_18
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         compose = true

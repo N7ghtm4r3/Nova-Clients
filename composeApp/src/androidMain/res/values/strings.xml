@@ -1,4 +1,6 @@
 <resources>
+    <string name="app_name" translatable="false">Nova</string>
+    <string name="app_version" translatable="false">1.0.0</string>
     <string name="release_events">Release events</string>
     <string name="notifications_channel_description">Notifications relating to events that occur in releases</string>
     <string name="new_release_has_been_created">New release has been created!</string>

@@ -11,13 +11,28 @@ androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.2"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-compose-plugin = "1.6.11"
+apimanager = "2.2.3"
+appUpdate = "2.1.0"
+coilCompose = "3.0.0-alpha07"
+compose-plugin = "1.7.0-beta02"
+equinox = "1.0.3"
+equinoxCompose = "1.0.1"
 junit = "4.13.2"
 kotlin = "2.0.20"
 kotlinx-coroutines = "1.8.1"
+novacore = "1.0.1"
+precompose = "1.6.2"
+review = "2.0.1"
 workRuntime = "2.9.1"
 
 [libraries]
+apimanager = { module = "com.github.N7ghtm4r3:APIManager", version.ref = "apimanager" }
+app-update = { module = "com.google.android.play:app-update", version.ref = "appUpdate" }
+app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "appUpdate" }
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coilCompose" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilCompose" }
+equinox = { module = "com.github.N7ghtm4r3:Equinox", version.ref = "equinox" }
+equinox-compose = { module = "io.github.n7ghtm4r3:Equinox-Compose", version.ref = "equinoxCompose" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -32,6 +47,10 @@ androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", nam
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 androidx-work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "workRuntime" }
+novacore = { module = "com.tecknobit.novacore:novacore", version.ref = "novacore" }
+precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
+review = { module = "com.google.android.play:review", version.ref = "review" }
+review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "review" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
