@@ -35,7 +35,7 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
@@ -46,6 +46,8 @@ kotlin {
             implementation("com.tecknobit.novacore:novacore:1.0.1")
             implementation("com.github.N7ghtm4r3:Equinox:1.0.3")
             implementation("io.github.n7ghtm4r3:Equinox-Compose:1.0.1")
+            implementation("io.coil-kt.coil3:coil-compose:3.0.0-alpha07")
+            implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.0-alpha07")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
