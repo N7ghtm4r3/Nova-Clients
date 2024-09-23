@@ -116,6 +116,7 @@ actual fun setLocale() {
     resources.updateConfiguration(configuration, resources.displayMetrics)
 }
 
+// TODO: TO IMPLEMENT
 actual fun refreshList() {
     /*
     if(activeLocalSession.isHostSet) {

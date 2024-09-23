@@ -14,6 +14,7 @@ import com.tecknobit.nova.screens.NovaScreen.Companion.RELEASE_SCREEN
 import com.tecknobit.nova.screens.NovaScreen.Companion.SPLASH_SCREEN
 import com.tecknobit.nova.screens.SplashScreen
 import com.tecknobit.nova.screens.auth.AuthScreen
+import com.tecknobit.nova.screens.projects.ProjectsScreen
 import com.tecknobit.nova.theme.NovaTheme
 import com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY
@@ -107,7 +108,7 @@ fun App() {
                 scene(
                     route = PROJECTS_SCREEN
                 ) {
-                    //SplashScreen().ShowContent()
+                    ProjectsScreen().ShowContent()
                 }
                 scene(
                     route = "$PROJECT_SCREEN/{project_id}"

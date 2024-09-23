@@ -36,6 +36,7 @@ fun initSession(): Boolean {
  */
 expect fun setLocale()
 
+// TODO: TO IMPLEMENT
 expect fun refreshList()
 
 fun launchApp(

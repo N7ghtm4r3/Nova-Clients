@@ -348,6 +348,7 @@ class AuthScreenViewModel(
             role = NovaUser.Role.Vendor,
             language = language
         )
+        activeLocalSession = localSessionsHelper.activeSession!!
         navigator.navigate(PROJECTS_SCREEN)
     }
 

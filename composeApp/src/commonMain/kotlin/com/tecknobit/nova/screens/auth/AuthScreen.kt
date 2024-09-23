@@ -34,11 +34,6 @@ import org.jetbrains.compose.resources.stringResource
 class AuthScreen : NovaScreen() {
 
     /**
-     * *snackbarHostState* -> the host to launch the snackbar messages
-     */
-    private val snackbarHostState = SnackbarHostState()
-
-    /**
      * *viewModel* -> the support view model to manage the requests to the backend
      */
     private val viewModel = AuthScreenViewModel(

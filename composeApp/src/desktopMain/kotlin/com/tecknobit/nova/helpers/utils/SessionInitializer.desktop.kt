@@ -53,6 +53,7 @@ actual fun setLocale() {
     Locale.setDefault(Locale.forLanguageTag(tag))
 }
 
+// TODO: TO IMPLEMENT
 actual fun refreshList() {
     /*if(activeLocalSession.isHostSet) {
         refreshRoutine.launch {

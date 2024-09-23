@@ -1,5 +1,6 @@
 package com.tecknobit.nova.screens
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import com.tecknobit.apimanager.annotations.Structure
 import com.tecknobit.equinoxcompose.helpers.session.EquinoxScreen
@@ -20,6 +21,11 @@ abstract class NovaScreen: EquinoxScreen() {
         const val RELEASE_SCREEN = "ReleaseScreen"
 
     }
+
+    /**
+     * *snackbarHostState* -> the host to launch the snackbar messages
+     */
+    protected val snackbarHostState = SnackbarHostState()
 
     @Composable
     protected open fun CollectStates() {
