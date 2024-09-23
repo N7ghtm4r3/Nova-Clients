@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Nova</string>
-    <string name="app_version">1.0.0</string>
+    <string name="app_version">1.0.1</string>
     <string name="app_description">Open source tool to manage and improve the developments of your releases</string>
     <string name="projects">Projects</string>
     <string name="no_version_available_yet">No version available yet</string>
@@ -66,6 +66,7 @@
     <string name="change_password">Change password</string>
     <string name="change_language">Change language</string>
     <string name="hello">Hello!</string>
+    <string name="welcome_back">Welcome back</string>
     <string name="host">Host</string>
     <string name="server_secret">Server secret</string>
     <string name="surname">Surname</string>

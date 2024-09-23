@@ -11,6 +11,14 @@ abstract class NovaScreen: EquinoxScreen() {
 
         const val SPLASH_SCREEN = "Splashscreen"
 
+        const val AUTH_SCREEN = "AuthScreen"
+
+        const val PROJECTS_SCREEN = "ProjectsScreen"
+
+        const val PROJECT_SCREEN = "ProjectScreen"
+
+        const val RELEASE_SCREEN = "ReleaseScreen"
+
     }
 
     @Composable

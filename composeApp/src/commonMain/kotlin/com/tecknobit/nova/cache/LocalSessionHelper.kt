@@ -97,6 +97,7 @@ class LocalSessionHelper(
      * @param id: the user identifier to fetch the local session
      * @return the local session as [NovaSession]
      */
+    // TODO: TO SET
     override fun getSession(
         id: String
     ): NovaSession? {
@@ -112,6 +113,7 @@ class LocalSessionHelper(
      * No-any params required
      * @return the local session as [NovaSession]
      */
+    // TODO: TO SET
     override fun getActiveSession(): NovaSession? {
         return null
         /*dbQuery.getActiveSession()*/

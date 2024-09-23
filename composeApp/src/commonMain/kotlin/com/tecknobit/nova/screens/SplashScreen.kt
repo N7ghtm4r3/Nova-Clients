@@ -11,6 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecknobit.nova.cache.LocalSessionHelper
+import com.tecknobit.nova.helpers.utils.CheckForUpdatesAndLaunch
 import com.tecknobit.nova.theme.md_theme_light_primary
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession
 import com.tecknobit.novacore.helpers.NovaRequester
@@ -76,29 +77,7 @@ class SplashScreen: NovaScreen() {
                     color = Color.White
                 )
             }
-            /*var launchApp by remember { mutableStateOf(true) }
-            val activeSession = localSessionsHelper.activeSession
-            if(activeSession != null) {
-                activeLocalSession = activeSession
-                requester = NovaRequester(
-                    userId = activeSession.id,
-                    userToken = activeSession.token,
-                    host = activeSession.hostAddress
-                )
-                setLocale()
-                //refreshList()
-            }
-            checkForUpdates(
-                destinationScreen = ""
-            )
-            TimeFormatter.changeDefaultPattern("dd/MM/yyyy HH:mm:ss")
-            LaunchedEffect(launchApp) {
-                delay(250)
-               /* if(activeSession != null)
-                    navigator.navigate(PROJECTS_ROUTE)
-                else
-                    navigator.navigate(AUTH_SCREEN_ROUTE)*/
-            }*/
+            CheckForUpdatesAndLaunch()
         }
     }
 

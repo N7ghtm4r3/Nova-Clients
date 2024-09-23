@@ -7,12 +7,20 @@ import coil3.addLastModifiedToFileCacheKey
 import coil3.compose.LocalPlatformContext
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
+import com.tecknobit.nova.screens.NovaScreen.Companion.AUTH_SCREEN
+import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECTS_SCREEN
+import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECT_SCREEN
+import com.tecknobit.nova.screens.NovaScreen.Companion.RELEASE_SCREEN
 import com.tecknobit.nova.screens.NovaScreen.Companion.SPLASH_SCREEN
 import com.tecknobit.nova.screens.SplashScreen
+import com.tecknobit.nova.screens.auth.AuthScreen
 import com.tecknobit.nova.theme.NovaTheme
+import com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY
+import com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.Navigator
+import moe.tlaster.precompose.navigation.path
 import moe.tlaster.precompose.navigation.rememberNavigator
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.robold
@@ -90,6 +98,29 @@ fun App() {
                     route = SPLASH_SCREEN
                 ) {
                     SplashScreen().ShowContent()
+                }
+                scene(
+                    route = AUTH_SCREEN
+                ) {
+                    AuthScreen().ShowContent()
+                }
+                scene(
+                    route = PROJECTS_SCREEN
+                ) {
+                    //SplashScreen().ShowContent()
+                }
+                scene(
+                    route = "$PROJECT_SCREEN/{project_id}"
+                ) { backstackEntry ->
+                    val projectId = backstackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
+                    //SplashScreen().ShowContent()
+                }
+                scene(
+                    route = "$RELEASE_SCREEN/{project_id}/{release_id}"
+                ) { backStackEntry ->
+                    val projectId = backStackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
+                    val releaseId = backStackEntry.path<String>(RELEASE_IDENTIFIER_KEY)
+                    //SplashScreen().ShowContent()
                 }
             }
         }

@@ -48,6 +48,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+            implementation(compose.materialIconsExtended)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             api(libs.precompose)
@@ -59,6 +60,7 @@ kotlin {
             implementation(libs.coil.network.okhttp)
             implementation(libs.sqldelight.runtime)
             implementation("io.github.pushpalroy:jetlime:3.0.1")
+            implementation("org.json:json:20240303")
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
