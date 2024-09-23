@@ -5,7 +5,6 @@ import com.tecknobit.nova.navigator
 import com.tecknobit.nova.screens.SplashScreen.Companion.activeLocalSession
 import com.tecknobit.nova.screens.SplashScreen.Companion.localSessionsHelper
 import com.tecknobit.nova.screens.SplashScreen.Companion.requester
-import com.tecknobit.novacore.helpers.NovaRequester
 
 @Composable
 expect fun CheckForUpdatesAndLaunch()
@@ -22,6 +21,10 @@ fun initSession(): Boolean {
         )
         setLocale()
         refreshList()
+    } else {
+        requester = NovaRequester(
+            host = ""
+        )
     }
     return sessionInitialized
 }

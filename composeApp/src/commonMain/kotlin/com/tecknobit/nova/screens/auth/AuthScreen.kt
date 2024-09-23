@@ -4,8 +4,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -43,9 +45,15 @@ class AuthScreen : NovaScreen() {
         snackbarHostState = snackbarHostState
     )
 
+    /**
+     * Function to arrange the content of the screen to display
+     *
+     * No-any params required
+     */
     @Composable
     override fun ArrangeScreenContent() {
         viewModel.isSignUp = remember { mutableStateOf(true) }
+        viewModel.isCustomerAuth = remember { mutableStateOf(false) }
         viewModel.host = remember { mutableStateOf("") }
         viewModel.hostError = remember { mutableStateOf(false) }
         viewModel.serverSecret = remember { mutableStateOf("") }
@@ -163,27 +171,34 @@ class AuthScreen : NovaScreen() {
                     bottom = 16.dp
                 )
                 .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            CustomerSelector()
             Column (
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 )
-                EquinoxOutlinedTextField(
-                    value = viewModel.host,
-                    label = stringResource(Res.string.host),
-                    keyboardOptions = keyboardOptions,
-                    errorText = stringResource(Res.string.wrong_host_address),
-                    isError = viewModel.hostError,
-                    validator = { isHostValid(it) }
-                )
                 AnimatedVisibility(
-                    visible = viewModel.isSignUp.value
+                    visible = !viewModel.isCustomerAuth.value
+                ) {
+                    EquinoxOutlinedTextField(
+                        value = viewModel.host,
+                        label = stringResource(Res.string.host),
+                        keyboardOptions = keyboardOptions,
+                        errorText = stringResource(Res.string.wrong_host_address),
+                        isError = viewModel.hostError,
+                        validator = { isHostValid(it) }
+                    )
+                }
+                AnimatedVisibility(
+                    visible = viewModel.isSignUp.value && !viewModel.isCustomerAuth.value
                 ) {
                     EquinoxOutlinedTextField(
                         value = viewModel.serverSecret,
@@ -292,7 +307,11 @@ class AuthScreen : NovaScreen() {
                     )
                     Text(
                         modifier = Modifier
-                            .clickable { viewModel.isSignUp.value = !viewModel.isSignUp.value },
+                            .clickable {
+                                viewModel.isSignUp.value = !viewModel.isSignUp.value
+                                if(!viewModel.isSignUp.value)
+                                    viewModel.isCustomerAuth.value = false
+                            },
                         text = stringResource(
                             if (viewModel.isSignUp.value)
                                 Res.string.sign_in
@@ -303,6 +322,35 @@ class AuthScreen : NovaScreen() {
                         fontSize = 14.sp
                     )
                 }
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun CustomerSelector() {
+        AnimatedVisibility(
+            visible = viewModel.isSignUp.value
+        ) {
+            Row (
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text(
+                    text = stringResource(Res.string.i_am_a_customer)
+                )
+                Switch(
+                    checked = viewModel.isCustomerAuth.value,
+                    onCheckedChange = { isCustomerAuth ->
+                        viewModel.isCustomerAuth.value = isCustomerAuth
+                        if(isCustomerAuth) {
+                            viewModel.host.value = ""
+                            viewModel.hostError.value = false
+                            viewModel.serverSecret.value = ""
+                            viewModel.serverSecretError.value = false
+                        }
+                    }
+                )
             }
         }
     }

@@ -159,4 +159,8 @@ sqldelight {
 
 configurations.all {
     exclude("commons-logging", "commons-logging")
+    // TODO: TO REMOVE IN THE NEXT VERSION (DEPRECATED TRIGGER SEARCH)
+    resolutionStrategy {
+        force("com.github.N7ghtm4r3:Equinox:1.0.2")
+    }
 }

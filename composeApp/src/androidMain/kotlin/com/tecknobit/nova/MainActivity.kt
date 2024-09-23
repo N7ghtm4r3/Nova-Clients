@@ -11,8 +11,8 @@ import androidx.activity.result.contract.ActivityResultContracts.StartIntentSend
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.tecknobit.nova.cache.LocalSessionHelper
-import com.tecknobit.nova.helpers.utils.launchApp
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
+import com.tecknobit.nova.helpers.utils.launchApp
 import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECTS_SCREEN
 import com.tecknobit.nova.screens.SplashScreen.Companion.localSessionsHelper
 

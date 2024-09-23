@@ -7,9 +7,12 @@ import com.tecknobit.equinox.environment.records.EquinoxItem.IDENTIFIER_KEY
 import com.tecknobit.equinox.environment.records.EquinoxUser.*
 import com.tecknobit.equinox.inputs.InputValidator.*
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
+import com.tecknobit.nova.screens.SplashScreen.Companion.activeLocalSession
 import com.tecknobit.nova.screens.SplashScreen.Companion.localSessionsHelper
 import com.tecknobit.nova.screens.SplashScreen.Companion.requester
+import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession.LOGGED_AS_CUSTOMER_RECORD_VALUE
 import com.tecknobit.novacore.records.NovaUser
+import java.util.*
 
 class AuthScreenViewModel(
     snackbarHostState: SnackbarHostState,
@@ -21,6 +24,11 @@ class AuthScreenViewModel(
      * **isSignUp** -> whether the auth request to execute is sign up or sign in
      */
     lateinit var isSignUp: MutableState<Boolean>
+
+    /**
+     * **isCustomerAuth** -> whether the auth request is to execute a customer authentication
+     */
+    lateinit var isCustomerAuth: MutableState<Boolean>
 
     /**
      * **host** -> the value of the host to reach
@@ -88,12 +96,13 @@ class AuthScreenViewModel(
      * No-any params required
      */
     fun auth() {
-        if (isSignUp.value)
+        if (isSignUp.value) {
             if(signUpFormIsValid())
                 signUp()
-            else
-                if(signInFormIsValid())
-                    signIn()
+        } else {
+            if(signInFormIsValid())
+                signIn()
+        }
     }
 
     /**
@@ -105,29 +114,61 @@ class AuthScreenViewModel(
     private fun signUp() {
         if (signUpFormIsValid()) {
             val language = getUserLanguage()
-            requester.changeHost(host.value)
-            requester.sendRequest(
-                request = {
-                    requester.signUp(
-                        serverSecret = serverSecret.value,
-                        name = name.value,
-                        surname = surname.value,
-                        email = email.value,
-                        password = password.value,
-                        language = language
-                    )
-                },
-                onSuccess = { response ->
-                    launchApp(
-                        name = name.value,
-                        surname = surname.value,
-                        language = language,
-                        response = response
-                    )
-                },
-                onFailure = { showSnackbarMessage(it) }
-            )
+            if(isCustomerAuth.value) {
+                customerSignUp(
+                    language = language
+                )
+            } else {
+                vendorSignUp(
+                    language = language
+                )
+            }
         }
+    }
+
+    private fun customerSignUp(
+        language: String
+    ) {
+        localSessionsHelper.insertSession(
+            id = UUID.randomUUID().toString().replace("-", ""),
+            token = LOGGED_AS_CUSTOMER_RECORD_VALUE,
+            profilePicUrl = LOGGED_AS_CUSTOMER_RECORD_VALUE,
+            name = name.value,
+            surname = surname.value,
+            email = email.value,
+            password = password.value,
+            hostAddress = LOGGED_AS_CUSTOMER_RECORD_VALUE,
+            role = NovaUser.Role.Customer,
+            language = language
+        )
+        activeLocalSession = localSessionsHelper.activeSession!!
+    }
+
+    private fun vendorSignUp(
+        language: String
+    ) {
+        requester.changeHost(host.value)
+        requester.sendRequest(
+            request = {
+                requester.signUp(
+                    serverSecret = serverSecret.value,
+                    name = name.value,
+                    surname = surname.value,
+                    email = email.value,
+                    password = password.value,
+                    language = language
+                )
+            },
+            onSuccess = { response ->
+                launchApp(
+                    name = name.value,
+                    surname = surname.value,
+                    language = language,
+                    response = response
+                )
+            },
+            onFailure = { showSnackbarMessage(it) }
+        )
     }
 
     /**
@@ -167,15 +208,18 @@ class AuthScreenViewModel(
      * @return whether the inputs are valid as [Boolean]
      */
     protected open fun signUpFormIsValid(): Boolean {
-        var isValid: Boolean = isHostValid(host.value)
-        if (!isValid) {
-            hostError.value = true
-            return false
-        }
-        isValid = isServerSecretValid(serverSecret.value)
-        if (!isValid) {
-            serverSecretError.value = true
-            return false
+        var isValid: Boolean
+        if (!isCustomerAuth.value) {
+            isValid = isHostValid(host.value)
+            if (!isValid) {
+                hostError.value = true
+                return false
+            }
+            isValid = isServerSecretValid(serverSecret.value)
+            if (!isValid) {
+                serverSecretError.value = true
+                return false
+            }
         }
         isValid = isNameValid(name.value)
         if (!isValid) {
@@ -213,8 +257,7 @@ class AuthScreenViewModel(
                 request = {
                     requester.signIn(
                         email = email.value,
-                        password = password.value,
-                        custom = getSignInCustomParameters()
+                        password = password.value
                     )
                 },
                 onSuccess = { response ->
