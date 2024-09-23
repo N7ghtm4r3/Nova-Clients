@@ -1,17 +1,25 @@
 package com.tecknobit.nova.cache
 
+import app.cash.sqldelight.db.SqlDriver
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
 import com.tecknobit.novacore.helpers.LocalSessionUtils
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession
 import com.tecknobit.novacore.helpers.LocalSessionUtils.SESSIONS_TABLE
+import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.NovaUser.Role
 
 class LocalSessionHelper(
-    databaseDriverFactory: DatabaseDriverFactory
+    val databaseDriverFactory: DatabaseDriverFactory
 ) : LocalSessionUtils {
 
+    private val sqlDriver: SqlDriver
+
+    init {
+        sqlDriver = databaseDriverFactory.createDriver()
+    }
+
     private var database = Nova(
-        driver = databaseDriverFactory.createDriver()
+        driver = sqlDriver
     )
 
     private val dbQuery = database.novaQueries
@@ -85,10 +93,17 @@ class LocalSessionHelper(
      *
      * @return the list of the local sessions of the user as [List] of [NovaSession]
      */
-    // TODO: TO SET
     override fun getSessions(): List<NovaSession> {
-        dbQuery.getSessions()
-        return listOf()
+        val currentSessions = arrayListOf<NovaSession>()
+        val sessions = dbQuery.getSessions().executeAsList()
+        sessions.forEach { session ->
+            currentSessions.add(
+                fillNovaSession(
+                    session = session
+                )
+            )
+        }
+        return currentSessions
     }
 
     /**
@@ -97,14 +112,18 @@ class LocalSessionHelper(
      * @param id: the user identifier to fetch the local session
      * @return the local session as [NovaSession]
      */
-    // TODO: TO SET
     override fun getSession(
         id: String
     ): NovaSession? {
-        return null
-        /*return dbQuery.getSession(
+        val querySession = dbQuery.getSession(
             id = id
-        )*/
+        ).executeAsOneOrNull()
+        if(querySession != null) {
+            return fillNovaSession(
+                session = querySession
+            )
+        }
+        return null
     }
 
     /**
@@ -113,10 +132,39 @@ class LocalSessionHelper(
      * No-any params required
      * @return the local session as [NovaSession]
      */
-    // TODO: TO SET
     override fun getActiveSession(): NovaSession? {
+        val querySession = dbQuery.getActiveSession().executeAsOneOrNull()
+        if(querySession != null) {
+            return fillNovaSession(
+                session = querySession
+            )
+        }
         return null
-        /*dbQuery.getActiveSession()*/
+    }
+
+    /**
+     * Function to create a [NovaSession] with the data queried to the database
+     *
+     * @param session: the session queried
+     *
+     * @return the session as [NovaSession] instance
+     */
+    private fun fillNovaSession(
+        session: Sessions
+    ) : NovaSession {
+        return NovaSession(
+            session.id,
+            session.token,
+            session.profile_pic,
+            session.name,
+            session.surname,
+            session.email,
+            session.password,
+            session.host_address,
+            NovaUser.Role.valueOf(session.role),
+            session.is_active!!,
+            session.language
+        )
     }
 
     /**
@@ -125,12 +173,22 @@ class LocalSessionHelper(
      * @param key: the key of the value to change
      * @param sessionValue: the new session value to set
      */
-    // TODO: TO CHECK TO IMPLEMENT RAW QUERY
     override fun changeSessionValue(
         key: String,
         sessionValue: String
     ) {
-        val updateQuery = "UPDATE $SESSIONS_TABLE SET $key = $sessionValue"
+        database.transaction {
+            val updateQuery = "UPDATE $SESSIONS_TABLE SET $key = $sessionValue"
+            sqlDriver.execute(
+                identifier = null,
+                sql = updateQuery,
+                parameters = 2,
+                binders = {
+                    bindString(0, key)
+                    bindString(1, sessionValue)
+                }
+            )
+        }
     }
 
     /**

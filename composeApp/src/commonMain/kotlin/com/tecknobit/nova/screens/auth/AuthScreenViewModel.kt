@@ -7,6 +7,8 @@ import com.tecknobit.equinox.environment.records.EquinoxItem.IDENTIFIER_KEY
 import com.tecknobit.equinox.environment.records.EquinoxUser.*
 import com.tecknobit.equinox.inputs.InputValidator.*
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
+import com.tecknobit.nova.navigator
+import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECTS_SCREEN
 import com.tecknobit.nova.screens.SplashScreen.Companion.activeLocalSession
 import com.tecknobit.nova.screens.SplashScreen.Companion.localSessionsHelper
 import com.tecknobit.nova.screens.SplashScreen.Companion.requester
@@ -142,6 +144,7 @@ class AuthScreenViewModel(
             language = language
         )
         activeLocalSession = localSessionsHelper.activeSession!!
+        navigator.navigate(PROJECTS_SCREEN)
     }
 
     private fun vendorSignUp(
@@ -345,6 +348,7 @@ class AuthScreenViewModel(
             role = NovaUser.Role.Vendor,
             language = language
         )
+        navigator.navigate(PROJECTS_SCREEN)
     }
 
 }
