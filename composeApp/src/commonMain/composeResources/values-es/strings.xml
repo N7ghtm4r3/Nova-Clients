@@ -1,12 +1,7 @@
 <resources>
     <string name="app_name" >Nova</string>
     <string name="app_version">1.0.1</string>
-    <string name="tags" >Tags</string>
-    <string name="test" >Test</string>
-    <string name="host" >Host</string>
-    <string name="server_secret" >Server secret</string>
-    <string name="uid" >UID</string>
-    <string name="logout" >Logout</string>
+    <string name="app_description">Herramienta de código abierto para gestionar y mejorar los desarrollos de sus lanzamientos</string>
     <string name="projects">Proyectos</string>
     <string name="no_version_available_yet">Aún no hay versión disponible</string>
     <string name="creation_date">Fecha de creación:</string>
@@ -20,6 +15,7 @@
     <string name="new_asset_has_been_uploaded">Se ha subido un nuevo recurso</string>
     <string name="delete_release">¿Eliminar versión?</string>
     <string name="delete_release_alert_message">Si confirma, la publicación se eliminará y\nlos datos relacionados ya no estarán disponibles</string>
+    <string name="test" >Test</string>
     <string name="confirm">Confirmar</string>
     <string name="dismiss">Despedir</string>
     <string name="promote_release">Promocionar el lanzamiento</string>
@@ -33,14 +29,14 @@
     <string name="approve">Aprobar</string>
     <string name="reject">Rechazar</string>
     <string name="reasons">Razones</string>
-    <string name="wrong_reasons">Los motivos del rechazo no están completos.</string>
+    <string name="tags" >Tags</string>
     <string name="close">Cerca</string>
     <string name="description">Descripción</string>
-    <string name="wrong_description">La descripción no es válida</string>
     <string name="delete_project">¿Eliminar proyecto?</string>
     <string name="delete_project_alert_message">Si confirmas, el proyecto se eliminará y\nlos datos relacionados ya no estarán disponibles</string>
     <string name="release_version">Versión de lanzamiento</string>
     <string name="wrong_release_version">La versión de lanzamiento no es válida</string>
+    <string name="wrong_release_notes">Las notas de la versión no son válidas</string>
     <string name="add">Agregar</string>
     <string name="note">Nota</string>
     <string name="notes">Notas</string>
@@ -59,6 +55,8 @@
     <string name="title_activity_profile">PerfilActividad</string>
     <string name="password">Contraseña</string>
     <string name="email">Correo electrónico</string>
+    <string name="uid" >UID</string>
+    <string name="logout" >Logout</string>
     <string name="delete_account">Eliminar cuenta</string>
     <string name="language">Idioma</string>
     <string name="edit">Editar</string>
@@ -69,6 +67,8 @@
     <string name="change_language">Cambiar de idioma</string>
     <string name="hello">¡Hola!</string>
     <string name="welcome_back">Bentornat</string>
+    <string name="host" >Host</string>
+    <string name="server_secret" >Server secret</string>
     <string name="surname">Apellido</string>
     <string name="sign_up">Inscríbete</string>
     <string name="authenticate_on_a_server">Autenticarse en un servidor</string>
@@ -99,12 +99,11 @@
     <string name="the_project_has_been_deleted">El proyecto ha sido eliminado</string>
     <string name="account_deletion_message">Si confirma, su cuenta se eliminará de forma permanente en el host actual al que está conectada.</string>
     <string name="account_logout_message">Si lo confirma, se desconectará de todos los hosts a los que esté conectado y tendrá que volver a conectarse.</string>
-    <string name="uploading_assets">Cargar activos</string>
-    <string name="the_assets_are_uploading_on_the_server">Los activos se están cargando en el servidor</string>
     <string name="wrong_join_code">El código de unión no es válido</string>
     <string name="join_project">Unirse a un proyecto</string>
     <string name="join_code">Código de unión</string>
     <string name="join">Unirse</string>
     <string name="preview">Avance</string>
     <string name="i_am_a_customer">Soy un/a cliente</string>
+    <string name="loading_data">Carga de datos</string>
 </resources>

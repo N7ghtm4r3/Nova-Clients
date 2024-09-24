@@ -26,6 +26,7 @@ import com.tecknobit.nova.ui.screens.NovaScreen.Companion.SPLASH_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen
 import com.tecknobit.nova.ui.screens.auth.AuthScreen
 import com.tecknobit.nova.ui.screens.profile.ProfileScreen
+import com.tecknobit.nova.ui.screens.project.ProjectScreen
 import com.tecknobit.nova.ui.screens.projects.ProjectsScreen
 import com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY
@@ -148,8 +149,10 @@ fun App() {
                 scene(
                     route = "$PROJECT_SCREEN/{project_id}"
                 ) { backstackEntry ->
-                    val projectId = backstackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
-                    //Splashscreen().ShowContent()
+                    val projectId = backstackEntry.path<String>(PROJECT_IDENTIFIER_KEY)!!
+                    ProjectScreen(
+                        projectId = projectId
+                    ).ShowContent()
                 }
                 scene(
                     route = "$RELEASE_SCREEN/{project_id}/{release_id}"

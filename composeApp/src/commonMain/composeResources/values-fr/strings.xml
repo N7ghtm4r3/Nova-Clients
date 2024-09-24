@@ -1,12 +1,7 @@
 <resources>
     <string name="app_name" >Nova</string>
     <string name="app_version">1.0.1</string>
-    <string name="tags" >Tags</string>
-    <string name="test" >Test</string>
-    <string name="host" >Host</string>
-    <string name="server_secret" >Server secret</string>
-    <string name="uid" >UID</string>
-    <string name="logout" >Logout</string>
+    <string name="app_description">Outil open source pour gérer et améliorer les développements de vos releases</string>
     <string name="projects">Projets</string>
     <string name="no_version_available_yet">Aucune version disponible pour le moment</string>
     <string name="creation_date">Date de création:</string>
@@ -20,6 +15,7 @@
     <string name="new_asset_has_been_uploaded">Un nouvel élément a été téléchargé</string>
     <string name="delete_release"><![CDATA[Supprimer la version ?]]></string>
     <string name="delete_release_alert_message">Si vous confirmez, la version sera supprimée et\nles données associées ne seront plus disponibles</string>
+    <string name="test" >Test</string>
     <string name="confirm">Confirmer</string>
     <string name="dismiss">Rejeter</string>
     <string name="promote_release">Promouvoir la sortie</string>
@@ -33,14 +29,14 @@
     <string name="approve">Approuver</string>
     <string name="reject">Rejeter</string>
     <string name="reasons">Les raisons</string>
-    <string name="wrong_reasons">Les raisons du refus ne sont pas complètes</string>
+    <string name="tags" >Tags</string>
     <string name="close">Fermer</string>
     <string name="description">Description</string>
-    <string name="wrong_description">La description n'est pas valide</string>
     <string name="delete_project"><![CDATA[Supprimer le projet ?]]></string>
     <string name="delete_project_alert_message">Si vous confirmez, le projet sera supprimé\net les données associées ne seront plus disponibles</string>
     <string name="release_version">Version finale</string>
     <string name="wrong_release_version">La version commerciale n'est pas valide</string>
+    <string name="wrong_release_notes">Les notes de mise à jour ne sont pas valides</string>
     <string name="add">Ajouter</string>
     <string name="note">Note</string>
     <string name="notes">Remarques</string>
@@ -59,6 +55,8 @@
     <string name="title_activity_profile">Activité de profil</string>
     <string name="password">Mot de passe</string>
     <string name="email">E-mail</string>
+    <string name="uid" >UID</string>
+    <string name="logout" >Logout</string>
     <string name="delete_account">Supprimer le compte</string>
     <string name="language">Langue</string>
     <string name="edit">Modifier</string>
@@ -69,6 +67,8 @@
     <string name="change_language">Changer de langue</string>
     <string name="hello">Bonjour!</string>
     <string name="welcome_back">Bentornat</string>
+    <string name="host" >Host</string>
+    <string name="server_secret" >Server secret</string>
     <string name="surname">Nom de famille</string>
     <string name="sign_up">S'inscrire</string>
     <string name="authenticate_on_a_server">S'authentifier sur un serveur</string>
@@ -99,12 +99,11 @@
     <string name="the_project_has_been_deleted">Le projet a été supprimé</string>
     <string name="account_deletion_message">Si vous confirmez, votre compte sera définitivement supprimé sur l'hébergeur actuel auquel il est connecté</string>
     <string name="account_logout_message">Si vous confirmez vous serez déconnecté de tous les hôtes auxquels il est connecté et vous devrez\nalors vous reconnecter</string>
-    <string name="uploading_assets">Téléchargement d'éléments</string>
-    <string name="the_assets_are_uploading_on_the_server">Les actifs sont téléchargés sur le serveur</string>
     <string name="wrong_join_code">Le code d'adhésion n'est pas valide</string>
     <string name="join_project">Rejoignez un projet</string>
     <string name="join_code">Rejoindre le code</string>
     <string name="join">Rejoindre</string>
     <string name="preview">Aperçu</string>
     <string name="i_am_a_customer">Je suis client</string>
+    <string name="loading_data">Chargement des données</string>
 </resources>

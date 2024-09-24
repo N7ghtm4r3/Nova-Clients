@@ -3,11 +3,9 @@
 package com.tecknobit.nova
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -26,8 +23,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.nova.theme.gray_background
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.NovaUser.DEFAULT_PROFILE_PIC
 import com.tecknobit.novacore.records.project.Project
@@ -40,7 +37,6 @@ import com.tecknobit.novacore.records.release.events.ReleaseStandardEvent.*
 import nova.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.StringResource
-import org.jetbrains.compose.resources.stringResource
 
 /**
  * Function to display an image as logo
@@ -421,43 +417,6 @@ fun UserRoleBadge(
  */
 private fun fromHexToColor(hex: String): Color {
     return Color(("ff" + hex.removePrefix("#").lowercase()).toLong(16))
-}
-
-/**
- * Function to display an UI element when a list of values is empty
- *
- * @param icon: the icon to display
- * @param description: the description to display
- */
-@Composable
-fun EmptyList(
-    icon: ImageVector,
-    description: StringResource
-) {
-    Column (
-        modifier = Modifier
-            .fillMaxSize()
-            .background(gray_background),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            modifier = Modifier
-                .size(125.dp),
-            imageVector = icon,
-            contentDescription = null,
-            tint = Color(200, 203, 210)
-        )
-        Text(
-            modifier = Modifier
-                .padding(
-                    top = 10.dp
-                ),
-            text = stringResource(description),
-            fontSize = 18.sp,
-            color = Color.Gray
-        )
-    }
 }
 
 /**

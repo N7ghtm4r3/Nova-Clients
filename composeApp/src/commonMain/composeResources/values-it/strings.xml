@@ -1,12 +1,7 @@
 <resources>
     <string name="app_name" >Nova</string>
     <string name="app_version">1.0.1</string>
-    <string name="tags" >Tags</string>
-    <string name="test" >Test</string>
-    <string name="host" >Host</string>
-    <string name="server_secret" >Server secret</string>
-    <string name="uid" >UID</string>
-    <string name="logout" >Logout</string>
+    <string name="app_description">Strumento open source per gestire e migliorare gli sviluppi delle vostre release</string>
     <string name="projects">Progetti</string>
     <string name="no_version_available_yet">Nessuna versione</string>
     <string name="creation_date">Data di creazione:</string>
@@ -20,6 +15,7 @@
     <string name="new_asset_has_been_uploaded">Sono stati caricati nuovi asset</string>
     <string name="delete_release">Eliminare la versione?</string>
     <string name="delete_release_alert_message">Se confermi la liberatoria verrà cancellata e\ni relativi dati non saranno più disponibili</string>
+    <string name="test" >Test</string>
     <string name="confirm">Conferma</string>
     <string name="dismiss">Annulla</string>
     <string name="promote_release">Promuovere release</string>
@@ -33,14 +29,14 @@
     <string name="approve">Approva</string>
     <string name="reject">Rifiuta</string>
     <string name="reasons">Motivi</string>
-    <string name="wrong_reasons">Le ragioni del rifiuto non sono complete</string>
+    <string name="tags" >Tags</string>
     <string name="close">Chiude</string>
     <string name="description">Descrizione</string>
-    <string name="wrong_description">La descrizione non è valida</string>
     <string name="delete_project">Eliminare il progetto?</string>
     <string name="delete_project_alert_message">Se confermi il progetto verrà eliminato\ne i relativi dati non saranno più disponibili</string>
     <string name="release_version">Versione della release</string>
     <string name="wrong_release_version">La versione delle release non è valida</string>
+    <string name="wrong_release_notes">Le note di rilascio non sono valide</string>
     <string name="add">Aggiungere</string>
     <string name="note">Nota</string>
     <string name="notes">Appunti</string>
@@ -59,6 +55,8 @@
     <string name="title_activity_profile">Attività del profilo</string>
     <string name="password">Password</string>
     <string name="email">E-mail</string>
+    <string name="uid" >UID</string>
+    <string name="logout" >Logout</string>
     <string name="delete_account">Elimina account</string>
     <string name="language">Lingua</string>
     <string name="edit">Modifica</string>
@@ -69,6 +67,8 @@
     <string name="change_language">Cambia lingua</string>
     <string name="hello">Ciao!</string>
     <string name="welcome_back">Bentornat</string>
+    <string name="host" >Host</string>
+    <string name="server_secret" >Server secret</string>
     <string name="surname">Cognome</string>
     <string name="sign_up">Registrati</string>
     <string name="authenticate_on_a_server">Autenticati su un server</string>
@@ -99,12 +99,11 @@
     <string name="the_project_has_been_deleted">Il progetto è stato eliminato</string>
     <string name="account_deletion_message">Se confermi il tuo account verrà eliminato definitivamente sull'host corrente a cui è connesso</string>
     <string name="account_logout_message">Se confermi verrai disconnesso da tutti gli host a cui è connesso e dovrai quindi riconnetterti</string>
-    <string name="uploading_assets">Caricamento degli asset</string>
-    <string name="the_assets_are_uploading_on_the_server">Caricamento degli asset</string>
     <string name="wrong_join_code">Il codice di iscrizione non è valido</string>
     <string name="join_project">Partecipa a un progetto</string>
     <string name="join_code">Codice iscrizione</string>
     <string name="join">Partecipa</string>
     <string name="preview">Anteprima</string>
     <string name="i_am_a_customer">Sono un/a cliente</string>
+    <string name="loading_data">Caricamento dati</string>
 </resources>

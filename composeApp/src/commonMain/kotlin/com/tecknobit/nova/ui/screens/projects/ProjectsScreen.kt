@@ -134,9 +134,17 @@ class ProjectsScreen : NovaScreen() {
     @Composable
     override fun CollectStates() {
         super.CollectStates()
-        viewModel.setActiveContext(this::class.java)
-        viewModel.getProjects()
         projects = viewModel.projects.collectAsState()
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        viewModel.setActiveContext(this::class.java)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.getProjects()
     }
 
     @Composable

@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecknobit.nova.Logo
 import com.tecknobit.nova.getProjectLogoUrl
+import com.tecknobit.nova.navigator
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECT_SCREEN
 import com.tecknobit.novacore.records.project.Project
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.no_version_available_yet
@@ -43,19 +45,7 @@ fun ProjectItem(
                 shape = RoundedCornerShape(15.dp)
             )
             .clip(RoundedCornerShape(15.dp))
-            .clickable {
-
-                // TODO: TO SET
-                /*val intent = Intent(
-                    this@MainActivity,
-                    ProjectActivity::class.java
-                )
-                intent.putExtra(
-                    PROJECT_IDENTIFIER_KEY,
-                    project.id
-                )
-                startActivity(intent)*/
-            },
+            .clickable { navigator.navigate("$PROJECT_SCREEN/${project.id}") },
         colors = ListItemDefaults.colors(
             containerColor = Color.White
         ),
