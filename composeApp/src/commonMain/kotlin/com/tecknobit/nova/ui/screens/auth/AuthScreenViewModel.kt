@@ -1,4 +1,4 @@
-package com.tecknobit.nova.screens.auth
+package com.tecknobit.nova.ui.screens.auth
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
@@ -8,10 +8,10 @@ import com.tecknobit.equinox.environment.records.EquinoxUser.*
 import com.tecknobit.equinox.inputs.InputValidator.*
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
 import com.tecknobit.nova.navigator
-import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECTS_SCREEN
-import com.tecknobit.nova.screens.SplashScreen.Companion.activeLocalSession
-import com.tecknobit.nova.screens.SplashScreen.Companion.localSessionsHelper
-import com.tecknobit.nova.screens.SplashScreen.Companion.requester
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECTS_SCREEN
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession.LOGGED_AS_CUSTOMER_RECORD_VALUE
 import com.tecknobit.novacore.records.NovaUser
 import java.util.*

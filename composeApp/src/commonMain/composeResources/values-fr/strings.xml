@@ -97,8 +97,8 @@
     <string name="the_release_has_been_promoted_to_latest"><![CDATA[La version a été promue au rang de Dernière !]]></string>
     <string name="the_release_has_been_deleted">La version a été supprimée</string>
     <string name="the_project_has_been_deleted">Le projet a été supprimé</string>
-    <string name="account_deletion_message">Si vous confirmez, votre compte sera définitivement\nsupprimé sur l'hébergeur actuel auquel il est connecté</string>
-    <string name="account_logout_message">Si vous confirmez vous serez déconnecté de tous les hôtes\nauxquels il est connecté et vous devrez\nalors vous reconnecter</string>
+    <string name="account_deletion_message">Si vous confirmez, votre compte sera définitivement supprimé sur l'hébergeur actuel auquel il est connecté</string>
+    <string name="account_logout_message">Si vous confirmez vous serez déconnecté de tous les hôtes auxquels il est connecté et vous devrez\nalors vous reconnecter</string>
     <string name="uploading_assets">Téléchargement d'éléments</string>
     <string name="the_assets_are_uploading_on_the_server">Les actifs sont téléchargés sur le serveur</string>
     <string name="wrong_join_code">Le code d'adhésion n'est pas valide</string>

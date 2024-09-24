@@ -97,8 +97,8 @@
     <string name="the_release_has_been_promoted_to_latest">La versione è stata promossa a Latest!</string>
     <string name="the_release_has_been_deleted">La release è stata eliminata</string>
     <string name="the_project_has_been_deleted">Il progetto è stato eliminato</string>
-    <string name="account_deletion_message">Se confermi il tuo account verrà eliminato\ndefinitivamente sull'host corrente a cui è connesso</string>
-    <string name="account_logout_message">Se confermi verrai disconnesso da tutti gli host\na cui è connesso e dovrai quindi riconnetterti</string>
+    <string name="account_deletion_message">Se confermi il tuo account verrà eliminato definitivamente sull'host corrente a cui è connesso</string>
+    <string name="account_logout_message">Se confermi verrai disconnesso da tutti gli host a cui è connesso e dovrai quindi riconnetterti</string>
     <string name="uploading_assets">Caricamento degli asset</string>
     <string name="the_assets_are_uploading_on_the_server">Caricamento degli asset</string>
     <string name="wrong_join_code">Il codice di iscrizione non è valido</string>

@@ -2,27 +2,31 @@ package com.tecknobit.nova
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
 import coil3.ImageLoader
 import coil3.addLastModifiedToFileCacheKey
 import coil3.compose.LocalPlatformContext
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
-import com.tecknobit.nova.screens.NovaScreen.Companion.AUTH_SCREEN
-import com.tecknobit.nova.screens.NovaScreen.Companion.PROFILE_SCREEN
-import com.tecknobit.nova.screens.NovaScreen.Companion.PROFILE_SCREEN_DIALOG
-import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECTS_SCREEN
-import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECT_SCREEN
-import com.tecknobit.nova.screens.NovaScreen.Companion.RELEASE_SCREEN
-import com.tecknobit.nova.screens.NovaScreen.Companion.SPLASH_SCREEN
-import com.tecknobit.nova.screens.SplashScreen
-import com.tecknobit.nova.screens.auth.AuthScreen
-import com.tecknobit.nova.screens.profile.ProfileScreen
-import com.tecknobit.nova.screens.projects.ProjectsScreen
 import com.tecknobit.nova.theme.NovaTheme
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.AUTH_SCREEN
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROFILE_SCREEN
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROFILE_SCREEN_DIALOG
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECTS_SCREEN
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECT_SCREEN
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.RELEASE_SCREEN
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.SPLASH_SCREEN
+import com.tecknobit.nova.ui.screens.Splashscreen
+import com.tecknobit.nova.ui.screens.auth.AuthScreen
+import com.tecknobit.nova.ui.screens.profile.ProfileScreen
+import com.tecknobit.nova.ui.screens.projects.ProjectsScreen
 import com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY
 import moe.tlaster.precompose.PreComposeApp
@@ -105,7 +109,7 @@ fun App() {
                 scene(
                     route = SPLASH_SCREEN
                 ) {
-                    SplashScreen().ShowContent()
+                    Splashscreen().ShowContent()
                 }
                 scene(
                     route = AUTH_SCREEN
@@ -125,7 +129,15 @@ fun App() {
                             .fillMaxSize(),
                         contentAlignment = Alignment.Center
                     ) {
-                        ProfileScreen().ShowContent()
+                        Surface (
+                            color = Color.Transparent,
+                            shadowElevation = 5.dp,
+                            shape = RoundedCornerShape(
+                                10.dp
+                            )
+                        ) {
+                            ProfileScreen().ShowContent()
+                        }
                     }
                 }
                 scene(
@@ -137,14 +149,14 @@ fun App() {
                     route = "$PROJECT_SCREEN/{project_id}"
                 ) { backstackEntry ->
                     val projectId = backstackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
-                    //SplashScreen().ShowContent()
+                    //Splashscreen().ShowContent()
                 }
                 scene(
                     route = "$RELEASE_SCREEN/{project_id}/{release_id}"
                 ) { backStackEntry ->
                     val projectId = backStackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
                     val releaseId = backStackEntry.path<String>(RELEASE_IDENTIFIER_KEY)
-                    //SplashScreen().ShowContent()
+                    //Splashscreen().ShowContent()
                 }
             }
         }

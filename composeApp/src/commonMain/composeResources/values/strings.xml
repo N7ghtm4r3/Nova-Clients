@@ -97,8 +97,8 @@
     <string name="the_release_has_been_promoted_to_latest">The release has been promoted to Latest!</string>
     <string name="the_release_has_been_deleted">The release has been deleted</string>
     <string name="the_project_has_been_deleted">The project has been deleted</string>
-    <string name="account_deletion_message">If you confirm your account will be\npermanently deleted on the current\nhost to which it is connected</string>
-    <string name="account_logout_message">If you confirm you will be disconnected\nfrom all hosts to which it is connected\nand you will then have to reconnect</string>
+    <string name="account_deletion_message">If you confirm your account will be permanently deleted on the current host to which it is connected</string>
+    <string name="account_logout_message">If you confirm you will be disconnected from all hosts to which it is connected and you will then have to reconnect</string>
     <string name="wrong_join_code">Join code is not valid</string>
     <string name="join_project">Join in a project</string>
     <string name="join_code">Join code</string>

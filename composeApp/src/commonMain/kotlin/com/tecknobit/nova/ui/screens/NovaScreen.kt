@@ -1,4 +1,4 @@
-package com.tecknobit.nova.screens
+package com.tecknobit.nova.ui.screens
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable

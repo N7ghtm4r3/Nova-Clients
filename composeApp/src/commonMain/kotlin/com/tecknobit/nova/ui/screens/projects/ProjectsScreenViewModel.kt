@@ -1,10 +1,10 @@
-package com.tecknobit.nova.screens.projects
+package com.tecknobit.nova.ui.screens.projects
 
 import androidx.compose.runtime.MutableState
 import com.tecknobit.equinox.inputs.InputValidator.isEmailValid
 import com.tecknobit.equinox.inputs.InputValidator.isPasswordValid
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
-import com.tecknobit.nova.screens.SplashScreen.Companion.requester
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
 import java.io.File
 
 class ProjectsScreenViewModel: EquinoxViewModel() {

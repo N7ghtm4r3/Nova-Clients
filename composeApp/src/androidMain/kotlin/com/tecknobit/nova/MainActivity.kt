@@ -13,8 +13,9 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.tecknobit.nova.cache.LocalSessionHelper
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
 import com.tecknobit.nova.helpers.utils.launchApp
-import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECTS_SCREEN
-import com.tecknobit.nova.screens.SplashScreen.Companion.localSessionsHelper
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECTS_SCREEN
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
+import io.github.vinceglb.filekit.core.FileKit
 
 class MainActivity : ComponentActivity() {
 
@@ -64,6 +65,7 @@ class MainActivity : ComponentActivity() {
         localSessionsHelper = LocalSessionHelper(
             databaseDriverFactory = DatabaseDriverFactory()
         )
+        FileKit.init(this)
     }
 
 }

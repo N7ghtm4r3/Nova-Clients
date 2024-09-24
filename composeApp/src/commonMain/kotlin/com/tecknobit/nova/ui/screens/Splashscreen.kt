@@ -1,7 +1,11 @@
-package com.tecknobit.nova.screens
+package com.tecknobit.nova.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,7 +23,7 @@ import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.app_name
 import org.jetbrains.compose.resources.stringResource
 
-class SplashScreen: NovaScreen() {
+class Splashscreen: NovaScreen() {
 
     companion object {
 

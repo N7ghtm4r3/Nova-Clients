@@ -1,4 +1,4 @@
-package com.tecknobit.nova.screens.auth
+package com.tecknobit.nova.ui.screens.auth
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -26,7 +26,7 @@ import com.tecknobit.equinox.inputs.InputValidator.*
 import com.tecknobit.equinoxcompose.components.EquinoxOutlinedTextField
 import com.tecknobit.nova.fontFamily
 import com.tecknobit.nova.helpers.utils.openLink
-import com.tecknobit.nova.screens.NovaScreen
+import com.tecknobit.nova.ui.screens.NovaScreen
 import nova.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource

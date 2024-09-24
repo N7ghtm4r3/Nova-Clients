@@ -2,9 +2,9 @@ package com.tecknobit.nova.helpers.utils
 
 import androidx.compose.runtime.Composable
 import com.tecknobit.nova.navigator
-import com.tecknobit.nova.screens.SplashScreen.Companion.activeLocalSession
-import com.tecknobit.nova.screens.SplashScreen.Companion.localSessionsHelper
-import com.tecknobit.nova.screens.SplashScreen.Companion.requester
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
 
 @Composable
 expect fun CheckForUpdatesAndLaunch()

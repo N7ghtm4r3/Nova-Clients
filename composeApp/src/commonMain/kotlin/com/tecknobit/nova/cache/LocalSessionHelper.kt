@@ -178,14 +178,13 @@ class LocalSessionHelper(
         sessionValue: String
     ) {
         database.transaction {
-            val updateQuery = "UPDATE $SESSIONS_TABLE SET $key = $sessionValue"
+            val updateQuery = "UPDATE $SESSIONS_TABLE SET $key = ?"
             sqlDriver.execute(
                 identifier = null,
                 sql = updateQuery,
                 parameters = 2,
                 binders = {
-                    bindString(0, key)
-                    bindString(1, sessionValue)
+                    bindString(0, sessionValue)
                 }
             )
         }

@@ -6,7 +6,7 @@ import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
 import com.tecknobit.nova.cache.LocalSessionHelper
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
-import com.tecknobit.nova.screens.SplashScreen.Companion.localSessionsHelper
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
 import moe.tlaster.precompose.ProvidePreComposeLocals
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.app_name

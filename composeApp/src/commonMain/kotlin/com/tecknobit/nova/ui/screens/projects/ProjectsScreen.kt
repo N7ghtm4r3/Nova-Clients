@@ -1,4 +1,4 @@
-package com.tecknobit.nova.screens.projects
+package com.tecknobit.nova.ui.screens.projects
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,8 +26,8 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.tecknobit.nova.helpers.utils.navToProfile
 import com.tecknobit.nova.imageLoader
-import com.tecknobit.nova.screens.NovaScreen
-import com.tecknobit.nova.screens.SplashScreen.Companion.activeLocalSession
+import com.tecknobit.nova.ui.screens.NovaScreen
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.nova.theme.gray_background
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.logo

@@ -59,14 +59,16 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.okhttp)
             implementation(libs.sqldelight.runtime)
-            implementation("io.github.pushpalroy:jetlime:3.0.1")
-            implementation("org.json:json:20240303")
+            implementation(libs.jetlime)
+            implementation(libs.json)
+            implementation(libs.filekit.core)
+            implementation(libs.filekit.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.sqldelight.sqlite.driver)
-            implementation("com.tecknobit.octocatkdu:OctocatKDU:1.0.4")
+            implementation(libs.octocatkdu)
         }
     }
 }
@@ -133,6 +135,7 @@ compose.desktop {
                 upgradeUuid = UUID.randomUUID().toString()
             }
             linux {
+                modules("jdk.security.auth")
                 iconFile.set(project.file("src/commonMain/resources/logo.png"))
                 packageName = "com-tecknobit-nova"
                 debMaintainer = "infotecknobitcompany@gmail.com"

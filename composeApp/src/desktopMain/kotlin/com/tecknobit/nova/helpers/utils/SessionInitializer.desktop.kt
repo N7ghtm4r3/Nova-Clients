@@ -5,9 +5,9 @@ import UpdaterDialog
 import androidx.compose.runtime.*
 import com.tecknobit.equinox.inputs.InputValidator.DEFAULT_LANGUAGE
 import com.tecknobit.equinox.inputs.InputValidator.LANGUAGES_SUPPORTED
-import com.tecknobit.nova.screens.NovaScreen.Companion.AUTH_SCREEN
-import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECTS_SCREEN
-import com.tecknobit.nova.screens.SplashScreen.Companion.activeLocalSession
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.AUTH_SCREEN
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECTS_SCREEN
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import nova.composeapp.generated.resources.Res.string
 import nova.composeapp.generated.resources.app_name
 import nova.composeapp.generated.resources.app_version
