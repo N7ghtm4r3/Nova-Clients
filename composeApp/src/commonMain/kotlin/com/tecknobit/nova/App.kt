@@ -1,6 +1,10 @@
 package com.tecknobit.nova
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontFamily
 import coil3.ImageLoader
 import coil3.addLastModifiedToFileCacheKey
@@ -8,12 +12,15 @@ import coil3.compose.LocalPlatformContext
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
 import com.tecknobit.nova.screens.NovaScreen.Companion.AUTH_SCREEN
+import com.tecknobit.nova.screens.NovaScreen.Companion.PROFILE_SCREEN
+import com.tecknobit.nova.screens.NovaScreen.Companion.PROFILE_SCREEN_DIALOG
 import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECTS_SCREEN
 import com.tecknobit.nova.screens.NovaScreen.Companion.PROJECT_SCREEN
 import com.tecknobit.nova.screens.NovaScreen.Companion.RELEASE_SCREEN
 import com.tecknobit.nova.screens.NovaScreen.Companion.SPLASH_SCREEN
 import com.tecknobit.nova.screens.SplashScreen
 import com.tecknobit.nova.screens.auth.AuthScreen
+import com.tecknobit.nova.screens.profile.ProfileScreen
 import com.tecknobit.nova.screens.projects.ProjectsScreen
 import com.tecknobit.nova.theme.NovaTheme
 import com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY
@@ -104,6 +111,22 @@ fun App() {
                     route = AUTH_SCREEN
                 ) {
                     AuthScreen().ShowContent()
+                }
+                scene(
+                    route = PROFILE_SCREEN
+                ) {
+                    ProfileScreen().ShowContent()
+                }
+                dialog(
+                    route = PROFILE_SCREEN_DIALOG
+                ) {
+                    Box (
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        ProfileScreen().ShowContent()
+                    }
                 }
                 scene(
                     route = PROJECTS_SCREEN

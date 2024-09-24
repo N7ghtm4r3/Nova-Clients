@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +24,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.tecknobit.nova.helpers.utils.navToProfile
 import com.tecknobit.nova.imageLoader
 import com.tecknobit.nova.screens.NovaScreen
 import com.tecknobit.nova.screens.SplashScreen.Companion.activeLocalSession
@@ -83,52 +85,7 @@ class ProjectsScreen : NovaScreen() {
                     .background(MaterialTheme.colorScheme.primary)
                     .fillMaxSize()
             ) {
-                Column (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    AsyncImage(
-                        modifier = Modifier
-                            .border(
-                                width = 2.dp,
-                                color = Color.White,
-                                shape = CircleShape
-                            )
-                            .shadow(
-                                elevation = 5.dp,
-                                shape = CircleShape
-                            )
-                            .clip(CircleShape)
-                            .clickable {
-                                // TODO: TO SET
-                                /*startActivity(
-                                    Intent(this@MainActivity, ProfileActivity::class.java)
-                                )*/
-                            }
-                            .size(150.dp),
-                        model = ImageRequest.Builder(LocalPlatformContext.current)
-                            .data(activeLocalSession.profilePicUrl)
-                            .crossfade(500)
-                            .crossfade(true)
-                            .build(),
-                        imageLoader = imageLoader,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        error = painterResource(Res.drawable.logo)
-                    )
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                top = 5.dp
-                            ),
-                        text = activeLocalSession.role.name.uppercase(),
-                        fontSize = 25.sp,
-                        color = Color.White
-                    )
-                }
+                UserDetails()
                 Card (
                     shape = RoundedCornerShape(
                         topStart = 35.dp,
@@ -246,6 +203,52 @@ class ProjectsScreen : NovaScreen() {
                     }
                 }
             }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun UserDetails() {
+        Column (
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .border(
+                        width = 2.dp,
+                        color = Color.White,
+                        shape = CircleShape
+                    )
+                    .shadow(
+                        elevation = 5.dp,
+                        shape = CircleShape
+                    )
+                    .clip(CircleShape)
+                    .clickable { navToProfile() }
+                    .size(150.dp),
+                model = ImageRequest.Builder(LocalPlatformContext.current)
+                    .data(activeLocalSession.profilePicUrl)
+                    .crossfade(500)
+                    .crossfade(true)
+                    .build(),
+                imageLoader = imageLoader,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                error = painterResource(Res.drawable.logo)
+            )
+            Text(
+                modifier = Modifier
+                    .padding(
+                        top = 5.dp
+                    ),
+                text = activeLocalSession.role.name.uppercase(),
+                fontSize = 25.sp,
+                color = Color.White
+            )
         }
     }
 

@@ -14,6 +14,10 @@ abstract class NovaScreen: EquinoxScreen() {
 
         const val AUTH_SCREEN = "AuthScreen"
 
+        const val PROFILE_SCREEN = "ProfileScreen"
+
+        const val PROFILE_SCREEN_DIALOG = "ProfileScreenDialog"
+
         const val PROJECTS_SCREEN = "ProjectsScreen"
 
         const val PROJECT_SCREEN = "ProjectScreen"
