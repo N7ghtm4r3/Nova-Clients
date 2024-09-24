@@ -22,6 +22,7 @@ class ProjectsScreenViewModel(
     val projects: StateFlow<List<Project>> = _projects
 
     fun getProjects() {
+        suspendRefresher()
         execRefreshingRoutine(
             currentContext = ProjectsScreen::class.java,
             routine = {

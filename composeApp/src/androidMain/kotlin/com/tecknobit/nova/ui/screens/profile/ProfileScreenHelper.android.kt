@@ -19,10 +19,13 @@ actual fun navToProfile() {
 actual fun getProfilePicPath(
     picture: PlatformFile?
 ): String? {
-    return getFilePath(
-        context = AppContext.get(),
-        uri = picture!!.uri
-    )
+    picture?.let {
+        return getFilePath(
+            context = AppContext.get(),
+            uri = picture.uri
+        )
+    }
+    return null
 }
 
 private fun getFilePath(

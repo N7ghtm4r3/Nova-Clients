@@ -5,31 +5,25 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.FolderOff
 import androidx.compose.material.icons.filled.QrCodeScanner
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
@@ -50,9 +44,6 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.tecknobit.equinoxcompose.components.EmptyListUI
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
-import com.tecknobit.nova.Logo
-import com.tecknobit.nova.getProjectLogoUrl
-import com.tecknobit.nova.helpers.utils.waitToStart
 import com.tecknobit.nova.imageLoader
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.screens.NovaScreen
@@ -62,27 +53,21 @@ import com.tecknobit.novacore.records.project.Project
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.logo
 import nova.composeapp.generated.resources.no_projects_yet
-import nova.composeapp.generated.resources.no_version_available_yet
 import nova.composeapp.generated.resources.projects
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 class ProjectsScreen : NovaScreen() {
 
-    private val viewModel = ProjectsScreenViewModel(
-        snackbarHostState = snackbarHostState
-    )
+    companion object {
+
+        private val viewModel = ProjectsScreenViewModel(
+            snackbarHostState = SnackbarHostState()
+        )
+
+    }
 
     private lateinit var projects: State<List<Project>>
-
-    init {
-        waitToStart(
-            action = {
-                viewModel.setActiveContext(this::class.java)
-                viewModel.getProjects()
-            }
-        )
-    }
 
     /**
      * Function to arrange the content of the screen to display
@@ -139,7 +124,7 @@ class ProjectsScreen : NovaScreen() {
                             .fillMaxSize()
                     ) {
                         UserDetails()
-                        Projects()
+                        ProjectsSection()
                     }
                 }
             }
@@ -149,6 +134,8 @@ class ProjectsScreen : NovaScreen() {
     @Composable
     override fun CollectStates() {
         super.CollectStates()
+        viewModel.setActiveContext(this::class.java)
+        viewModel.getProjects()
         projects = viewModel.projects.collectAsState()
     }
 
@@ -200,7 +187,7 @@ class ProjectsScreen : NovaScreen() {
 
     @Composable
     @NonRestartableComposable
-    private fun Projects() {
+    private fun ProjectsSection() {
         Card (
             shape = RoundedCornerShape(
                 topStart = 35.dp,
@@ -232,104 +219,12 @@ class ProjectsScreen : NovaScreen() {
                         fontSize = 22.sp,
                         fontWeight = FontWeight.Bold
                     )
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentPadding = PaddingValues(
-                            top = 10.dp,
-                            bottom = 10.dp
-                        ),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        items(
-                            key = { project -> project.id },
-                            items = projects.value
-                        ) { project ->
-                            ProjectItem(
-                                project = project
-                            )
-                        }
-                    }
+                    Projects(
+                        projects = projects.value
+                    )
                 }
             }
         }
-    }
-
-    @Composable
-    @NonRestartableComposable
-    private fun ProjectItem(
-        project: Project
-    ) {
-        ListItem(
-            modifier = Modifier
-                .shadow(
-                    elevation = 5.dp,
-                    shape = RoundedCornerShape(15.dp)
-                )
-                .clip(RoundedCornerShape(15.dp))
-                .clickable {
-
-                    // TODO: TO SET
-                    /*val intent = Intent(
-                        this@MainActivity,
-                        ProjectActivity::class.java
-                    )
-                    intent.putExtra(
-                        PROJECT_IDENTIFIER_KEY,
-                        project.id
-                    )
-                    startActivity(intent)*/
-                },
-            colors = ListItemDefaults.colors(
-                containerColor = Color.White
-            ),
-            leadingContent = {
-                BadgedBox(
-                    badge = {
-                        // TODO: TO SET
-                        /*val notifications = project.getNotifications(
-                            notifications
-                        )
-                        if(notifications > 0) {
-                            Badge {
-                                Text(
-                                    text = "$notifications"
-                                )
-                            }
-                        }*/
-                    }
-                ) {
-                    Logo(
-                        url = getProjectLogoUrl(project)
-                    )
-                }
-            },
-            headlineContent = {
-                Text(
-                    text = project.name,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            supportingContent = {
-                val workingProgressVersionText = project.workingProgressVersion
-                Text(
-                    text = if(workingProgressVersionText != null)
-                        workingProgressVersionText
-                    else
-                        stringResource(Res.string.no_version_available_yet),
-                    fontSize = 16.sp
-                )
-            },
-            trailingContent = {
-                Icon(
-                    modifier = Modifier
-                        .size(30.dp),
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = null
-                )
-            }
-        )
     }
 
     /**
