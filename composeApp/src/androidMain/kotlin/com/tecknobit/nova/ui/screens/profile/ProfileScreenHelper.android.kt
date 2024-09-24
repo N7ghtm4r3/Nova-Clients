@@ -1,8 +1,9 @@
-package com.tecknobit.nova.helpers.utils
+package com.tecknobit.nova.ui.screens.profile
 
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import com.tecknobit.nova.helpers.utils.AppContext
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROFILE_SCREEN
 import io.github.vinceglb.filekit.core.PlatformFile

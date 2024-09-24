@@ -8,8 +8,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.tecknobit.equinoxcompose.helpers.session.setUpSession
 import com.tecknobit.nova.cache.LocalSessionHelper
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
 import com.tecknobit.nova.helpers.utils.launchApp
@@ -52,18 +56,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // TODO: TO FIX BEHAVIOR
         enableEdgeToEdge()
-        initInstances()
         setContent {
+            InitInstances()
             App()
         }
     }
 
-    private fun initInstances() {
+    @Composable
+    private fun InitInstances() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
         appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
         localSessionsHelper = LocalSessionHelper(
             databaseDriverFactory = DatabaseDriverFactory()
+        )
+       setUpSession(
+            serverOfflineMessage = "server_currently_offline_message",
+            noInternetConnectionMessage = "no_internet_message",
+            noInternetConnectionIcon = ImageVector.vectorResource(id = R.drawable.no_internet),
+            hasBeenDisconnectedAction = {
+                // the action to execute when the user has been disconnected
+            }
         )
         FileKit.init(this)
     }

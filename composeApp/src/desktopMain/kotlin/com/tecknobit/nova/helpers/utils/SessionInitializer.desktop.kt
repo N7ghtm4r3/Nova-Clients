@@ -2,7 +2,11 @@ package com.tecknobit.nova.helpers.utils
 
 import OctocatKDUConfig
 import UpdaterDialog
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.tecknobit.equinox.inputs.InputValidator.DEFAULT_LANGUAGE
 import com.tecknobit.equinox.inputs.InputValidator.LANGUAGES_SUPPORTED
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.AUTH_SCREEN
@@ -12,7 +16,7 @@ import nova.composeapp.generated.resources.Res.string
 import nova.composeapp.generated.resources.app_name
 import nova.composeapp.generated.resources.app_version
 import org.jetbrains.compose.resources.stringResource
-import java.util.*
+import java.util.Locale
 
 @Composable
 actual fun CheckForUpdatesAndLaunch() {

@@ -1,9 +1,11 @@
 package com.tecknobit.nova
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPlacement
 import androidx.compose.ui.window.WindowState
 import androidx.compose.ui.window.application
+import com.tecknobit.equinoxcompose.helpers.session.setUpSession
 import com.tecknobit.nova.cache.LocalSessionHelper
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
@@ -21,11 +23,21 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         state = WindowState(placement = WindowPlacement.Maximized)
     ) {
-        localSessionsHelper = LocalSessionHelper(
-            databaseDriverFactory = DatabaseDriverFactory()
-        )
+        InitInstances()
         ProvidePreComposeLocals {
             App()
         }
     }
+}
+
+@Composable
+private fun InitInstances() {
+    localSessionsHelper = LocalSessionHelper(
+        databaseDriverFactory = DatabaseDriverFactory()
+    )
+    setUpSession(
+        hasBeenDisconnectedAction = {
+
+        }
+    )
 }

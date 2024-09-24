@@ -35,7 +35,6 @@ import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
 import com.tecknobit.equinoxcompose.components.EquinoxOutlinedTextField
 import com.tecknobit.nova.Logo
 import com.tecknobit.nova.UserRoleBadge
-import com.tecknobit.nova.helpers.utils.getProfilePicPath
 import com.tecknobit.nova.imageLoader
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.theme.gray_background
@@ -637,11 +636,21 @@ class ProfileScreen : NovaScreen() {
         navigator.navigate(SPLASH_SCREEN)
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been started
+     *
+     * No-any params required
+     */
     override fun onStart() {
         viewModel.setActiveContext(this::class.java)
         mySessions.addAll(localSessionsHelper.sessions)
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been stopped
+     *
+     * No-any params required
+     */
     override fun onStop() {
         mySessions.clear()
     }

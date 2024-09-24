@@ -17,7 +17,8 @@ fun initSession(): Boolean {
         requester = NovaRequester(
             userId = activeSession.id,
             userToken = activeSession.token,
-            host = activeSession.hostAddress
+            host = activeSession.hostAddress,
+            debugMode = true // TODO: TO REMOVE
         )
         setLocale()
         refreshList()
