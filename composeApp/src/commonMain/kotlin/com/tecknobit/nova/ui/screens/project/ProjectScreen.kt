@@ -6,12 +6,15 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Downloading
@@ -50,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecknobit.equinoxcompose.components.EmptyListUI
 import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
+import com.tecknobit.equinoxcompose.components.EquinoxOutlinedTextField
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
 import com.tecknobit.nova.Logo
 import com.tecknobit.nova.UserRoleBadge
@@ -58,9 +62,13 @@ import com.tecknobit.nova.navigator
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.novacore.NovaInputValidator.areReleaseNotesValid
+import com.tecknobit.novacore.NovaInputValidator.isReleaseVersionValid
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.project.Project
 import nova.composeapp.generated.resources.Res
+import nova.composeapp.generated.resources.Res.string
+import nova.composeapp.generated.resources.add_release
 import nova.composeapp.generated.resources.confirm
 import nova.composeapp.generated.resources.delete_project
 import nova.composeapp.generated.resources.delete_project_alert_message
@@ -68,6 +76,11 @@ import nova.composeapp.generated.resources.dismiss
 import nova.composeapp.generated.resources.leave_from_project
 import nova.composeapp.generated.resources.leave_project_alert_message
 import nova.composeapp.generated.resources.loading_data
+import nova.composeapp.generated.resources.no_releases_yet
+import nova.composeapp.generated.resources.release_notes
+import nova.composeapp.generated.resources.release_version
+import nova.composeapp.generated.resources.wrong_release_notes
+import nova.composeapp.generated.resources.wrong_release_version
 
 class ProjectScreen(
     val projectId: String
@@ -91,9 +104,14 @@ class ProjectScreen(
     private lateinit var showMembers: MutableState<Boolean>
 
     /**
-     * **workOnProject** -> state used to display the [NovaAlertDialog] shown to delete or leave from a project
+     * **workOnProject** -> state used to display the [EquinoxAlertDialog] shown to delete or leave from a project
      */
     private lateinit var workOnProject: MutableState<Boolean>
+
+    /**
+     * **addRelease** -> state used to display the [EquinoxAlertDialog] to add a new release
+     */
+    private lateinit var addRelease: MutableState<Boolean>
     
     /**
      * Function to arrange the content of the screen to display
@@ -127,10 +145,7 @@ class ProjectScreen(
                         floatingActionButton = {
                             FloatingActionButton(
                                 containerColor = MaterialTheme.colorScheme.primary,
-                                onClick = {
-                                    /*suspendRefresher()
-                                    showAddRelease.value = true*/
-                                }
+                                onClick = { addRelease.value = true }
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
@@ -138,6 +153,7 @@ class ProjectScreen(
                                     tint = Color.White
                                 )
                             }
+                            AddRelease()
                             /*val releaseVersion = remember { mutableStateOf("") }
                             val releaseVersionError = remember { mutableStateOf(false) }
                             val releaseVersionErrorMessage = remember { mutableStateOf("") }
@@ -288,7 +304,9 @@ class ProjectScreen(
                             )*/
                         }
                     ) {
-
+                        ReleasesSection(
+                            paddingValues = it
+                        )
                     }
                 }
             )
@@ -300,7 +318,7 @@ class ProjectScreen(
         ) {
             EmptyListUI(
                 icon = Icons.Default.Downloading,
-                subText = Res.string.loading_data
+                subText = string.loading_data
             )
         }
     }
@@ -464,13 +482,13 @@ class ProjectScreen(
             else
                 Icons.AutoMirrored.Filled.ExitToApp,
             title = if(amITheProjectAuthor)
-                Res.string.delete_project
+                string.delete_project
             else
-                Res.string.leave_from_project,
+                string.leave_from_project,
             text = if(amITheProjectAuthor)
-                Res.string.delete_project_alert_message
+                string.delete_project_alert_message
             else
-                Res.string.leave_project_alert_message,
+                string.leave_project_alert_message,
             confirmAction = {
                 viewModel.workOnProject(
                     amITheProjectAuthor = amITheProjectAuthor,
@@ -480,11 +498,68 @@ class ProjectScreen(
                     }
                 )
             },
-            confirmText = Res.string.confirm,
-            dismissText = Res.string.dismiss
+            confirmText = string.confirm,
+            dismissText = string.dismiss
         )
     }
 
+    @Composable
+    @NonRestartableComposable
+    private fun ReleasesSection(
+        paddingValues: PaddingValues
+    ) {
+        val releases = project.value!!.releases
+        if (releases.isNotEmpty()) {
+            Releases(
+                paddingValues = paddingValues,
+                project = project.value!!
+            )
+        } else {
+            EmptyListUI(
+                icon = Icons.AutoMirrored.Filled.LibraryBooks,
+                subText = string.no_releases_yet
+            )
+        }
+    }
+
+
+    @Composable
+    private fun AddRelease() {
+        viewModel.releaseVersion = remember { mutableStateOf("") }
+        viewModel.releaseVersionError = remember { mutableStateOf(false) }
+        viewModel.releaseNotes = remember { mutableStateOf("") }
+        viewModel.releaseNotesError = remember { mutableStateOf(false) }
+        EquinoxAlertDialog(
+            show = addRelease,
+            icon = Icons.Default.Add,
+            viewModel = viewModel,
+            title = string.add_release,
+            text = {
+                Column {
+                    EquinoxOutlinedTextField(
+                        label = string.release_version,
+                        value = viewModel.releaseVersion,
+                        validator = { isReleaseVersionValid(it) },
+                        isError = viewModel.releaseVersionError,
+                        errorText = string.wrong_release_version
+                    )
+                    EquinoxOutlinedTextField(
+                        label = string.release_notes,
+                        value = viewModel.releaseNotes,
+                        validator = { areReleaseNotesValid(it) },
+                        isError = viewModel.releaseNotesError,
+                        errorText = string.wrong_release_notes,
+                        maxLines = 10
+                    )
+                }
+            },
+            confirmAction = {
+                viewModel.addRelease { addRelease.value = false }
+            },
+            confirmText = string.confirm,
+            dismissText = string.dismiss
+        )
+    }
 
     @Composable
     override fun CollectStates() {
@@ -495,6 +570,7 @@ class ProjectScreen(
         }
         showMembers = remember { mutableStateOf(false) }
         workOnProject = remember { mutableStateOf(false) }
+        addRelease = remember { mutableStateOf(false) }
     }
 
     override fun onCreate() {
@@ -516,7 +592,8 @@ class ProjectScreen(
      */
     override fun onResume() {
         super.onResume()
-        viewModel.restartRefresher()
+        if (!workOnProject.value && !addRelease.value)
+            viewModel.restartRefresher()
     }
 
     /**

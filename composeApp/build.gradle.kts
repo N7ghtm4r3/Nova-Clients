@@ -1,8 +1,9 @@
-
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat.*
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Exe
+import org.jetbrains.compose.desktop.application.dsl.TargetFormat.Pkg
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.*
+import java.util.UUID
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -63,6 +64,7 @@ kotlin {
             implementation(libs.json)
             implementation(libs.filekit.core)
             implementation(libs.filekit.compose)
+            implementation(libs.richeditor.compose)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

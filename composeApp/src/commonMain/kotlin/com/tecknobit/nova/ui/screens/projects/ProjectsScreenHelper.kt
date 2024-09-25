@@ -1,6 +1,9 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.tecknobit.nova.ui.screens.projects
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -45,7 +48,12 @@ fun ProjectItem(
                 shape = RoundedCornerShape(15.dp)
             )
             .clip(RoundedCornerShape(15.dp))
-            .clickable { navigator.navigate("$PROJECT_SCREEN/${project.id}") },
+            .combinedClickable(
+                onClick = { navigator.navigate("$PROJECT_SCREEN/${project.id}") },
+                onLongClick = {
+                    // TODO: TO SET
+                }
+            ),
         colors = ListItemDefaults.colors(
             containerColor = Color.White
         ),

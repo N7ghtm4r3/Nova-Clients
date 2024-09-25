@@ -1,11 +1,14 @@
 package com.tecknobit.nova.ui.screens.project
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.MutableState
 import com.tecknobit.equinox.Requester.Companion.RESPONSE_MESSAGE_KEY
 import com.tecknobit.equinoxcompose.helpers.session.setHasBeenDisconnectedValue
 import com.tecknobit.equinoxcompose.helpers.session.setServerOfflineValue
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
+import com.tecknobit.novacore.NovaInputValidator.areReleaseNotesValid
+import com.tecknobit.novacore.NovaInputValidator.isReleaseVersionValid
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.project.Project.returnProjectInstance
@@ -17,6 +20,17 @@ class ProjectScreenViewModel(
 ) : EquinoxViewModel(
     snackbarHostState = snackbarHostState
 ) {
+
+    lateinit var releaseVersion: MutableState<String>
+
+    lateinit var releaseVersionError: MutableState<Boolean>
+
+    lateinit var releaseNotes: MutableState<String>
+
+    lateinit var releaseNotesError: MutableState<Boolean>
+
+    //lateinit var releaseVersionErrorMessage: MutableState<String>
+    //lateinit var releaseNotesErrorMessage = remember { mutableStateOf("") }
 
     private val _project = MutableStateFlow<Project?>(
         value = null
@@ -90,6 +104,40 @@ class ProjectScreenViewModel(
             },
             onFailure = { showSnackbarMessage(it) }
         )
+    }
+
+    fun addRelease(
+        onSuccess: () -> Unit
+    ) {
+        validateReleasePayload()
+        requester.sendRequest(
+            request = {
+                requester.addRelease(
+                    projectId = _project.value!!.id,
+                    releaseVersion = releaseVersion.value,
+                    releaseNotes = releaseNotes.value
+                )
+            },
+            onSuccess = {
+                releaseVersion.value = ""
+                releaseVersionError.value = false
+                releaseNotes.value = ""
+                releaseNotesError.value = false
+                onSuccess.invoke()
+            },
+            onFailure = { showSnackbarMessage(it) }
+        )
+    }
+
+    private fun validateReleasePayload() {
+        if (!isReleaseVersionValid(releaseVersion.value)) {
+            releaseVersionError.value = true
+            return
+        }
+        if (!areReleaseNotesValid(releaseNotes.value)) {
+            releaseVersionError.value = true
+            return
+        }
     }
 
 }
