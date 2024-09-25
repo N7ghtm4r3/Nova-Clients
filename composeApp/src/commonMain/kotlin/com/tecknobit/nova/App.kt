@@ -28,6 +28,7 @@ import com.tecknobit.nova.ui.screens.auth.AuthScreen
 import com.tecknobit.nova.ui.screens.profile.ProfileScreen
 import com.tecknobit.nova.ui.screens.project.ProjectScreen
 import com.tecknobit.nova.ui.screens.projects.ProjectsScreen
+import com.tecknobit.nova.ui.screens.release.ReleaseScreen
 import com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY
 import moe.tlaster.precompose.PreComposeApp
@@ -157,9 +158,12 @@ fun App() {
                 scene(
                     route = "$RELEASE_SCREEN/{project_id}/{release_id}"
                 ) { backStackEntry ->
-                    val projectId = backStackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
-                    val releaseId = backStackEntry.path<String>(RELEASE_IDENTIFIER_KEY)
-                    //Splashscreen().ShowContent()
+                    val projectId = backStackEntry.path<String>(PROJECT_IDENTIFIER_KEY)!!
+                    val releaseId = backStackEntry.path<String>(RELEASE_IDENTIFIER_KEY)!!
+                    ReleaseScreen(
+                        projectId = projectId,
+                        releaseId = releaseId
+                    ).ShowContent()
                 }
             }
         }

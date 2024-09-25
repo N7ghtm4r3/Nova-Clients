@@ -14,16 +14,16 @@
     <string name="latest_timeline_message"><![CDATA[Sortie promue comme la dernière !]]></string>
     <string name="new_asset_has_been_uploaded">Un nouvel élément a été téléchargé</string>
     <string name="delete_release"><![CDATA[Supprimer la version ?]]></string>
-    <string name="delete_release_alert_message">Si vous confirmez, la version sera supprimée et\nles données associées ne seront plus disponibles</string>
+    <string name="delete_release_alert_message">Si vous confirmez, la version sera supprimée et les données associées ne seront plus disponibles</string>
     <string name="test" >Test</string>
     <string name="confirm">Confirmer</string>
     <string name="dismiss">Rejeter</string>
     <string name="promote_release">Promouvoir la sortie</string>
     <string name="promote_release_as_beta">Promouvoir en tant que version bêta</string>
     <string name="promote_release_as_latest">Promouvoir comme le dernier</string>
-    <string name="promote_alpha_release_alert_message">Si vous confirmez, la version sera promue\nen version Alpha</string>
-    <string name="promote_beta_release_alert_message">Si vous confirmez, la version sera promue\ncomme version bêta</string>
-    <string name="promote_latest_release_alert_message">Si vous confirmez, la version sera promue\ncomme la dernière disponible et aucune modification\nsupplémentaire ne sera autorisée.</string>
+    <string name="promote_alpha_release_alert_message">Si vous confirmez, la version sera promue en version Alpha</string>
+    <string name="promote_beta_release_alert_message">Si vous confirmez, la version sera promue comme version bêta</string>
+    <string name="promote_latest_release_alert_message">Si vous confirmez, la version sera promue comme la dernière disponible et aucune modification supplémentaire ne sera autorisée.</string>
     <string name="comment">Commentaire</string>
     <string name="comment_the_asset">Commentez l'actif</string>
     <string name="approve">Approuver</string>
@@ -33,7 +33,7 @@
     <string name="close">Fermer</string>
     <string name="description">Description</string>
     <string name="delete_project"><![CDATA[Supprimer le projet ?]]></string>
-    <string name="delete_project_alert_message">Si vous confirmez, le projet sera supprimé\net les données associées ne seront plus disponibles</string>
+    <string name="delete_project_alert_message">Si vous confirmez, le projet sera supprimé et les données associées ne seront plus disponibles</string>
     <string name="release_version">Version finale</string>
     <string name="wrong_release_version">La version commerciale n'est pas valide</string>
     <string name="wrong_release_notes">Les notes de mise à jour ne sont pas valides</string>
@@ -51,7 +51,7 @@
     <string name="wrong_mailing_list">Mauvaise liste de diffusion</string>
     <string name="project_members">Membres du projet</string>
     <string name="leave_from_project">Quitter le projet ?</string>
-    <string name="leave_project_alert_message">Si vous confirmez, vous ne serez plus autorisé\nà accéder aux données associées</string>
+    <string name="leave_project_alert_message">Si vous confirmez, vous ne serez plus autorisé à accéder aux données associées</string>
     <string name="title_activity_profile">Activité de profil</string>
     <string name="password">Mot de passe</string>
     <string name="email">E-mail</string>
@@ -98,7 +98,7 @@
     <string name="the_release_has_been_deleted">La version a été supprimée</string>
     <string name="the_project_has_been_deleted">Le projet a été supprimé</string>
     <string name="account_deletion_message">Si vous confirmez, votre compte sera définitivement supprimé sur l'hébergeur actuel auquel il est connecté</string>
-    <string name="account_logout_message">Si vous confirmez vous serez déconnecté de tous les hôtes auxquels il est connecté et vous devrez\nalors vous reconnecter</string>
+    <string name="account_logout_message">Si vous confirmez vous serez déconnecté de tous les hôtes auxquels il est connecté et vous devrez alors vous reconnecter</string>
     <string name="wrong_join_code">Le code d'adhésion n'est pas valide</string>
     <string name="join_project">Rejoignez un projet</string>
     <string name="join_code">Rejoindre le code</string>

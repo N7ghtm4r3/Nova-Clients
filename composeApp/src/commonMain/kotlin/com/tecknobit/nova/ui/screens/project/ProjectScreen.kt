@@ -17,7 +17,6 @@ import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DeleteForever
-import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.material.icons.filled.Group
 import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material.icons.filled.QrCode
@@ -33,7 +32,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -66,7 +64,6 @@ import com.tecknobit.novacore.NovaInputValidator.areReleaseNotesValid
 import com.tecknobit.novacore.NovaInputValidator.isReleaseVersionValid
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.project.Project
-import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.Res.string
 import nova.composeapp.generated.resources.add_release
 import nova.composeapp.generated.resources.confirm
@@ -75,7 +72,6 @@ import nova.composeapp.generated.resources.delete_project_alert_message
 import nova.composeapp.generated.resources.dismiss
 import nova.composeapp.generated.resources.leave_from_project
 import nova.composeapp.generated.resources.leave_project_alert_message
-import nova.composeapp.generated.resources.loading_data
 import nova.composeapp.generated.resources.no_releases_yet
 import nova.composeapp.generated.resources.release_notes
 import nova.composeapp.generated.resources.release_version
@@ -83,13 +79,13 @@ import nova.composeapp.generated.resources.wrong_release_notes
 import nova.composeapp.generated.resources.wrong_release_version
 
 class ProjectScreen(
-    val projectId: String
+    private val projectId: String
 ) : NovaScreen() {
 
     companion object {
 
         private val viewModel = ProjectScreenViewModel(
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = snackbarHostState
         )
 
     }
@@ -154,154 +150,6 @@ class ProjectScreen(
                                 )
                             }
                             AddRelease()
-                            /*val releaseVersion = remember { mutableStateOf("") }
-                            val releaseVersionError = remember { mutableStateOf(false) }
-                            val releaseVersionErrorMessage = remember { mutableStateOf("") }
-                            val releaseNotes = remember { mutableStateOf("") }
-                            val releaseNotesError = remember { mutableStateOf(false) }
-                            val releaseNotesErrorMessage = remember { mutableStateOf("") }
-                            val state = rememberRichTextState()
-                            val resetLayout = {
-                                releaseVersion.value = ""
-                                releaseVersionError.value = false
-                                releaseNotes.value = ""
-                                state.setMarkdown("")
-                                releaseNotesError.value = false
-                                releaseNotesErrorMessage.value = ""
-                                showAddRelease.value = false
-                                refreshItem()
-                            }
-                            NovaAlertDialog(
-                                modifier = Modifier
-                                    .width(750.dp)
-                                    .heightIn(
-                                        max = 500.dp
-                                    ),
-                                show = showAddRelease,
-                                onDismissAction = { resetLayout() },
-                                icon = Icons.Default.NewReleases,
-                                title = string.add_release,
-                                message = {
-                                    Row (
-                                        modifier = Modifier
-                                            .fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                                    ) {
-                                        Column (
-                                            modifier = Modifier
-                                                .weight(1f),
-                                            verticalArrangement = Arrangement.spacedBy(10.dp)
-                                        ) {
-                                            NovaTextField(
-                                                value = releaseVersion,
-                                                onValueChange = {
-                                                    releaseVersionError.value = !isReleaseVersionValid(it) &&
-                                                            releaseVersion.value.isNotEmpty()
-                                                    checkToSetErrorMessage(
-                                                        errorMessage = releaseVersionErrorMessage,
-                                                        errorMessageKey = string.wrong_release_version,
-                                                        error = releaseVersionError
-                                                    )
-                                                    releaseVersion.value = it
-                                                },
-                                                label = string.release_version,
-                                                errorMessage = releaseVersionErrorMessage,
-                                                isError = releaseVersionError
-                                            )
-                                            NovaTextField(
-                                                modifier = Modifier
-                                                    .fillMaxHeight(),
-                                                singleLine = false,
-                                                value = releaseNotes,
-                                                onValueChange = {
-                                                    releaseNotesError.value = !areReleaseNotesValid(it) &&
-                                                            releaseNotes.value.isNotEmpty()
-                                                    checkToSetErrorMessage(
-                                                        errorMessage = releaseNotesErrorMessage,
-                                                        errorMessageKey = string.wrong_release_notes,
-                                                        error = releaseNotesError
-                                                    )
-                                                    releaseNotes.value = it
-                                                    state.setMarkdown(it)
-                                                },
-                                                trailingIcon = {
-                                                    IconButton(
-                                                        onClick = {
-                                                            releaseNotes.value = ""
-                                                            state.setMarkdown("")
-                                                        }
-                                                    ) {
-                                                        Icon(
-                                                            imageVector = Icons.Default.Clear,
-                                                            contentDescription = null
-                                                        )
-                                                    }
-                                                },
-                                                label = string.release_version,
-                                                errorMessage = releaseNotesErrorMessage,
-                                                isError = releaseNotesError
-                                            )
-                                        }
-                                        VerticalDivider()
-                                        Column (
-                                            modifier = Modifier
-                                                .weight(1f)
-                                        ) {
-                                            Text(
-                                                modifier = Modifier
-                                                    .padding(
-                                                        top = 7.dp
-                                                    ),
-                                                text = stringResource(string.preview),
-                                                fontSize = 22.sp
-                                            )
-                                            RichText(
-                                                modifier = Modifier
-                                                    .verticalScroll(rememberScrollState()),
-                                                state = state
-                                            )
-                                        }
-
-                                    }
-                                },
-                                dismissAction = { resetLayout() },
-                                confirmAction = {
-                                    if(isReleaseVersionValid(releaseVersion.value)) {
-                                        if(areReleaseNotesValid(releaseNotes.value)) {
-                                            requester.sendRequest(
-                                                request = {
-                                                    requester.addRelease(
-                                                        projectId = project.value.id,
-                                                        releaseVersion = releaseVersion.value,
-                                                        releaseNotes = releaseNotes.value
-                                                    )
-                                                },
-                                                onSuccess = {
-                                                    resetLayout()
-                                                },
-                                                onFailure = { response ->
-                                                    resetLayout()
-                                                    snackbarLauncher.showSnack(
-                                                        message = response.getString(RESPONSE_MESSAGE_KEY)
-                                                    )
-                                                }
-                                            )
-                                        } else {
-                                            setErrorMessage(
-                                                errorMessage = releaseNotesErrorMessage,
-                                                errorMessageValue = string.wrong_release_notes,
-                                                error = releaseNotesError
-                                            )
-                                        }
-                                    } else {
-                                        setErrorMessage(
-                                            errorMessage = releaseVersionErrorMessage,
-                                            errorMessageValue = string.wrong_release_version,
-                                            error = releaseVersionError
-                                        )
-                                    }
-                                }
-                            )*/
                         }
                     ) {
                         ReleasesSection(
@@ -311,16 +159,9 @@ class ProjectScreen(
                 }
             )
         }
-        AnimatedVisibility(
-            visible = project.value == null,
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            EmptyListUI(
-                icon = Icons.Default.Downloading,
-                subText = string.loading_data
-            )
-        }
+        LoadingData(
+            item = project
+        )
     }
 
     @Composable
