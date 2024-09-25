@@ -75,6 +75,7 @@ class MainActivity : ComponentActivity() {
             noInternetConnectionMessage = "no_internet_message",
             noInternetConnectionIcon = ImageVector.vectorResource(id = R.drawable.no_internet),
             hasBeenDisconnectedAction = {
+                // TODO: TO SET
                 // the action to execute when the user has been disconnected
             }
         )

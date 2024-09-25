@@ -7,7 +7,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -111,20 +110,13 @@ class ProfileScreen : NovaScreen() {
                         contentScale = ContentScale.Crop,
                         error = painterResource(Res.drawable.logo)
                     )
-                    IconButton(
+                    NavBackButton(
                         modifier = Modifier
                             .align(Alignment.TopStart)
                             .padding(
                                 start = 5.dp
-                            ),
-                        onClick = { navigator.goBack() }
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
-                    }
+                            )
+                    )
                     Text(
                         modifier = Modifier
                             .align(Alignment.BottomStart)

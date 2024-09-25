@@ -8,27 +8,40 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Downloading
 import androidx.compose.material.icons.filled.Group
+import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LastBaseline
@@ -36,13 +49,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecknobit.equinoxcompose.components.EmptyListUI
+import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
+import com.tecknobit.nova.Logo
+import com.tecknobit.nova.UserRoleBadge
+import com.tecknobit.nova.getMemberProfilePicUrl
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.project.Project
 import nova.composeapp.generated.resources.Res
+import nova.composeapp.generated.resources.confirm
+import nova.composeapp.generated.resources.delete_project
+import nova.composeapp.generated.resources.delete_project_alert_message
+import nova.composeapp.generated.resources.dismiss
+import nova.composeapp.generated.resources.leave_from_project
+import nova.composeapp.generated.resources.leave_project_alert_message
 import nova.composeapp.generated.resources.loading_data
 
 class ProjectScreen(
@@ -58,6 +82,18 @@ class ProjectScreen(
     }
 
     private lateinit var project: State<Project?>
+    
+    private var amITheProjectAuthor: Boolean = false
+
+    /**
+     * **showMembers** -> state used to display the [ProjectMembers] UI
+     */
+    private lateinit var showMembers: MutableState<Boolean>
+
+    /**
+     * **workOnProject** -> state used to display the [NovaAlertDialog] shown to delete or leave from a project
+     */
+    private lateinit var workOnProject: MutableState<Boolean>
     
     /**
      * Function to arrange the content of the screen to display
@@ -82,145 +118,9 @@ class ProjectScreen(
                                 colors = TopAppBarDefaults.largeTopAppBarColors(
                                     containerColor = MaterialTheme.colorScheme.primary
                                 ),
-                                navigationIcon = {
-                                    IconButton(
-                                        onClick = { navigator.goBack() }
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = null,
-                                            tint = Color.White
-                                        )
-                                    }
-                                },
-                                title = {
-                                    Row (
-                                        modifier = Modifier
-                                            .fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(5.dp)
-                                    ) {
-                                        Text(
-                                            modifier = Modifier
-                                                .alignBy(LastBaseline),
-                                            text = project.value!!.name,
-                                            color = Color.White,
-                                            fontWeight = FontWeight.Bold
-                                        )
-                                        val workingProgressVersion = project.value!!.workingProgressVersion
-                                        if(workingProgressVersion != null) {
-                                            Text(
-                                                modifier = Modifier
-                                                    .alignBy(LastBaseline),
-                                                text = workingProgressVersion,
-                                                fontSize = 14.sp,
-                                                color = Color.White
-                                            )
-                                        }
-                                    }
-                                },
-                                actions = {
-                                    if(activeLocalSession.isVendor) {
-                                        IconButton(
-                                            onClick = {
-                                                /*suspendRefresher()
-                                                showAddMembers.value = true*/
-                                            }
-                                        ) {
-                                            Icon(
-                                                imageVector = Icons.Default.QrCode,
-                                                contentDescription = null,
-                                                tint = Color.White
-                                            )
-                                        }
-                                        //AddMembers()
-                                    }
-                                    IconButton(
-                                        onClick = { /*showMembers.value = true*/ }
-                                    ) {
-                                        Icon(
-                                            imageVector = Icons.Default.Group,
-                                            contentDescription = null,
-                                            tint = Color.White
-                                        )
-                                    }
-                                    //ShowMembers()
-                                    IconButton(
-                                        onClick = {
-                                            /*workOnProject.value = true
-                                            suspendRefresher()*/
-                                        }
-                                    ) {
-                                        Icon(
-                                            imageVector = /*if(isProjectAuthor)
-                                    Icons.Default.DeleteForever
-                                else*/
-                                            Icons.AutoMirrored.Filled.ExitToApp,
-                                            contentDescription = null,
-                                            tint = Color.White
-                                        )
-                                    }
-                                    /*val goBack = {
-                                        workOnProject.value = false
-                                        navigator.goBack()
-                                    }
-                                    val failureAction = {
-                                        workOnProject.value = false
-                                        refreshItem()
-                                    }
-                                    NovaAlertDialog(
-                                        show = workOnProject,
-                                        onDismissAction = failureAction,
-                                        icon = if(isProjectAuthor)
-                                            Icons.Default.DeleteForever
-                                        else
-                                            Icons.AutoMirrored.Filled.ExitToApp,
-                                        title = if(isProjectAuthor)
-                                            string.delete_project
-                                        else
-                                            string.leave_from_project,
-                                        message = if(isProjectAuthor)
-                                            string.delete_project_alert_message
-                                        else
-                                            string.leave_project_alert_message,
-                                        confirmAction = {
-                                            if(isProjectAuthor) {
-                                                requester.sendRequest(
-                                                    request = {
-                                                        requester.deleteProject(
-                                                            projectId = project.value.id
-                                                        )
-                                                    },
-                                                    onSuccess = {
-                                                        goBack()
-                                                    },
-                                                    onFailure = { response ->
-                                                        failureAction()
-                                                        snackbarLauncher.showSnack(
-                                                            message = response.getString(RESPONSE_MESSAGE_KEY)
-                                                        )
-                                                    }
-                                                )
-                                            } else {
-                                                requester.sendRequest(
-                                                    request = {
-                                                        requester.leaveProject(
-                                                            projectId = project.value.id
-                                                        )
-                                                    },
-                                                    onSuccess = {
-                                                        goBack()
-                                                    },
-                                                    onFailure = { response ->
-                                                        failureAction()
-                                                        snackbarLauncher.showSnack(
-                                                            message = response.getString(RESPONSE_MESSAGE_KEY)
-                                                        )
-                                                    }
-                                                )
-                                            }
-                                        }
-                                    )*/
-                                }
+                                navigationIcon = { NavBackButton() },
+                                title = { ProjectTitle() },
+                                actions = { Actions() }
                             )
                         },
                         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -406,9 +306,195 @@ class ProjectScreen(
     }
 
     @Composable
+    @NonRestartableComposable
+    private fun ProjectTitle() {
+        Row (
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(5.dp)
+        ) {
+            Text(
+                modifier = Modifier
+                    .alignBy(LastBaseline),
+                text = project.value!!.name,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+            val workingProgressVersion = project.value!!.workingProgressVersion
+            if(workingProgressVersion != null) {
+                Text(
+                    modifier = Modifier
+                        .alignBy(LastBaseline),
+                    text = workingProgressVersion,
+                    fontSize = 14.sp,
+                    color = Color.White
+                )
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun Actions() {
+        if(activeLocalSession.isVendor) {
+            IconButton(
+                onClick = {
+                    /*suspendRefresher()
+                    showAddMembers.value = true*/
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.QrCode,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+            //AddMembers()
+        }
+        IconButton(
+            onClick = { showMembers.value = true }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Group,
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
+        ProjectMembers()
+        IconButton(
+            onClick = { workOnProject.value = true }
+        ) {
+            Icon(
+                imageVector = if(amITheProjectAuthor)
+                    Icons.Default.DeleteForever
+                else
+                    Icons.AutoMirrored.Filled.ExitToApp,
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
+        WarnAlertDialog()
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun ProjectMembers() {
+        if(showMembers.value) {
+            ModalBottomSheet(
+                sheetState = rememberModalBottomSheetState(),
+                containerColor = gray_background,
+                onDismissRequest = { showMembers.value = false }
+            ) {
+                LazyColumn {
+                    items(
+                        key = { member -> member.id },
+                        items = project.value!!.projectMembers
+                    ) { member ->
+                        Member(
+                            member = member
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun Member(
+        member: NovaUser
+    ) {
+        ListItem(
+            colors = ListItemDefaults.colors(
+                containerColor = gray_background
+            ),
+            leadingContent = {
+                Logo(
+                    url = getMemberProfilePicUrl(member)
+                )
+            },
+            headlineContent = {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    Text(
+                        text = "${member.name} ${member.surname}"
+                    )
+                    UserRoleBadge(
+                        role = member.role
+                    )
+                }
+            },
+            supportingContent = {
+                Text(
+                    text = member.email
+                )
+            },
+            trailingContent = {
+                if(amITheProjectAuthor && activeLocalSession.id != member.id) {
+                    IconButton(
+                        onClick = {
+                            viewModel.removeMember(
+                                member = member
+                            )
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.PersonRemove,
+                            null
+                        )
+                    }
+                }
+            }
+        )
+        HorizontalDivider()
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun WarnAlertDialog() {
+        EquinoxAlertDialog(
+            show = workOnProject,
+            viewModel = viewModel,
+            icon = if(amITheProjectAuthor)
+                Icons.Default.DeleteForever
+            else
+                Icons.AutoMirrored.Filled.ExitToApp,
+            title = if(amITheProjectAuthor)
+                Res.string.delete_project
+            else
+                Res.string.leave_from_project,
+            text = if(amITheProjectAuthor)
+                Res.string.delete_project_alert_message
+            else
+                Res.string.leave_project_alert_message,
+            confirmAction = {
+                viewModel.workOnProject(
+                    amITheProjectAuthor = amITheProjectAuthor,
+                    onSuccess = {
+                        workOnProject.value = false
+                        navigator.goBack()
+                    }
+                )
+            },
+            confirmText = Res.string.confirm,
+            dismissText = Res.string.dismiss
+        )
+    }
+
+
+    @Composable
     override fun CollectStates() {
         super.CollectStates()
         project = viewModel.project.collectAsState()
+        project.value?.let { project: Project ->
+            amITheProjectAuthor = project.amITheProjectAuthor(activeLocalSession.id)
+        }
+        showMembers = remember { mutableStateOf(false) }
+        workOnProject = remember { mutableStateOf(false) }
     }
 
     override fun onCreate() {

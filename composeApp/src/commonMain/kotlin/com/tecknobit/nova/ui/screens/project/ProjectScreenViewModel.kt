@@ -6,6 +6,7 @@ import com.tecknobit.equinoxcompose.helpers.session.setHasBeenDisconnectedValue
 import com.tecknobit.equinoxcompose.helpers.session.setServerOfflineValue
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
+import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.project.Project.returnProjectInstance
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,8 @@ class ProjectScreenViewModel(
         value = null
     )
     val project : StateFlow<Project?> = _project
+
+    private var projectDeleted = false
 
     fun getProject(
         projectId : String
@@ -40,13 +43,52 @@ class ProjectScreenViewModel(
                         setServerOfflineValue(false)
                     },
                     onFailure = {
-                        setHasBeenDisconnectedValue(true)
+                        if(!projectDeleted)
+                            setHasBeenDisconnectedValue(true)
                     },
                     onConnectionError = {
                         setServerOfflineValue(true)
                     }
                 )
             }
+        )
+    }
+
+    fun removeMember(
+        member: NovaUser
+    ) {
+        requester.sendRequest(
+            request = {
+                requester.removeMember(
+                    projectId = _project.value!!.id,
+                    memberId = member.id
+                )
+            },
+            onResponse = { showSnackbarMessage(it) }
+        )
+    }
+
+    fun workOnProject(
+        amITheProjectAuthor: Boolean,
+        onSuccess: () -> Unit
+    ) {
+        requester.sendRequest(
+            request = {
+                if(amITheProjectAuthor) {
+                    requester.deleteProject(
+                        projectId = _project.value!!.id
+                    )
+                } else {
+                    requester.leaveProject(
+                        projectId = _project.value!!.id
+                    )
+                }
+            },
+            onSuccess = {
+                projectDeleted = true
+                onSuccess.invoke()
+            },
+            onFailure = { showSnackbarMessage(it) }
         )
     }
 

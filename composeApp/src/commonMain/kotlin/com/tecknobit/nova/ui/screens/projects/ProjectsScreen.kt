@@ -81,6 +81,7 @@ class ProjectsScreen : NovaScreen() {
             viewModel = viewModel,
             content = {
                 Scaffold (
+                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
                     floatingActionButton = {
                         Column (
                             verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -115,8 +116,7 @@ class ProjectsScreen : NovaScreen() {
                                 )
                             }
                         }
-                    },
-                    snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+                    }
                 ) {
                     Column (
                         modifier = Modifier
