@@ -13,7 +13,8 @@ import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession.LOGGED_AS_CUSTOMER_RECORD_VALUE
-import com.tecknobit.novacore.records.NovaUser
+import com.tecknobit.novacore.records.NovaUser.*
+import com.tecknobit.novacore.records.NovaUser.Role.Vendor
 import java.util.*
 
 class AuthScreenViewModel(
@@ -140,7 +141,7 @@ class AuthScreenViewModel(
             email = email.value,
             password = password.value,
             hostAddress = LOGGED_AS_CUSTOMER_RECORD_VALUE,
-            role = NovaUser.Role.Customer,
+            role = Role.Customer,
             language = language
         )
         activeLocalSession = localSessionsHelper.activeSession!!
@@ -167,6 +168,7 @@ class AuthScreenViewModel(
                     name = name.value,
                     surname = surname.value,
                     language = language,
+                    role = Vendor,
                     response = response
                 )
             },
@@ -188,19 +190,6 @@ class AuthScreenViewModel(
             DEFAULT_LANGUAGE
         else
             currentLanguageTag
-    }
-
-    /**
-     * Function to get the list of the custom parameters to use in the [signUp] request
-     *
-     * The order of the custom parameters must be the same of that specified in your customization of the
-     * [getQueryValuesKeys()](https://github.com/N7ghtm4r3/Equinox/blob/main/src/main/java/com/tecknobit/equinox/environment/helpers/services/EquinoxUsersHelper.java#L133)
-     * method
-     *
-     * No-any params required
-     */
-    protected open fun getSignUpCustomParameters() : Array<out Any?> {
-        return emptyArray()
     }
 
     /**
@@ -268,26 +257,13 @@ class AuthScreenViewModel(
                         name = response.getString(NAME_KEY),
                         surname = response.getString(SURNAME_KEY),
                         language = response.getString(LANGUAGE_KEY),
+                        role = Role.valueOf(response.getString(ROLE_KEY)),
                         response = response
                     )
                 },
                 onFailure = { showSnackbarMessage(it) }
             )
         }
-    }
-
-    /**
-     * Function to get the list of the custom parameters to use in the [signIn] request.
-     *
-     * The order of the custom parameters must be the same of that specified in your customization of the
-     * [getQueryValuesKeys()](https://github.com/N7ghtm4r3/Equinox/blob/main/src/main/java/com/tecknobit/equinox/environment/helpers/services/EquinoxUsersHelper.java#L133)
-     * method
-     *
-     * No-any params required
-     *
-     */
-    protected open fun getSignInCustomParameters() : Array<out Any?> {
-        return emptyArray()
     }
 
     /**
@@ -330,7 +306,8 @@ class AuthScreenViewModel(
         response: JsonHelper,
         name: String,
         surname: String,
-        language: String
+        language: String,
+        role: Role
     ) {
         requester.setUserCredentials(
             userId = response.getString(IDENTIFIER_KEY),
@@ -345,7 +322,7 @@ class AuthScreenViewModel(
             email = email.value,
             password = password.value,
             hostAddress = host.value,
-            role = NovaUser.Role.Vendor,
+            role = role,
             language = language
         )
         activeLocalSession = localSessionsHelper.activeSession!!

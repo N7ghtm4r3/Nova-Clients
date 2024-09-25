@@ -8,18 +8,24 @@ package com.tecknobit.nova.ui.screens.release
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
+import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.EventBusy
 import androidx.compose.material.icons.filled.Receipt
@@ -27,12 +33,15 @@ import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
@@ -44,6 +53,7 @@ import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -54,6 +64,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
+import com.mohamedrejeb.richeditor.model.rememberRichTextState
+import com.mohamedrejeb.richeditor.ui.material.RichText
 import com.pushpal.jetlime.EventPosition
 import com.pushpal.jetlime.ItemsList
 import com.pushpal.jetlime.JetLimeColumn
@@ -62,9 +75,11 @@ import com.pushpal.jetlime.JetLimeEventDefaults
 import com.pushpal.jetlime.JetLimeExtendedEvent
 import com.tecknobit.equinoxcompose.components.EmptyListUI
 import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
+import com.tecknobit.equinoxcompose.components.EquinoxTextField
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
 import com.tecknobit.nova.ReleaseStatusBadge
 import com.tecknobit.nova.ReleaseTagBadge
+import com.tecknobit.nova.createColor
 import com.tecknobit.nova.getMessage
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.theme.BlueSchemeColors
@@ -77,11 +92,15 @@ import com.tecknobit.nova.theme.md_theme_light_primary
 import com.tecknobit.nova.thinFontFamily
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.novacore.NovaInputValidator.areRejectionReasonsValid
 import com.tecknobit.novacore.records.release.Release
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
+import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Alpha
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Approved
+import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Beta
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Latest
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.New
+import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Rejected
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Verifying
 import com.tecknobit.novacore.records.release.events.AssetUploadingEvent
 import com.tecknobit.novacore.records.release.events.RejectedReleaseEvent
@@ -93,17 +112,30 @@ import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag.Iss
 import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag.LayoutChange
 import com.tecknobit.novacore.records.release.events.ReleaseStandardEvent
 import nova.composeapp.generated.resources.Res
+import nova.composeapp.generated.resources.approve
 import nova.composeapp.generated.resources.comment
+import nova.composeapp.generated.resources.comment_the_asset
 import nova.composeapp.generated.resources.confirm
 import nova.composeapp.generated.resources.delete_release
 import nova.composeapp.generated.resources.delete_release_alert_message
 import nova.composeapp.generated.resources.dismiss
 import nova.composeapp.generated.resources.new_asset_has_been_uploaded
 import nova.composeapp.generated.resources.no_events_yet
+import nova.composeapp.generated.resources.promote_alpha_release_alert_message
+import nova.composeapp.generated.resources.promote_beta_release_alert_message
+import nova.composeapp.generated.resources.promote_latest_release_alert_message
+import nova.composeapp.generated.resources.promote_release
+import nova.composeapp.generated.resources.promote_release_as_beta
+import nova.composeapp.generated.resources.promote_release_as_latest
+import nova.composeapp.generated.resources.reasons
+import nova.composeapp.generated.resources.reject
+import nova.composeapp.generated.resources.tags
 import nova.composeapp.generated.resources.test
 import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalRichTextApi::class)
 class ReleaseScreen(
     private val projectId: String,
     private val releaseId: String
@@ -125,6 +157,11 @@ class ReleaseScreen(
      * **deleteRelease** -> state used to display the delete release [DeleteRelease] UI
      */
     private lateinit var deleteRelease: MutableState<Boolean>
+
+    /**
+     * **promoteRelease** -> state used to display the [PromoteRelease] UI
+     */
+    private lateinit var promoteRelease: MutableState<Boolean>
 
     /**
      * Function to arrange the content of the screen to display
@@ -203,22 +240,29 @@ class ReleaseScreen(
                 tint = Color.White
             )
         }
-        // TODO: HIDE IF TESTER
-        IconButton(
-            onClick = { deleteRelease.value = true }
+        AnimatedVisibility(
+            visible = !activeLocalSession.isTester
         ) {
-            Icon(
-                imageVector = Icons.Default.DeleteForever,
-                contentDescription = null,
-                tint = Color.White
-            )
+            IconButton(
+                onClick = { deleteRelease.value = true }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.DeleteForever,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
+            DeleteRelease()
         }
-        DeleteRelease()
     }
 
     @Composable
     private fun DeleteRelease() {
         EquinoxAlertDialog(
+            modifier = Modifier
+                .widthIn(
+                    max = 400.dp
+                ),
             show = deleteRelease,
             icon = Icons.Default.Warning,
             viewModel = viewModel,
@@ -295,8 +339,14 @@ class ReleaseScreen(
                         } else
                             uploadAsset = true
                     }*/
+
+                    if (isReleaseApproved)
+                        promoteRelease.value = true
+                    else
+                        uploadAsset = true
                 }
             ) {
+                // TODO: TO SET
                 /*if(isUploading) {
                     CircularProgressIndicator(
                         color = Color.White
@@ -312,7 +362,151 @@ class ReleaseScreen(
                 )
                 //}
             }
-            //PromoteRelease()
+            PromoteRelease()
+        }
+    }
+
+    /**
+     * Function to create and display the UI to promote the [release]
+     *
+     * No-any params required
+     */
+    @Composable
+    @NonRestartableComposable
+    private fun PromoteRelease() {
+        if (releaseStatus == Approved) {
+            val lastEventStatus = release.value!!.lastPromotionStatus
+            val promotionInfo = getPromotionInfo(
+                lastEventStatus = lastEventStatus
+            )
+            var newStatus = promotionInfo.second
+            EquinoxAlertDialog(
+                modifier = Modifier
+                    .widthIn(
+                        max = 400.dp
+                    ),
+                show = promoteRelease,
+                icon = Icons.Default.Verified,
+                viewModel = viewModel,
+                title = getPromotionTitle(
+                    lastEventStatus = lastEventStatus
+                ),
+                text = {
+                    if (lastEventStatus == Approved) {
+                        PromotionPathSelector(
+                            onStatusChange = { status ->
+                                newStatus = status
+                            }
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(promotionInfo.first),
+                            textAlign = TextAlign.Justify
+                        )
+                    }
+                },
+                confirmAction = {
+                    viewModel.promoteRelease(
+                        projectId = projectId,
+                        releaseId = releaseId,
+                        newStatus = newStatus,
+                        onResponse = { promoteRelease.value = false }
+                    )
+                },
+                confirmText = Res.string.confirm,
+                dismissText = Res.string.dismiss
+            )
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun getPromotionTitle(
+        lastEventStatus: ReleaseStatus
+    ): StringResource {
+        return when (lastEventStatus) {
+            Approved -> Res.string.promote_release
+            Alpha -> Res.string.promote_release_as_beta
+            else -> Res.string.promote_release_as_latest
+        }
+    }
+
+    private fun getPromotionInfo(
+        lastEventStatus: ReleaseStatus
+    ): Pair<StringResource, ReleaseStatus> {
+        val promotionInfo: Pair<StringResource, ReleaseStatus>
+        when (lastEventStatus) {
+            Approved -> {
+                promotionInfo = Pair(
+                    first = Res.string.promote_release,
+                    second = Alpha
+                )
+            }
+
+            Alpha -> {
+                promotionInfo = Pair(
+                    first = Res.string.promote_beta_release_alert_message,
+                    second = Beta
+                )
+            }
+
+            else -> {
+                promotionInfo = Pair(
+                    first = Res.string.promote_latest_release_alert_message,
+                    second = Latest
+                )
+            }
+        }
+        return promotionInfo
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun PromotionPathSelector(
+        onStatusChange: (ReleaseStatus) -> Unit
+    ) {
+        var isAlphaSelected by remember { mutableStateOf(true) }
+        var warnText by remember { mutableStateOf(Res.string.promote_alpha_release_alert_message) }
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                RadioButton(
+                    selected = isAlphaSelected,
+                    onClick = {
+                        if (!isAlphaSelected) {
+                            isAlphaSelected = true
+                            onStatusChange.invoke(Alpha)
+                            warnText = Res.string.promote_alpha_release_alert_message
+                        }
+                    }
+                )
+                Text(
+                    text = Alpha.name
+                )
+                RadioButton(
+                    selected = !isAlphaSelected,
+                    onClick = {
+                        if (isAlphaSelected) {
+                            isAlphaSelected = false
+                            onStatusChange.invoke(Latest)
+                            warnText = Res.string.promote_latest_release_alert_message
+                        }
+                    }
+                )
+                Text(
+                    text = Latest.name
+                )
+            }
+            Text(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                text = stringResource(warnText),
+                textAlign = TextAlign.Justify
+            )
         }
     }
 
@@ -394,172 +588,333 @@ class ReleaseScreen(
                         fontFamily = thinFontFamily,
                     )
                     if (event !is RejectedReleaseEvent) {
-                        val message = if (isAssetUploadingEvent)
-                            Res.string.new_asset_has_been_uploaded
-                        else
-                            (event as ReleaseStandardEvent).getMessage()
-                        Text(
-                            text = stringResource(message),
+                        EventTitle(
+                            event = event
                         )
-                        if ((isAssetUploadingEvent && ((releaseStatus != Approved) &&
-                                    (releaseStatus != Latest)))
-                        ) {
-                            if (!(event as AssetUploadingEvent).isCommented) {
-                                val showCommentAsset = remember { mutableStateOf(false) }
-                                val isApproved = remember { mutableStateOf(true) }
-                                val reasons = remember { mutableStateOf("") }
-                                val reasonsErrorMessage = remember { mutableStateOf("") }
-                                val isError = remember { mutableStateOf(false) }
-                                val rejectedTags = remember {
-                                    mutableListOf<ReleaseTag>()
-                                }
-                                val closeAction = {
-                                    isApproved.value = true
-                                    reasons.value = ""
-                                    isError.value = false
-                                    reasonsErrorMessage.value = ""
-                                    showCommentAsset.value = false
-                                    rejectedTags.clear()
-                                }
-                                /*NovaAlertDialog(
-                                    show = showCommentAsset,
-                                    icon = Icons.AutoMirrored.Filled.Comment,
-                                    onDismissAction = closeAction,
-                                    title = Res.string.comment_the_asset,
-                                    message = commentReleaseMessage(
-                                        isApproved = isApproved,
-                                        reasons = reasons,
-                                        isError = isError,
-                                        reasonsErrorMessage = reasonsErrorMessage,
-                                        rejectedTags = rejectedTags
-                                    ),
-                                    dismissAction = closeAction,
-                                    confirmAction = {
-                                        if(isApproved.value) {
-                                            requester.sendRequest(
-                                                request = {
-                                                    requester.approveAssets(
-                                                        projectId = currentProject.value!!.id!!,
-                                                        releaseId = currentRelease.value!!.id,
-                                                        eventId = event.id
-                                                    )
-                                                },
-                                                onSuccess = {
-                                                    closeAction()
-                                                },
-                                                onFailure = { response ->
-                                                    closeAction()
-                                                    snackbarLauncher.showSnack(
-                                                        message = response
-                                                            .getString(RESPONSE_MESSAGE_KEY)
-                                                    )
-                                                }
-                                            )
-                                        } else {
-                                            if(areRejectionReasonsValid(reasons.value)) {
-                                                requester.sendRequest(
-                                                    request = {
-                                                        requester.rejectAssets(
-                                                            projectId = currentProject.value!!.id!!,
-                                                            releaseId = currentRelease.value!!.id,
-                                                            eventId = event.id,
-                                                            reasons = reasons.value,
-                                                            tags = rejectedTags
-                                                        )
-                                                    },
-                                                    onSuccess = {
-                                                        closeAction()
-                                                    },
-                                                    onFailure = { response ->
-                                                        closeAction()
-                                                        snackbarLauncher.showSnack(
-                                                            message = response
-                                                                .getString(RESPONSE_MESSAGE_KEY)
-                                                        )
-                                                    }
-                                                )
-                                            } else {
-                                                setErrorMessage(
-                                                    errorMessage = reasonsErrorMessage,
-                                                    errorMessageKey = Res.string.wrong_reasons,
-                                                    error = isError
-                                                )
-                                            }
-                                        }
-                                    }
-                                )*/
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                                ) {
-                                    Button(
-                                        onClick = {
-                                            event.assetsUploaded.forEach { asset ->
-                                                // TODO: TO SET
-                                                /*downloadAndOpenAsset(
-                                                    asset = asset
-                                                )*/
-                                            }
-                                        }
-                                    ) {
-                                        Text(
-                                            text = stringResource(Res.string.test)
-                                        )
-                                    }
-                                    if (activeLocalSession.isCustomer) {
-                                        Button(
-                                            onClick = { showCommentAsset.value = true }
-                                        ) {
-                                            Text(
-                                                text = stringResource(Res.string.comment)
-                                            )
-                                        }
-                                    }
-                                }
-                            }
+                        if (isAssetUploadingEvent) {
+                            UploadingEventInfo(
+                                event = event as AssetUploadingEvent
+                            )
                         }
                     } else {
-                        Column {
-                            Text(
-                                text = event.reasons,
-                                textAlign = TextAlign.Justify
-                            )
-                            LazyHorizontalGrid(
-                                modifier = Modifier
-                                    .requiredHeightIn(
-                                        min = 35.dp,
-                                        max = 70.dp
-                                    ),
-                                contentPadding = PaddingValues(
-                                    top = 5.dp
-                                ),
-                                rows = GridCells.Fixed(2),
-                                verticalArrangement = Arrangement.spacedBy(5.dp),
-                                horizontalArrangement = Arrangement.spacedBy(5.dp)
-                            ) {
-                                items(
-                                    key = { tag -> tag.tag.name },
-                                    items = event.tags
-                                ) { tag ->
-                                    val showAlert = remember {
-                                        mutableStateOf(false)
-                                    }
-                                    ReleaseTagBadge(
-                                        tag = tag,
-                                        isLastEvent = release.value!!.isLastEvent(event),
-                                        onClick = { showAlert.value = true }
-                                    )
-                                    TagInformation(
-                                        show = showAlert,
-                                        event = event,
-                                        tag = tag,
-                                        date = event.releaseEventDate
-                                    )
-                                }
-                            }
+                        RejectedReleaseEventInfo(
+                            event = event
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun EventTitle(
+        event: ReleaseEvent
+    ) {
+        val message = if (event is AssetUploadingEvent)
+            Res.string.new_asset_has_been_uploaded
+        else
+            (event as ReleaseStandardEvent).getMessage()
+        Text(
+            text = stringResource(message),
+        )
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun UploadingEventInfo(
+        event: AssetUploadingEvent
+    ) {
+        val comment = rememberRichTextState()
+        comment.setMarkdown(event.comment)
+        Column {
+            Text(
+                text = stringResource(Res.string.comment),
+                fontSize = 14.sp
+            )
+            RichText(
+                state = comment,
+                fontFamily = thinFontFamily
+            )
+        }
+        AnimatedVisibility(
+            visible = releaseStatus != Approved && releaseStatus != Latest && !event.isCommented
+        ) {
+            viewModel.commentAsset = remember { mutableStateOf(false) }
+            CommentAssetsUploaded(
+                event = event
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                Button(
+                    shape = RoundedCornerShape(
+                        size = 10.dp
+                    ),
+                    onClick = {
+                        event.assetsUploaded.forEach { asset ->
+                            // TODO: TO SET
+                            /*downloadAndOpenAsset(
+                                asset = asset
+                            )*/
                         }
                     }
+                ) {
+                    Text(
+                        text = stringResource(Res.string.test)
+                    )
+                }
+                if (!activeLocalSession.isVendor) {
+                    Button(
+                        shape = RoundedCornerShape(
+                            size = 10.dp
+                        ),
+                        onClick = { viewModel.commentAsset.value = true }
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.comment)
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun CommentAssetsUploaded(
+        event: ReleaseEvent
+    ) {
+        viewModel.isApproved = remember { mutableStateOf(true) }
+        viewModel.reasons = remember { mutableStateOf("") }
+        viewModel.reasonsError = remember { mutableStateOf(false) }
+        viewModel.rejectedTags = remember { mutableStateListOf() }
+        EquinoxAlertDialog(
+            modifier = Modifier
+                .widthIn(
+                    max = 400.dp
+                ),
+            show = viewModel.commentAsset,
+            icon = Icons.AutoMirrored.Filled.Comment,
+            viewModel = viewModel,
+            onDismissAction = { viewModel.closeAction() },
+            title = Res.string.comment_the_asset,
+            text = {
+                CommentReleaseMessage(
+                    isApproved = viewModel.isApproved,
+                    rejectedTags = viewModel.rejectedTags
+                )
+            },
+            confirmAction = {
+                viewModel.commentAssetsUploaded(
+                    projectId = projectId,
+                    releaseId = releaseId,
+                    event = event
+                )
+            },
+            confirmText = Res.string.confirm,
+            dismissText = Res.string.dismiss
+        )
+    }
+
+    /**
+     * Function to create and display the UI to comment a release
+     *
+     * @param isApproved: state to indicate whether the release is approved
+     * @param rejectedTags: the tags to fill if the release is rejected
+     */
+    @Composable
+    @NonRestartableComposable
+    private fun CommentReleaseMessage(
+        isApproved: MutableState<Boolean>,
+        rejectedTags: MutableList<ReleaseTag>
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(
+                    start = 10.dp,
+                    end = 10.dp
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            val green = Approved.createColor()
+            val red = Rejected.createColor()
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                OutlinedButton(
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = if (isApproved.value)
+                            green
+                        else
+                            Color.Unspecified,
+                        contentColor = if (isApproved.value)
+                            Color.White
+                        else
+                            green
+                    ),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = green
+                    ),
+                    modifier = Modifier
+                        .width(120.dp),
+                    onClick = {
+                        if (!isApproved.value)
+                            isApproved.value = true
+                    }
+                ) {
+                    Text(
+                        text = stringResource(Res.string.approve)
+                    )
+                }
+                OutlinedButton(
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        containerColor = if (!isApproved.value)
+                            red
+                        else
+                            Color.Unspecified,
+                        contentColor = if (!isApproved.value)
+                            Color.White
+                        else
+                            red
+                    ),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = red
+                    ),
+                    modifier = Modifier
+                        .width(120.dp),
+                    onClick = {
+                        if (isApproved.value)
+                            isApproved.value = false
+                    }
+                ) {
+                    Text(
+                        text = stringResource(Res.string.reject)
+                    )
+                }
+            }
+            if (!isApproved.value) {
+                EquinoxTextField(
+                    value = viewModel.reasons,
+                    label = Res.string.reasons,
+                    isError = viewModel.reasonsError,
+                    validator = { areRejectionReasonsValid(it) }
+                )
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Start),
+                    text = stringResource(Res.string.tags),
+                    fontSize = 20.sp
+                )
+                LazyHorizontalGrid(
+                    modifier = Modifier
+                        .requiredHeightIn(
+                            min = 40.dp,
+                            max = 80.dp
+                        )
+                        .align(Alignment.Start),
+                    contentPadding = PaddingValues(
+                        top = 5.dp
+                    ),
+                    rows = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(5.dp),
+                    horizontalArrangement = Arrangement.spacedBy(5.dp)
+                ) {
+                    items(
+                        key = { tag -> tag.name },
+                        items = ReleaseTag.entries.toTypedArray()
+                    ) { tag ->
+                        var isAdded by remember { mutableStateOf(false) }
+                        val tagColor = tag.createColor()
+                        OutlinedButton(
+                            modifier = Modifier
+                                .requiredWidthIn(
+                                    min = 40.dp,
+                                    max = 150.dp
+                                )
+                                .height(40.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = if (isAdded)
+                                    tagColor
+                                else
+                                    Color.White
+                            ),
+                            border = BorderStroke(
+                                width = 1.dp,
+                                color = if (!isAdded)
+                                    tagColor
+                                else
+                                    Color.White
+                            ),
+                            onClick = {
+                                isAdded = !isAdded
+                                if (isAdded)
+                                    rejectedTags.add(tag)
+                                else
+                                    rejectedTags.remove(tag)
+                            }
+                        ) {
+                            Text(
+                                text = tag.name,
+                                fontWeight = FontWeight.Bold,
+                                color = if (!isAdded)
+                                    tagColor
+                                else
+                                    Color.White
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun RejectedReleaseEventInfo(
+        event: RejectedReleaseEvent
+    ) {
+        Column {
+            Text(
+                text = event.reasons,
+                textAlign = TextAlign.Justify
+            )
+            LazyHorizontalGrid(
+                modifier = Modifier
+                    .requiredHeightIn(
+                        min = 35.dp,
+                        max = 70.dp
+                    ),
+                contentPadding = PaddingValues(
+                    top = 5.dp
+                ),
+                rows = GridCells.Fixed(2),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                items(
+                    key = { tag -> tag.tag.name },
+                    items = event.tags
+                ) { tag ->
+                    val showAlert = remember {
+                        mutableStateOf(false)
+                    }
+                    ReleaseTagBadge(
+                        tag = tag,
+                        isLastEvent = release.value!!.isLastEvent(event),
+                        onClick = { showAlert.value = true }
+                    )
+                    TagInformation(
+                        show = showAlert,
+                        event = event,
+                        tag = tag,
+                        date = event.releaseEventDate
+                    )
                 }
             }
         }
@@ -718,6 +1073,7 @@ class ReleaseScreen(
             releaseStatus = release.status
         }
         deleteRelease = remember { mutableStateOf(false) }
+        promoteRelease = remember { mutableStateOf(false) }
     }
 
     override fun onCreate() {
@@ -740,7 +1096,7 @@ class ReleaseScreen(
      */
     override fun onResume() {
         super.onResume()
-        if (!deleteRelease.value)
+        if (!deleteRelease.value && !promoteRelease.value)
             viewModel.restartRefresher()
     }
 

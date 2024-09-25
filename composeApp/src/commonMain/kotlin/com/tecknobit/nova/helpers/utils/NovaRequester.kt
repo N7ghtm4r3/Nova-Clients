@@ -3,19 +3,43 @@ package com.tecknobit.nova.helpers.utils
 import com.tecknobit.apimanager.annotations.RequestPath
 import com.tecknobit.apimanager.annotations.Wrapper
 import com.tecknobit.apimanager.apis.APIRequest.Params
-import com.tecknobit.apimanager.apis.APIRequest.RequestMethod.*
+import com.tecknobit.apimanager.apis.APIRequest.RequestMethod.DELETE
+import com.tecknobit.apimanager.apis.APIRequest.RequestMethod.GET
+import com.tecknobit.apimanager.apis.APIRequest.RequestMethod.PATCH
+import com.tecknobit.apimanager.apis.APIRequest.RequestMethod.POST
+import com.tecknobit.apimanager.apis.APIRequest.RequestMethod.PUT
 import com.tecknobit.equinox.environment.helpers.EquinoxRequester
 import com.tecknobit.equinox.environment.records.EquinoxItem.IDENTIFIER_KEY
-import com.tecknobit.novacore.helpers.NovaEndpoints.*
+import com.tecknobit.novacore.helpers.NovaEndpoints.ADD_MEMBERS_ENDPOINT
+import com.tecknobit.novacore.helpers.NovaEndpoints.COMMENT_ASSET_ENDPOINT
+import com.tecknobit.novacore.helpers.NovaEndpoints.CREATE_REPORT_ENDPOINT
+import com.tecknobit.novacore.helpers.NovaEndpoints.EVENTS_ENDPOINT
+import com.tecknobit.novacore.helpers.NovaEndpoints.JOIN_ENDPOINT
+import com.tecknobit.novacore.helpers.NovaEndpoints.LEAVE_ENDPOINT
+import com.tecknobit.novacore.helpers.NovaEndpoints.MARK_MEMBER_AS_TESTER_ENDPOINT
+import com.tecknobit.novacore.helpers.NovaEndpoints.PROMOTE_RELEASE_ENDPOINT
+import com.tecknobit.novacore.helpers.NovaEndpoints.REMOVE_MEMBER_ENDPOINT
+import com.tecknobit.novacore.helpers.NovaEndpoints.UPLOAD_ASSETS_ENDPOINT
 import com.tecknobit.novacore.records.NovaNotification.NOTIFICATIONS_KEY
-import com.tecknobit.novacore.records.NovaUser.*
+import com.tecknobit.novacore.records.NovaUser.EMAIL_KEY
+import com.tecknobit.novacore.records.NovaUser.MEMBER_IDENTIFIER_KEY
+import com.tecknobit.novacore.records.NovaUser.NAME_KEY
+import com.tecknobit.novacore.records.NovaUser.PASSWORD_KEY
+import com.tecknobit.novacore.records.NovaUser.PROJECTS_KEY
+import com.tecknobit.novacore.records.NovaUser.ROLE_KEY
+import com.tecknobit.novacore.records.NovaUser.Role
+import com.tecknobit.novacore.records.NovaUser.SURNAME_KEY
 import com.tecknobit.novacore.records.project.JoiningQRCode.CREATE_JOIN_CODE_KEY
 import com.tecknobit.novacore.records.project.JoiningQRCode.JOIN_CODE_KEY
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.project.Project.LOGO_URL_KEY
 import com.tecknobit.novacore.records.project.Project.PROJECT_MEMBERS_KEY
 import com.tecknobit.novacore.records.release.Release
-import com.tecknobit.novacore.records.release.Release.*
+import com.tecknobit.novacore.records.release.Release.RELEASES_KEY
+import com.tecknobit.novacore.records.release.Release.RELEASE_NOTES_KEY
+import com.tecknobit.novacore.records.release.Release.RELEASE_STATUS_KEY
+import com.tecknobit.novacore.records.release.Release.RELEASE_VERSION_KEY
+import com.tecknobit.novacore.records.release.Release.ReleaseStatus
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Approved
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Rejected
 import com.tecknobit.novacore.records.release.events.AssetUploadingEvent.AssetUploaded.ASSETS_UPLOADED_KEY
@@ -205,7 +229,7 @@ class NovaRequester(
         createJoinCode: Boolean
     ) : JSONObject {
         val payload = Params()
-        payload.addParam(PROJECT_MEMBERS_KEY, formatValuesList(mailingList))
+        payload.addParam(PROJECT_MEMBERS_KEY, JSONArray(mailingList))
         payload.addParam(ROLE_KEY, role)
         payload.addParam(CREATE_JOIN_CODE_KEY, createJoinCode)
         return execPut(
@@ -651,13 +675,8 @@ class NovaRequester(
         payload.addParam(RELEASE_EVENT_STATUS_KEY, releaseStatus)
         if(reasons != null)
             payload.addParam(REASONS_KEY, reasons)
-        if(tags != null) {
-            payload.addParam(
-                TAGS_KEY, formatValuesList(tags.toString()
-                .replace("[", "")
-                .replace("]", "")
-            ))
-        }
+        if (tags != null)
+            payload.addParam(TAGS_KEY, JSONArray(tags))
         return execPost(
             endpoint = assembleReleasesEndpointPath(
                 projectId = projectId,
@@ -803,17 +822,6 @@ class NovaRequester(
         if(extraId.isNotEmpty() && !extraId.startsWith("/") && !vEndpoint.endsWith("/"))
             vExtraId = "/$vExtraId"
         return assembleProjectsEndpointPath(projectId) + "/$RELEASES_KEY$vReleaseId$vEndpoint$vExtraId"
-    }
-
-    /**
-     * Function to format a values list for the request payload
-     *
-     * @param values: values list as [String]
-     *
-     * @return the list formatted as [JSONArray]
-     */
-    private fun formatValuesList(values: String) : JSONArray {
-        return JSONArray(values.replace(" ", "").split(","))
     }
 
 }

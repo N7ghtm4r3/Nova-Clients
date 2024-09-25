@@ -265,6 +265,10 @@ class ProfileScreen : NovaScreen() {
             info = userEmail
         )
         EquinoxAlertDialog(
+            modifier = Modifier
+                .widthIn(
+                    max = 400.dp
+                ),
             onDismissAction = resetEmailLayout,
             icon = Icons.Default.Email,
             show = showChangeEmailAlert,
@@ -315,6 +319,10 @@ class ProfileScreen : NovaScreen() {
             info = "****"
         )
         EquinoxAlertDialog(
+            modifier = Modifier
+                .widthIn(
+                    max = 400.dp
+                ),
             onDismissAction = resetPasswordLayout,
             icon = Icons.Default.Password,
             show = showChangePasswordAlert,
@@ -389,6 +397,10 @@ class ProfileScreen : NovaScreen() {
     ) {
         var selectedLanguage by remember { mutableStateOf(activeLocalSession.language) }
         EquinoxAlertDialog(
+            modifier = Modifier
+                .widthIn(
+                    max = 400.dp
+                ),
             show = changeLanguage,
             icon = Icons.Default.Language,
             title = Res.string.change_language,

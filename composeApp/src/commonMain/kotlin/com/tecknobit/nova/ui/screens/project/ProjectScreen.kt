@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -316,6 +317,10 @@ class ProjectScreen(
     @NonRestartableComposable
     private fun WarnAlertDialog() {
         EquinoxAlertDialog(
+            modifier = Modifier
+                .widthIn(
+                    max = 400.dp
+                ),
             show = workOnProject,
             viewModel = viewModel,
             icon = if(amITheProjectAuthor)
@@ -371,6 +376,10 @@ class ProjectScreen(
         viewModel.releaseNotes = remember { mutableStateOf("") }
         viewModel.releaseNotesError = remember { mutableStateOf(false) }
         EquinoxAlertDialog(
+            modifier = Modifier
+                .widthIn(
+                    max = 400.dp
+                ),
             show = addRelease,
             icon = Icons.Default.Add,
             viewModel = viewModel,
