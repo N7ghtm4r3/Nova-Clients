@@ -701,12 +701,7 @@ class ReleaseScreen(
             viewModel = viewModel,
             onDismissAction = { viewModel.closeAction() },
             title = Res.string.comment_the_asset,
-            text = {
-                CommentReleaseMessage(
-                    isApproved = viewModel.isApproved,
-                    rejectedTags = viewModel.rejectedTags
-                )
-            },
+            text = { CommentRelease() },
             confirmAction = {
                 viewModel.commentAssetsUploaded(
                     projectId = projectId,
@@ -722,14 +717,11 @@ class ReleaseScreen(
     /**
      * Function to create and display the UI to comment a release
      *
-     * @param isApproved: state to indicate whether the release is approved
-     * @param rejectedTags: the tags to fill if the release is rejected
+     * No-any params required
      */
     @Composable
     @NonRestartableComposable
-    private fun CommentReleaseMessage(
-        isApproved: MutableState<Boolean>,
-        rejectedTags: MutableList<ReleaseTag>
+    private fun CommentRelease(
     ) {
         Column(
             modifier = Modifier
@@ -740,137 +732,162 @@ class ReleaseScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            val green = Approved.createColor()
-            val red = Rejected.createColor()
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            StatusSelector()
+            AnimatedVisibility(
+                visible = !viewModel.isApproved.value
             ) {
-                OutlinedButton(
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = if (isApproved.value)
-                            green
-                        else
-                            Color.Unspecified,
-                        contentColor = if (isApproved.value)
-                            Color.White
-                        else
-                            green
-                    ),
-                    border = BorderStroke(
-                        width = 1.dp,
-                        color = green
-                    ),
-                    modifier = Modifier
-                        .width(120.dp),
-                    onClick = {
-                        if (!isApproved.value)
-                            isApproved.value = true
-                    }
-                ) {
-                    Text(
-                        text = stringResource(Res.string.approve)
-                    )
+                RejectionSection()
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun StatusSelector() {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            StatusButton(
+                isApproved = viewModel.isApproved.value,
+                statusColor = Approved.createColor(),
+                text = Res.string.approve,
+                onClick = {
+                    if (!viewModel.isApproved.value)
+                        viewModel.isApproved.value = true
                 }
-                OutlinedButton(
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        containerColor = if (!isApproved.value)
-                            red
-                        else
-                            Color.Unspecified,
-                        contentColor = if (!isApproved.value)
-                            Color.White
-                        else
-                            red
+            )
+            StatusButton(
+                isApproved = !viewModel.isApproved.value,
+                statusColor = Rejected.createColor(),
+                text = Res.string.reject,
+                onClick = {
+                    if (viewModel.isApproved.value)
+                        viewModel.isApproved.value = false
+                }
+            )
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun StatusButton(
+        isApproved: Boolean,
+        statusColor: Color,
+        text: StringResource,
+        onClick: () -> Unit
+    ) {
+        OutlinedButton(
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = if (isApproved)
+                    statusColor
+                else
+                    Color.Unspecified,
+                contentColor = if (isApproved)
+                    Color.White
+                else
+                    statusColor
+            ),
+            border = BorderStroke(
+                width = 1.dp,
+                color = statusColor
+            ),
+            modifier = Modifier
+                .width(120.dp),
+            onClick = onClick
+        ) {
+            Text(
+                text = stringResource(text)
+            )
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun RejectionSection() {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            EquinoxTextField(
+                value = viewModel.reasons,
+                label = Res.string.reasons,
+                maxLines = 10,
+                isError = viewModel.reasonsError,
+                validator = { areRejectionReasonsValid(it) }
+            )
+            Text(
+                text = stringResource(Res.string.tags),
+                fontSize = 20.sp
+            )
+            LazyHorizontalGrid(
+                modifier = Modifier
+                    .requiredHeightIn(
+                        min = 40.dp,
+                        max = 80.dp
                     ),
-                    border = BorderStroke(
-                        width = 1.dp,
-                        color = red
-                    ),
-                    modifier = Modifier
-                        .width(120.dp),
-                    onClick = {
-                        if (isApproved.value)
-                            isApproved.value = false
-                    }
-                ) {
-                    Text(
-                        text = stringResource(Res.string.reject)
+                contentPadding = PaddingValues(
+                    top = 5.dp
+                ),
+                rows = GridCells.Fixed(2),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp)
+            ) {
+                items(
+                    key = { tag -> tag.name },
+                    items = ReleaseTag.entries.toTypedArray()
+                ) { tag ->
+                    RejectedTagButton(
+                        tag = tag,
+                        rejectedTags = viewModel.rejectedTags
                     )
                 }
             }
-            if (!isApproved.value) {
-                EquinoxTextField(
-                    value = viewModel.reasons,
-                    label = Res.string.reasons,
-                    isError = viewModel.reasonsError,
-                    validator = { areRejectionReasonsValid(it) }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun RejectedTagButton(
+        tag: ReleaseTag,
+        rejectedTags: MutableList<ReleaseTag>
+    ) {
+        var isAdded by remember { mutableStateOf(false) }
+        val tagColor = tag.createColor()
+        OutlinedButton(
+            modifier = Modifier
+                .requiredWidthIn(
+                    min = 40.dp,
+                    max = 150.dp
                 )
-                Text(
-                    modifier = Modifier
-                        .align(Alignment.Start),
-                    text = stringResource(Res.string.tags),
-                    fontSize = 20.sp
-                )
-                LazyHorizontalGrid(
-                    modifier = Modifier
-                        .requiredHeightIn(
-                            min = 40.dp,
-                            max = 80.dp
-                        )
-                        .align(Alignment.Start),
-                    contentPadding = PaddingValues(
-                        top = 5.dp
-                    ),
-                    rows = GridCells.Fixed(2),
-                    verticalArrangement = Arrangement.spacedBy(5.dp),
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    items(
-                        key = { tag -> tag.name },
-                        items = ReleaseTag.entries.toTypedArray()
-                    ) { tag ->
-                        var isAdded by remember { mutableStateOf(false) }
-                        val tagColor = tag.createColor()
-                        OutlinedButton(
-                            modifier = Modifier
-                                .requiredWidthIn(
-                                    min = 40.dp,
-                                    max = 150.dp
-                                )
-                                .height(40.dp),
-                            colors = ButtonDefaults.outlinedButtonColors(
-                                containerColor = if (isAdded)
-                                    tagColor
-                                else
-                                    Color.White
-                            ),
-                            border = BorderStroke(
-                                width = 1.dp,
-                                color = if (!isAdded)
-                                    tagColor
-                                else
-                                    Color.White
-                            ),
-                            onClick = {
-                                isAdded = !isAdded
-                                if (isAdded)
-                                    rejectedTags.add(tag)
-                                else
-                                    rejectedTags.remove(tag)
-                            }
-                        ) {
-                            Text(
-                                text = tag.name,
-                                fontWeight = FontWeight.Bold,
-                                color = if (!isAdded)
-                                    tagColor
-                                else
-                                    Color.White
-                            )
-                        }
-                    }
-                }
+                .height(40.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = if (isAdded)
+                    tagColor
+                else
+                    Color.White
+            ),
+            border = BorderStroke(
+                width = 1.dp,
+                color = if (!isAdded)
+                    tagColor
+                else
+                    Color.White
+            ),
+            onClick = {
+                isAdded = !isAdded
+                if (isAdded)
+                    rejectedTags.add(tag)
+                else
+                    rejectedTags.remove(tag)
             }
+        ) {
+            Text(
+                text = tag.name,
+                fontWeight = FontWeight.Bold,
+                color = if (!isAdded)
+                    tagColor
+                else
+                    Color.White
+            )
         }
     }
 
@@ -945,6 +962,18 @@ class ReleaseScreen(
             },
             typography = Typography,
         ) {
+            /*EquinoxAlertDialog(
+                modifier = Modifier
+                    .widthIn(
+                        max = 400.dp
+                    ),
+                show = show,
+                icon = Icons.Default.Info,
+                title = tag.tag.name,
+                text = {
+
+                }
+            )*/
             /*if(show.value) {
                 suspendRefresher()
                 val isInputMode = tag.comment == null || tag.comment.isEmpty()
