@@ -28,10 +28,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.EventBusy
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,6 +47,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ExperimentalComposeApi
@@ -93,6 +96,7 @@ import com.tecknobit.nova.thinFontFamily
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.novacore.NovaInputValidator.areRejectionReasonsValid
+import com.tecknobit.novacore.NovaInputValidator.isTagCommentValid
 import com.tecknobit.novacore.records.release.Release
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Alpha
@@ -113,11 +117,13 @@ import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag.Lay
 import com.tecknobit.novacore.records.release.events.ReleaseStandardEvent
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.approve
+import nova.composeapp.generated.resources.close
 import nova.composeapp.generated.resources.comment
 import nova.composeapp.generated.resources.comment_the_asset
 import nova.composeapp.generated.resources.confirm
 import nova.composeapp.generated.resources.delete_release
 import nova.composeapp.generated.resources.delete_release_alert_message
+import nova.composeapp.generated.resources.description
 import nova.composeapp.generated.resources.dismiss
 import nova.composeapp.generated.resources.new_asset_has_been_uploaded
 import nova.composeapp.generated.resources.no_events_yet
@@ -962,135 +968,125 @@ class ReleaseScreen(
             },
             typography = Typography,
         ) {
-            /*EquinoxAlertDialog(
+            val isInputMode = tag.comment == null || tag.comment.isEmpty()
+            viewModel.rejectedTagDescription = remember { mutableStateOf("") }
+            viewModel.rejectedTagDescriptionError = remember { mutableStateOf(false) }
+            val isInputButton = @Composable {
+                TextButton(
+                    onClick = {
+                        viewModel.rejectedTagDescription.value = ""
+                        viewModel.rejectedTagDescriptionError.value = false
+                        viewModel.restartRefresher()
+                        show.value = false
+                    }
+                ) {
+                    Text(
+                        text = stringResource(Res.string.dismiss)
+                    )
+                }
+            }
+            val dismissButton = if (isInputMode)
+                isInputButton
+            else
+                null
+            NovaAlertDialog(
+                show = show,
+                tag = tag,
+                text = {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            text = date,
+                            fontFamily = thinFontFamily,
+                        )
+                        if (!isInputMode) {
+                            Text(
+                                text = tag.comment,
+                                textAlign = TextAlign.Justify
+                            )
+                        } else {
+                            EquinoxTextField(
+                                value = viewModel.rejectedTagDescription,
+                                label = Res.string.description,
+                                isError = viewModel.rejectedTagDescriptionError,
+                                validator = { isTagCommentValid(it) },
+                                maxLines = 5
+                            )
+                        }
+                    }
+                },
+                confirmText = if (isInputMode)
+                    Res.string.confirm
+                else
+                    Res.string.close,
+                dismissButton = dismissButton,
+                confirmAction = {
+                    if (isInputMode) {
+                        viewModel.fillRejectedTag(
+                            projectId = projectId,
+                            releaseId = releaseId,
+                            event = event,
+                            tag = tag,
+                            onSuccess = { show.value = false }
+                        )
+                    } else
+                        show.value = false
+                }
+            )
+        }
+    }
+
+    // TODO: WARN IN THE DOCU THAT WILL BE REPLACED WITH THE EQUINOX ONE
+    @Composable
+    @NonRestartableComposable
+    private fun NovaAlertDialog(
+        show: MutableState<Boolean>,
+        tag: RejectedTag,
+        text: @Composable () -> Unit,
+        confirmAction: () -> Unit,
+        confirmText: StringResource,
+        dismissButton: @Composable (() -> Unit)?
+    ) {
+        if (show.value) {
+            viewModel.suspendRefresher()
+            AlertDialog(
                 modifier = Modifier
                     .widthIn(
                         max = 400.dp
                     ),
-                show = show,
-                icon = Icons.Default.Info,
-                title = tag.tag.name,
-                text = {
-
-                }
-            )*/
-            /*if(show.value) {
-                suspendRefresher()
-                val isInputMode = tag.comment == null || tag.comment.isEmpty()
-                val isInputButton = @Composable {
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.Info,
+                        contentDescription = null
+                    )
+                },
+                onDismissRequest = {
+                    viewModel.rejectedTagDescription.value = ""
+                    viewModel.rejectedTagDescriptionError.value = false
+                    viewModel.restartRefresher()
+                    show.value = false
+                },
+                title = {
+                    Text(
+                        text = tag.tag.name
+                    )
+                },
+                text = text,
+                dismissButton = dismissButton,
+                confirmButton = {
                     TextButton(
-                        onClick = { show.value = false }
+                        onClick = {
+                            confirmAction.invoke()
+                            viewModel.restartRefresher()
+                        }
                     ) {
                         Text(
-                            text = stringResource(Res.string.dismiss)
+                            text = stringResource(confirmText)
                         )
                     }
                 }
-                val dismissButton = if(isInputMode)
-                    isInputButton
-                else
-                    null
-                val description = remember { mutableStateOf("") }
-                val isError = remember { mutableStateOf(false) }
-                val descriptionErrorMessage = remember { mutableStateOf("") }
-                AlertDialog(
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = null
-                        )
-                    },
-                    onDismissRequest = { show.value = false },
-                    title = {
-                        Text(
-                            text = tag.tag.name,
-                            textAlign = TextAlign.Start
-                        )
-                    },
-                    text = {
-                        Column {
-                            Text(
-                                text = date,
-                                fontFamily = thinFontFamily,
-                            )
-                            if(!isInputMode) {
-                                Text(
-                                    text = tag.comment,
-                                    textAlign = TextAlign.Justify
-                                )
-                            } else {
-                                NovaTextField(
-                                    value = description,
-                                    onValueChange = {
-                                        isError.value = !isTagCommentValid(it) &&
-                                                description.value.isNotEmpty()
-                                        checkToSetErrorMessage(
-                                            errorMessage = descriptionErrorMessage,
-                                            errorMessageKey = Res.string.wrong_description,
-                                            error = isError
-                                        )
-                                        description.value = it
-                                    },
-                                    label = Res.string.description,
-                                    errorMessage = descriptionErrorMessage,
-                                    isError = isError
-                                )
-                            }
-                        }
-                    },
-                    dismissButton = dismissButton,
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                if(isInputMode) {
-                                    val closeAction = {
-                                        show.value = false
-                                        refreshItem()
-                                    }
-                                    if(isTagCommentValid(description.value)) {
-                                        requester.sendRequest(
-                                            request = {
-                                                requester.fillRejectedTag(
-                                                    projectId = currentProject.value!!.id!!,
-                                                    releaseId = currentRelease.value!!.id,
-                                                    eventId = event.id,
-                                                    tagId = tag.id,
-                                                    comment = description.value
-                                                )
-                                            },
-                                            onSuccess = {
-                                                closeAction.invoke()
-                                            },
-                                            onFailure = { response ->
-                                                closeAction.invoke()
-                                                snackbarLauncher.showSnack(
-                                                    message = response.getString(RESPONSE_MESSAGE_KEY)
-                                                )
-                                            }
-                                        )
-                                    } else {
-                                        setErrorMessage(
-                                            errorMessage = descriptionErrorMessage,
-                                            errorMessageKey = Res.string.wrong_description,
-                                            error = isError
-                                        )
-                                    }
-                                } else
-                                    show.value = false
-                            }
-                        ) {
-                            val buttonText = if(isInputMode)
-                                Res.string.confirm
-                            else
-                                Res.string.close
-                            Text(
-                                text = stringResource(buttonText)
-                            )
-                        }
-                    }
-                )
-            } else
-                refreshItem()*/
+            )
         }
     }
 

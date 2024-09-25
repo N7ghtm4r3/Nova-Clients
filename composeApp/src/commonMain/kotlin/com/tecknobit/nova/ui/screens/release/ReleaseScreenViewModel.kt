@@ -9,8 +9,10 @@ import com.tecknobit.equinoxcompose.helpers.session.setServerOfflineValue
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
 import com.tecknobit.novacore.NovaInputValidator.areRejectionReasonsValid
+import com.tecknobit.novacore.NovaInputValidator.isTagCommentValid
 import com.tecknobit.novacore.records.release.Release
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
+import com.tecknobit.novacore.records.release.events.RejectedTag
 import com.tecknobit.novacore.records.release.events.ReleaseEvent
 import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +33,10 @@ class ReleaseScreenViewModel(
     lateinit var reasonsError: MutableState<Boolean>
 
     lateinit var rejectedTags: SnapshotStateList<ReleaseTag>
+
+    lateinit var rejectedTagDescription: MutableState<String>
+
+    lateinit var rejectedTagDescriptionError: MutableState<Boolean>
 
     val closeAction = {
         isApproved.value = true
@@ -179,6 +185,36 @@ class ReleaseScreenViewModel(
             } else
                 reasonsError.value = true
         }
+    }
+
+    fun fillRejectedTag(
+        projectId: String,
+        releaseId: String,
+        event: ReleaseEvent,
+        tag: RejectedTag,
+        onSuccess: () -> Unit
+    ) {
+        if (!isTagCommentValid(rejectedTagDescription.value)) {
+            rejectedTagDescriptionError.value = true
+            return
+        }
+        requester.sendRequest(
+            request = {
+                requester.fillRejectedTag(
+                    projectId = projectId,
+                    releaseId = releaseId,
+                    eventId = event.id,
+                    tagId = tag.id,
+                    comment = rejectedTagDescription.value
+                )
+            },
+            onSuccess = {
+                rejectedTagDescription.value = ""
+                rejectedTagDescriptionError.value = false
+                onSuccess.invoke()
+            },
+            onFailure = { response -> showSnackbarMessage(response) }
+        )
     }
 
     fun promoteRelease(
