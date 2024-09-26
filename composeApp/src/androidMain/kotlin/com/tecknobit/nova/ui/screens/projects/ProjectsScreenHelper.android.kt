@@ -11,6 +11,9 @@ import androidx.compose.ui.unit.dp
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.WORK_ON_PROJECT_SCREEN
 import com.tecknobit.novacore.records.project.Project
+import com.tecknobit.novacore.records.project.Project.PROJECT_KEY
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 @Composable
 actual fun Projects(
@@ -39,9 +42,10 @@ actual fun Projects(
 actual fun workOnProject(
     project: Project?
 ) {
-    val projectId = if (project != null)
-        "/${project.id}"
-    else
-        ""
-    navigator.navigate(WORK_ON_PROJECT_SCREEN + projectId)
+    MainScope().launch {
+        navigator.currentEntry.collect { entry ->
+            entry!!.stateHolder[PROJECT_KEY] = project
+        }
+    }
+    navigator.navigate(WORK_ON_PROJECT_SCREEN)
 }

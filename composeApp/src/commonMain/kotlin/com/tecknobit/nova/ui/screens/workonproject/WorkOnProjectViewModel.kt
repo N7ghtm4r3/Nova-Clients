@@ -13,6 +13,7 @@ import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
 import com.tecknobit.novacore.NovaInputValidator.isProjectNameValid
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.NovaUser.returnUsersList
+import com.tecknobit.novacore.records.project.Project
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -63,7 +64,7 @@ class WorkOnProjectViewModel(
     }
 
     fun workOnProject(
-        projectId: String?,
+        project: Project?,
         onSuccess: () -> Unit
     ) {
         if (logoPic.value.isEmpty()) {
@@ -74,13 +75,13 @@ class WorkOnProjectViewModel(
             projectTitleError.value = true
             return
         }
-        if (projectId == null) {
+        if (project == null) {
             addProject(
                 onSuccess = onSuccess
             )
         } else {
             editProject(
-                projectId = projectId,
+                project = project,
                 onSuccess = onSuccess
             )
         }
@@ -103,14 +104,17 @@ class WorkOnProjectViewModel(
     }
 
     private fun editProject(
-        projectId: String,
+        project: Project,
         onSuccess: () -> Unit
     ) {
         requester.sendRequest(
             request = {
                 requester.editProject(
-                    projectId = projectId,
-                    logoPic = logoPic.value,
+                    project = project,
+                    logoPic = if (logoPic.value.endsWith(project.logoUrl))
+                        null
+                    else
+                        logoPic.value,
                     projectTitle = projectTitle.value,
                     members = membersAdded
                 )

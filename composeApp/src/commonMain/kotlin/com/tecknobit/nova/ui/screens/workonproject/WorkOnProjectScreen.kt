@@ -16,11 +16,12 @@ import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.graphics.Color
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.theme.gray_background
+import com.tecknobit.novacore.records.project.Project
 
 class WorkOnProjectScreen(
-    val projectId: String?
+    project: Project?
 ) : WorkOnProject(
-    projectId = projectId
+    project = project
 ) {
 
     /**
@@ -50,7 +51,7 @@ class WorkOnProjectScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     onClick = {
                         viewModel.workOnProject(
-                            projectId = projectId,
+                            project = project,
                             onSuccess = { navigator.goBack() }
                         )
                     }

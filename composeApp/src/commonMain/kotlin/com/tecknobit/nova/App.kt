@@ -36,7 +36,9 @@ import com.tecknobit.nova.ui.screens.projects.ProjectsScreen
 import com.tecknobit.nova.ui.screens.release.ReleaseScreen
 import com.tecknobit.nova.ui.screens.workonproject.WorkOnProjectDialog
 import com.tecknobit.nova.ui.screens.workonproject.WorkOnProjectScreen
+import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY
+import com.tecknobit.novacore.records.project.Project.PROJECT_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.navigation.NavHost
@@ -143,20 +145,20 @@ fun App() {
                     ProjectsScreen().ShowContent()
                 }
                 scene(
-                    route = "$WORK_ON_PROJECT_SCREEN/{project_id}?"
+                    route = WORK_ON_PROJECT_SCREEN
                 ) { backstackEntry ->
-                    val projectId = backstackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
+                    val project = backstackEntry.stateHolder.get<Project?>(PROJECT_KEY)
                     WorkOnProjectScreen(
-                        projectId = projectId
+                        project = project
                     ).ShowContent()
                 }
                 dialog(
-                    route = "$WORK_ON_PROJECT_DIALOG/{project_id}?"
+                    route = WORK_ON_PROJECT_DIALOG
                 ) { backstackEntry ->
-                    val projectId = backstackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
+                    val project = backstackEntry.stateHolder.get<Project?>(PROJECT_KEY)
                     DialogScreen(
                         dialogScreen = WorkOnProjectDialog(
-                            projectId = projectId
+                            project = project
                         )
                     )
                 }

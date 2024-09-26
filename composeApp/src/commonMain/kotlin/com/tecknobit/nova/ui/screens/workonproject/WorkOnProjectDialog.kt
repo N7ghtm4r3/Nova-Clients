@@ -21,14 +21,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.theme.gray_background
+import com.tecknobit.novacore.records.project.Project
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.confirm
 import org.jetbrains.compose.resources.stringResource
 
 class WorkOnProjectDialog(
-    val projectId: String?
+    project: Project?
 ) : WorkOnProject(
-    projectId = projectId
+    project = project
 ) {
 
     /**
@@ -79,7 +80,7 @@ class WorkOnProjectDialog(
                 ),
                 onClick = {
                     viewModel.workOnProject(
-                        projectId = projectId,
+                        project = project,
                         onSuccess = { navigator.goBack() }
                     )
                 }

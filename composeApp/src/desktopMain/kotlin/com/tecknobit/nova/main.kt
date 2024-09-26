@@ -38,7 +38,6 @@ private fun InitInstances() {
     setUpSession(
         hasBeenDisconnectedAction = {
             // TODO: TO SET
-            println("FUCK")
         }
     )
 }

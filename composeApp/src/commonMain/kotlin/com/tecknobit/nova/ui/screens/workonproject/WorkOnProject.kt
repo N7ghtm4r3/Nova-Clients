@@ -43,12 +43,14 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.tecknobit.equinoxcompose.components.EquinoxTextField
+import com.tecknobit.nova.getProjectLogoUrl
 import com.tecknobit.nova.imageLoader
 import com.tecknobit.nova.ui.components.MemberListItem
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.profile.getProfilePicPath
 import com.tecknobit.novacore.NovaInputValidator.isProjectNameValid
 import com.tecknobit.novacore.records.NovaUser
+import com.tecknobit.novacore.records.project.Project
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerMode
 import io.github.vinceglb.filekit.core.PickerType
@@ -64,7 +66,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 abstract class WorkOnProject(
-    projectId: String?
+    val project: Project?
 ) : NovaScreen() {
 
     companion object {
@@ -78,7 +80,7 @@ abstract class WorkOnProject(
 
     protected lateinit var potentialMembers: State<List<NovaUser>>
 
-    protected val isInAddMode = projectId == null
+    protected val isInAddMode = project == null
 
     @Composable
     override fun ArrangeScreenContent() {
@@ -127,8 +129,17 @@ abstract class WorkOnProject(
     protected fun LogoSelector(
         modifier: Modifier
     ) {
-        // TODO: TO SET THE REAL LOGO VALUE WHEN EDIT
-        viewModel.logoPic = remember { mutableStateOf("") }
+        viewModel.logoPic = remember {
+            mutableStateOf(
+                if (isInAddMode)
+                    ""
+                else {
+                    getProjectLogoUrl(
+                        project = project!!
+                    )
+                }
+            )
+        }
         viewModel.logoPicBordersColor = remember { mutableStateOf(Color.Transparent) }
         val launcher = rememberFilePickerLauncher(
             type = PickerType.Image,
@@ -192,7 +203,7 @@ abstract class WorkOnProject(
                 if (isInAddMode)
                     ""
                 else
-                    "TODO INSERT THE NAME OF THE PROJECT"
+                    project!!.name
             )
         }
         viewModel.projectTitleError = remember { mutableStateOf(false) }
@@ -280,6 +291,8 @@ abstract class WorkOnProject(
         super.CollectStates()
         potentialMembers = viewModel.potentialMembers.collectAsState()
         viewModel.membersAdded = mutableStateListOf()
+        if (!isInAddMode)
+            viewModel.membersAdded.addAll(project!!.projectMembers.map { member -> member.id })
     }
 
     override fun onCreate() {

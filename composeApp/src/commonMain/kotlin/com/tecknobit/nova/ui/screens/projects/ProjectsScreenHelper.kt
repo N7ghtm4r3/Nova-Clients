@@ -26,6 +26,7 @@ import com.tecknobit.nova.Logo
 import com.tecknobit.nova.getProjectLogoUrl
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECT_SCREEN
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.novacore.records.project.Project
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.no_version_available_yet
@@ -54,9 +55,14 @@ fun ProjectItem(
             .clip(RoundedCornerShape(15.dp))
             .combinedClickable(
                 onClick = { navigator.navigate("$PROJECT_SCREEN/${project.id}") },
-                onLongClick = {
-                    // TODO: TO SET
-                }
+                onLongClick = if (project.amITheProjectAuthor(activeLocalSession.id)) {
+                    {
+                        workOnProject(
+                            project = project
+                        )
+                    }
+                } else
+                    null
             ),
         colors = ListItemDefaults.colors(
             containerColor = Color.White
