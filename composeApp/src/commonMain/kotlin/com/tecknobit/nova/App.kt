@@ -2,9 +2,11 @@ package com.tecknobit.nova
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,19 +18,24 @@ import coil3.compose.LocalPlatformContext
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
 import com.tecknobit.nova.theme.NovaTheme
+import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.AUTH_SCREEN
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROFILE_DIALOG
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROFILE_SCREEN
-import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROFILE_SCREEN_DIALOG
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECTS_SCREEN
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECT_SCREEN
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.RELEASE_SCREEN
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.SPLASH_SCREEN
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.WORK_ON_PROJECT_DIALOG
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.WORK_ON_PROJECT_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen
 import com.tecknobit.nova.ui.screens.auth.AuthScreen
 import com.tecknobit.nova.ui.screens.profile.ProfileScreen
 import com.tecknobit.nova.ui.screens.project.ProjectScreen
 import com.tecknobit.nova.ui.screens.projects.ProjectsScreen
 import com.tecknobit.nova.ui.screens.release.ReleaseScreen
+import com.tecknobit.nova.ui.screens.workonproject.WorkOnProjectDialog
+import com.tecknobit.nova.ui.screens.workonproject.WorkOnProjectScreen
 import com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY
 import moe.tlaster.precompose.PreComposeApp
@@ -124,28 +131,34 @@ fun App() {
                     ProfileScreen().ShowContent()
                 }
                 dialog(
-                    route = PROFILE_SCREEN_DIALOG
+                    route = PROFILE_DIALOG
                 ) {
-                    Box (
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Surface (
-                            color = Color.Transparent,
-                            shadowElevation = 5.dp,
-                            shape = RoundedCornerShape(
-                                10.dp
-                            )
-                        ) {
-                            ProfileScreen().ShowContent()
-                        }
-                    }
+                    DialogScreen(
+                        dialogScreen = ProfileScreen()
+                    )
                 }
                 scene(
                     route = PROJECTS_SCREEN
                 ) {
                     ProjectsScreen().ShowContent()
+                }
+                scene(
+                    route = "$WORK_ON_PROJECT_SCREEN/{project_id}?"
+                ) { backstackEntry ->
+                    val projectId = backstackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
+                    WorkOnProjectScreen(
+                        projectId = projectId
+                    ).ShowContent()
+                }
+                dialog(
+                    route = "$WORK_ON_PROJECT_DIALOG/{project_id}?"
+                ) { backstackEntry ->
+                    val projectId = backstackEntry.path<String>(PROJECT_IDENTIFIER_KEY)
+                    DialogScreen(
+                        dialogScreen = WorkOnProjectDialog(
+                            projectId = projectId
+                        )
+                    )
                 }
                 scene(
                     route = "$PROJECT_SCREEN/{project_id}"
@@ -166,6 +179,33 @@ fun App() {
                     ).ShowContent()
                 }
             }
+        }
+    }
+}
+
+@Composable
+@NonRestartableComposable
+private fun DialogScreen(
+    dialogScreen: NovaScreen
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Surface(
+            modifier = Modifier
+                .size(
+                    width = 425.dp,
+                    height = 700.dp
+                ),
+            color = Color.Transparent,
+            shadowElevation = 5.dp,
+            shape = RoundedCornerShape(
+                10.dp
+            )
+        ) {
+            dialogScreen.ShowContent()
         }
     }
 }

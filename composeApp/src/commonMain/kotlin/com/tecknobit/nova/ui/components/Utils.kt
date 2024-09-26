@@ -37,6 +37,7 @@ import com.tecknobit.novacore.records.release.events.ReleaseStandardEvent.*
 import nova.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
 
 /**
  * Function to display an image as logo
@@ -57,9 +58,11 @@ fun Logo(
         model = ImageRequest.Builder(LocalPlatformContext.current)
             .data(url)
             .crossfade(true)
+            .crossfade(500)
             .build(),
         contentDescription = null,
-        contentScale = ContentScale.Crop
+        contentScale = ContentScale.Crop,
+        error = painterResource(Res.drawable.logo)
     )
 }
 

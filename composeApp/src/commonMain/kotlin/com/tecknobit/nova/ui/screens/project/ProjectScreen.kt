@@ -23,12 +23,9 @@ import androidx.compose.material.icons.filled.PersonRemove
 import androidx.compose.material.icons.filled.QrCode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -43,7 +40,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.LastBaseline
@@ -54,11 +50,9 @@ import com.tecknobit.equinoxcompose.components.EmptyListUI
 import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
 import com.tecknobit.equinoxcompose.components.EquinoxOutlinedTextField
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
-import com.tecknobit.nova.Logo
-import com.tecknobit.nova.UserRoleBadge
-import com.tecknobit.nova.getMemberProfilePicUrl
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.theme.gray_background
+import com.tecknobit.nova.ui.components.MemberListItem
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.novacore.NovaInputValidator.areReleaseNotesValid
@@ -264,35 +258,8 @@ class ProjectScreen(
     private fun Member(
         member: NovaUser
     ) {
-        ListItem(
-            colors = ListItemDefaults.colors(
-                containerColor = gray_background
-            ),
-            leadingContent = {
-                Logo(
-                    url = getMemberProfilePicUrl(member)
-                )
-            },
-            headlineContent = {
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp)
-                ) {
-                    Text(
-                        text = "${member.name} ${member.surname}"
-                    )
-                    UserRoleBadge(
-                        role = member.role
-                    )
-                }
-            },
-            supportingContent = {
-                Text(
-                    text = member.email
-                )
-            },
+        MemberListItem(
+            member = member,
             trailingContent = {
                 if(amITheProjectAuthor && activeLocalSession.id != member.id) {
                     IconButton(
@@ -310,7 +277,6 @@ class ProjectScreen(
                 }
             }
         )
-        HorizontalDivider()
     }
 
     @Composable

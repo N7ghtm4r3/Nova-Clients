@@ -45,7 +45,11 @@
     <string name="no_releases_yet">Aucune sortie pour l'instant</string>
     <string name="no_projects_yet">Aucun projet pour l'instant</string>
     <string name="add_project">Ajouter un projet</string>
+    <string name="edit_project">Edit project</string>
     <string name="name">Nom</string>
+    <string name="title">Titre</string>
+    <string name="members">Les membres</string>
+    <string name="wrong_title">Le titre n\'est pas valide</string>
     <string name="separate_emails_with_a_comma">Séparez les e-mails par une virgule</string>
     <string name="mailing_list">Liste de diffusion</string>
     <string name="wrong_mailing_list">Mauvaise liste de diffusion</string>

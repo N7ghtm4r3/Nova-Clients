@@ -33,9 +33,13 @@ abstract class NovaScreen: EquinoxScreen() {
 
         const val PROFILE_SCREEN = "ProfileScreen"
 
-        const val PROFILE_SCREEN_DIALOG = "ProfileScreenDialog"
+        const val PROFILE_DIALOG = "ProfileDialog"
 
         const val PROJECTS_SCREEN = "ProjectsScreen"
+
+        const val WORK_ON_PROJECT_SCREEN = "WorkOnProjectScreen"
+
+        const val WORK_ON_PROJECT_DIALOG = "WorkOnProjectDialog"
 
         const val PROJECT_SCREEN = "ProjectScreen"
 
@@ -56,7 +60,8 @@ abstract class NovaScreen: EquinoxScreen() {
     @Composable
     @NonRestartableComposable
     protected fun NavBackButton(
-        modifier: Modifier = Modifier
+        modifier: Modifier = Modifier,
+        tint: Color = Color.White
     ) {
         IconButton(
             modifier = modifier,
@@ -65,7 +70,7 @@ abstract class NovaScreen: EquinoxScreen() {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = null,
-                tint = Color.White
+                tint = tint
             )
         }
     }

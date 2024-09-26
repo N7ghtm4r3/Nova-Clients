@@ -78,7 +78,8 @@ class ProjectScreenViewModel(
                     memberId = member.id
                 )
             },
-            onResponse = { showSnackbarMessage(it) }
+            onSuccess = {},
+            onFailure = { showSnackbarMessage(it) }
         )
     }
 

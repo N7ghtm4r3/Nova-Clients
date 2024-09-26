@@ -71,6 +71,20 @@ class NovaRequester(
 ) {
 
     /**
+     * Function to execute the request to get the potential members for a [Project]
+     *
+     * No-any params required
+     *
+     * @return the result of the request as [JSONObject]
+     */
+    @RequestPath(path = "/api/v1/users/{id}", method = GET)
+    fun getPotentialMembers(): JSONObject {
+        return execGet(
+            endpoint = assembleUsersEndpointPath()
+        )
+    }
+
+    /**
      * Function to execute the request to get the user notifications
      *
      * No-any params required
@@ -102,18 +116,21 @@ class NovaRequester(
      * Function to execute the request to add a new project
      *
      * @param logoPic: the project logo
-     * @param projectName: the name of the project
+     * @param projectTitle: the name of the project
+     * @param members: the members of the project
      *
      * @return the result of the request as [JSONObject]
      */
     @RequestPath(path = "/api/v1/{id}/projects", method = POST)
     fun addProject(
-        logoPic: File,
-        projectName: String
+        logoPic: String,
+        projectTitle: String,
+        members: List<String>
     ) : JSONObject {
         val body = createProjectPayload(
-            logoPic = logoPic,
-            projectName = projectName
+            logoPic = File(logoPic),
+            projectTitle = projectTitle,
+            members = members
         )
         return execMultipartRequest(
             body = body,
@@ -126,20 +143,23 @@ class NovaRequester(
      *
      * @param project: the project to edit
      * @param logoPic: the project logo
-     * @param projectName: the name of the project
+     * @param projectTitle: the title of the project
+     * @param members: the members of the project
      *
      * @return the result of the request as [JSONObject]
      */
     @RequestPath(path = "/api/v1/{id}/projects/{project_id}", method = POST)
     fun editProject(
         project: Project,
-        logoPic: File?,
-        projectName: String
+        logoPic: String?,
+        projectTitle: String,
+        members: List<String>
     ) : JSONObject {
         return editProject(
             projectId = project.id,
             logoPic = logoPic,
-            projectName = projectName
+            projectTitle = projectTitle,
+            members = members
         )
     }
 
@@ -148,19 +168,25 @@ class NovaRequester(
      *
      * @param projectId: the identifier of the project
      * @param logoPic: the project logo
-     * @param projectName: the name of the project
+     * @param projectTitle: the title of the project
+     * @param members: the members of the project
      *
      * @return the result of the request as [JSONObject]
      */
     @RequestPath(path = "/api/v1/{id}/projects/{project_id}", method = POST)
     fun editProject(
         projectId: String,
-        logoPic: File?,
-        projectName: String
+        logoPic: String?,
+        projectTitle: String,
+        members: List<String>
     ) : JSONObject {
         val body = createProjectPayload(
-            logoPic = logoPic,
-            projectName = projectName
+            logoPic = if (logoPic != null)
+                File(logoPic)
+            else
+                null,
+            projectTitle = projectTitle,
+            members = members
         )
         return execMultipartRequest(
             body = body,
@@ -172,26 +198,32 @@ class NovaRequester(
      * Function to create the payload for the project requests
      *
      * @param logoPic: the project logo
-     * @param projectName: the name of the project
+     * @param projectTitle: the title of the project
+     * @param members: the members of the project
      *
      * @return the payload of the request as [MultipartBody]
      */
     private fun createProjectPayload(
         logoPic: File?,
-        projectName: String
+        projectTitle: String,
+        members: List<String>
     ) : MultipartBody {
         val body = MultipartBody.Builder().setType(MultipartBody.FORM)
             .addFormDataPart(
                 NAME_KEY,
-                projectName
+                projectTitle
             )
         if(logoPic != null) {
-            body .addFormDataPart(
+            body.addFormDataPart(
                 LOGO_URL_KEY,
                 logoPic.name,
                 logoPic.readBytes().toRequestBody("*/*".toMediaType())
             )
         }
+        body.addFormDataPart(
+            PROJECT_MEMBERS_KEY,
+            JSONArray(members).toString(),
+        )
         return body.build()
     }
 

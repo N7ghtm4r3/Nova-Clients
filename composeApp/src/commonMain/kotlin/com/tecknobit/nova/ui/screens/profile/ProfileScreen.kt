@@ -80,11 +80,6 @@ class ProfileScreen : NovaScreen() {
         }
         mySessions = remember { mutableStateListOf() }
         Card (
-            modifier = Modifier
-                .size(
-                    width = 425.dp,
-                    height = 700.dp
-                ),
             colors = CardDefaults.cardColors(
                 containerColor = gray_background
             )
@@ -105,6 +100,7 @@ class ProfileScreen : NovaScreen() {
                         model = ImageRequest.Builder(LocalPlatformContext.current)
                             .data(profilePic.value)
                             .crossfade(true)
+                            .crossfade(500)
                             .build(),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,

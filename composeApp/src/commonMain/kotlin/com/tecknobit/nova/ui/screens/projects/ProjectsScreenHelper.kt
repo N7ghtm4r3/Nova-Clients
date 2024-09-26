@@ -36,6 +36,10 @@ expect fun Projects(
     projects: List<Project>
 )
 
+expect fun workOnProject(
+    project: Project? = null
+)
+
 @Composable
 @NonRestartableComposable
 fun ProjectItem(

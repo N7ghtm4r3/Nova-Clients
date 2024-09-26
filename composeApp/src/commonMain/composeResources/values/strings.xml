@@ -45,7 +45,11 @@
     <string name="no_releases_yet">No releases yet</string>
     <string name="no_projects_yet">No projects yet</string>
     <string name="add_project">Add project</string>
+    <string name="edit_project">Edit project</string>
     <string name="name">Name</string>
+    <string name="title">Title</string>
+    <string name="members">Members</string>
+    <string name="wrong_title">Title is not valid</string>
     <string name="separate_emails_with_a_comma">Separate emails with a comma</string>
     <string name="mailing_list">Mailing list</string>
     <string name="wrong_mailing_list">Wrong mailing list</string>

@@ -87,11 +87,7 @@ class ProjectsScreen : NovaScreen() {
                         ) {
                             if(activeLocalSession.isVendor) {
                                 FloatingActionButton(
-                                    onClick = {
-                                        // TODO: TO SET
-                                        /*displayAddProject.value = true
-                                        suspendRefresher()*/
-                                    },
+                                    onClick = { workOnProject() },
                                     containerColor = MaterialTheme.colorScheme.primary
                                 ) {
                                     Icon(
@@ -99,7 +95,6 @@ class ProjectsScreen : NovaScreen() {
                                         contentDescription = null
                                     )
                                 }
-                                // AddProject()
                             }
                             FloatingActionButton(
                                 onClick = {

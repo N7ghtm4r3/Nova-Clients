@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import com.tecknobit.nova.navigator
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.WORK_ON_PROJECT_DIALOG
 import com.tecknobit.novacore.records.project.Project
 
 @Composable
@@ -34,4 +36,14 @@ actual fun Projects(
             )
         }
     }
+}
+
+actual fun workOnProject(
+    project: Project?
+) {
+    val projectId = if (project != null)
+        "/${project.id}"
+    else
+        ""
+    navigator.navigate(WORK_ON_PROJECT_DIALOG + projectId)
 }

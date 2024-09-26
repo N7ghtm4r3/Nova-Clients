@@ -45,7 +45,11 @@
     <string name="no_releases_yet">Ancora nessuna versione</string>
     <string name="no_projects_yet">Ancora nessun progetto</string>
     <string name="add_project">Aggiungi progetto</string>
+    <string name="edit_project">Modifica progetto</string>
     <string name="name">Nome</string>
+    <string name="title">Titolo</string>
+    <string name="members">Membri</string>
+    <string name="wrong_title">Il titolo non valido</string>
     <string name="separate_emails_with_a_comma">Separa le email con una virgola</string>
     <string name="mailing_list">Mailing list</string>
     <string name="wrong_mailing_list">Mailing list sbagliata</string>
