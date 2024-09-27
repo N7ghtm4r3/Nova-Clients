@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package com.tecknobit.nova.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +17,6 @@ import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection.Companion.Next
 import androidx.compose.ui.focus.FocusDirection.Companion.Previous
@@ -27,6 +24,9 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -87,7 +87,8 @@ private fun SplitBox(
     textSlice: MutableState<String>,
     currentBox: Int
 ) {
-    val isLast = currentBox == currentTextSlices.lastIndex
+    val lastIndex = currentTextSlices.lastIndex
+    val isLast = currentBox == lastIndex
     val keyboardManager = LocalSoftwareKeyboardController.current
     Card(
         modifier = Modifier
@@ -101,23 +102,33 @@ private fun SplitBox(
         ) {
             BasicTextField(
                 modifier = Modifier
+                    .onKeyEvent { event ->
+                        if (event.key == Key.Backspace) {
+                            textSlice.value = ""
+                            if (currentBox > 0)
+                                focusManager.moveFocus(Previous)
+                        }
+                        true
+                    }
                     .align(Alignment.Center),
                 value = textSlice.value,
                 onValueChange = {
-                    if (it.isEmpty()) {
+                    if (textSlice.value.isNotEmpty() && !isLast) {
+                        currentTextSlices[currentBox + 1].value = it..ifEmpty {
+                            ""
+                        }
+                        focusManager.moveFocus(Next)
+                    } else if (it.isNotEmpty())
+                        textSlice.value = it.first().toString()
+
+                    /*if(it.isEmpty()) {
                         textSlice.value = ""
-                        if (currentBox != 0)
+                        if(currentBox > 0)
                             focusManager.moveFocus(Previous)
+
                     } else {
-                        if (textSlice.value.length == 1) {
-                            if (!isLast) {
-                                val lastCharacter = it.first().toString()
-                                focusManager.moveFocus(Next)
-                                currentTextSlices[currentBox + 1].value = lastCharacter
-                            }
-                        } else
-                            textSlice.value = it
-                    }
+
+                    }*/
                 },
                 textStyle = boxTextStyle,
                 cursorBrush = SolidColor(Color.Transparent),
@@ -128,7 +139,9 @@ private fun SplitBox(
                         ImeAction.Next
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { keyboardManager!!.hide() }
+                    onDone = {
+                        keyboardManager!!.hide()
+                    }
                 )
             )
         }
