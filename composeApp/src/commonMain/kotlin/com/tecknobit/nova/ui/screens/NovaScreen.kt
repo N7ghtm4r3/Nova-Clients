@@ -41,6 +41,10 @@ abstract class NovaScreen: EquinoxScreen() {
 
         const val WORK_ON_PROJECT_DIALOG = "WorkOnProjectDialog"
 
+        const val JOIN_PROJECT_SCREEN = "JoinProjectScreen"
+
+        const val JOIN_PROJECT_DIALOG = "JoinProjectDialog"
+
         const val PROJECT_SCREEN = "ProjectScreen"
 
         const val RELEASE_SCREEN = "ReleaseScreen"

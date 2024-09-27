@@ -20,6 +20,8 @@ import coil3.request.CachePolicy
 import com.tecknobit.nova.theme.NovaTheme
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.AUTH_SCREEN
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.JOIN_PROJECT_DIALOG
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.JOIN_PROJECT_SCREEN
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROFILE_DIALOG
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROFILE_SCREEN
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECTS_SCREEN
@@ -30,6 +32,7 @@ import com.tecknobit.nova.ui.screens.NovaScreen.Companion.WORK_ON_PROJECT_DIALOG
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.WORK_ON_PROJECT_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen
 import com.tecknobit.nova.ui.screens.auth.AuthScreen
+import com.tecknobit.nova.ui.screens.joinproject.JoinProjectScreen
 import com.tecknobit.nova.ui.screens.profile.ProfileScreen
 import com.tecknobit.nova.ui.screens.project.ProjectScreen
 import com.tecknobit.nova.ui.screens.projects.ProjectsScreen
@@ -162,6 +165,22 @@ fun App() {
                         )
                     )
                     backstackEntry.stateHolder.remove(PROJECT_KEY)
+                }
+                scene(
+                    route = JOIN_PROJECT_SCREEN
+                ) {
+                    JoinProjectScreen(
+                        enableScanOption = true
+                    ).ShowContent()
+                }
+                dialog(
+                    route = JOIN_PROJECT_DIALOG
+                ) {
+                    DialogScreen(
+                        dialogScreen = JoinProjectScreen(
+                            enableScanOption = false
+                        )
+                    )
                 }
                 scene(
                     route = "$PROJECT_SCREEN/{project_id}"

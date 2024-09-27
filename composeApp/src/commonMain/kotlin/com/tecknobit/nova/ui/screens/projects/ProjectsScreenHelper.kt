@@ -41,6 +41,8 @@ expect fun workOnProject(
     project: Project? = null
 )
 
+expect fun joinProject()
+
 @Composable
 @NonRestartableComposable
 fun ProjectItem(

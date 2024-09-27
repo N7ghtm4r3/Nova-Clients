@@ -65,6 +65,7 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.compose)
             implementation(libs.richeditor.compose)
+            implementation(libs.qr.kit)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

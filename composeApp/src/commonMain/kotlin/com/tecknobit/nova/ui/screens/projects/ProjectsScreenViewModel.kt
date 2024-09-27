@@ -4,6 +4,7 @@ import androidx.compose.material3.SnackbarHostState
 import com.tecknobit.equinoxcompose.helpers.session.setHasBeenDisconnectedValue
 import com.tecknobit.equinoxcompose.helpers.session.setServerOfflineValue
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
 import com.tecknobit.novacore.records.NovaUser.PROJECTS_KEY
 import com.tecknobit.novacore.records.project.Project
@@ -26,19 +27,25 @@ class ProjectsScreenViewModel(
         execRefreshingRoutine(
             currentContext = ProjectsScreen::class.java,
             routine = {
-                requester.sendRequest(
-                    request = { requester.listProjects() },
-                    onSuccess = { response ->
-                        _projects.value = Project.returnProjectsList(response.getJSONArray(PROJECTS_KEY))
-                        setServerOfflineValue(false)
-                    },
-                    onFailure = {
-                        setHasBeenDisconnectedValue(true)
-                    },
-                    onConnectionError = {
-                        setServerOfflineValue(true)
-                    }
-                )
+                if (activeLocalSession.isHostSet) {
+                    requester.sendRequest(
+                        request = { requester.listProjects() },
+                        onSuccess = { response ->
+                            _projects.value = Project.returnProjectsList(
+                                response.getJSONArray(
+                                    PROJECTS_KEY
+                                )
+                            )
+                            setServerOfflineValue(false)
+                        },
+                        onFailure = {
+                            setHasBeenDisconnectedValue(true)
+                        },
+                        onConnectionError = {
+                            setServerOfflineValue(true)
+                        }
+                    )
+                }
             }
         )
     }

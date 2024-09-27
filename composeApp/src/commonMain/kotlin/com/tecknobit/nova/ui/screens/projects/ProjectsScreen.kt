@@ -97,11 +97,7 @@ class ProjectsScreen : NovaScreen() {
                                 }
                             }
                             FloatingActionButton(
-                                onClick = {
-                                    // TODO: TO SET
-                                    /*   suspendRefresher()
-                                       barcodeLauncher.launch(scanOptions)*/
-                                },
+                                onClick = { joinProject() },
                                 containerColor = MaterialTheme.colorScheme.primary
                             ) {
                                 Icon(
@@ -123,22 +119,6 @@ class ProjectsScreen : NovaScreen() {
                 }
             }
         )
-    }
-
-    @Composable
-    override fun CollectStates() {
-        super.CollectStates()
-        projects = viewModel.projects.collectAsState()
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        viewModel.setActiveContext(this::class.java)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.getProjects()
     }
 
     @Composable
@@ -227,6 +207,22 @@ class ProjectsScreen : NovaScreen() {
                 }
             }
         }
+    }
+
+    @Composable
+    override fun CollectStates() {
+        super.CollectStates()
+        projects = viewModel.projects.collectAsState()
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        viewModel.setActiveContext(this::class.java)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.getProjects()
     }
 
     /**
