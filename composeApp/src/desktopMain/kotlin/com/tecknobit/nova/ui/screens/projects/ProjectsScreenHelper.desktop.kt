@@ -12,6 +12,7 @@ import com.tecknobit.nova.ui.screens.NovaScreen.Companion.WORK_ON_PROJECT_DIALOG
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.project.Project.PROJECT_KEY
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @Composable
@@ -45,9 +46,8 @@ actual fun workOnProject(
     project: Project?
 ) {
     MainScope().launch {
-        navigator.currentEntry.collect { entry ->
-            entry!!.stateHolder[PROJECT_KEY] = project
-        }
+        val entry = navigator.currentEntry.first()
+        entry?.stateHolder?.set(PROJECT_KEY, project)
     }
     navigator.navigate(WORK_ON_PROJECT_DIALOG)
 }

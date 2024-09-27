@@ -78,9 +78,9 @@ abstract class WorkOnProject(
 
     }
 
-    protected lateinit var potentialMembers: State<List<NovaUser>>
+    private lateinit var potentialMembers: State<List<NovaUser>>
 
-    protected val isInAddMode = project == null
+    private val isInAddMode = project == null
 
     @Composable
     override fun ArrangeScreenContent() {

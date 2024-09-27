@@ -161,6 +161,7 @@ fun App() {
                             project = project
                         )
                     )
+                    backstackEntry.stateHolder.remove(PROJECT_KEY)
                 }
                 scene(
                     route = "$PROJECT_SCREEN/{project_id}"
