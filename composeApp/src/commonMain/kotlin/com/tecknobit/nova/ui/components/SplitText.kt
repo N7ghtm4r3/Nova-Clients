@@ -1,5 +1,6 @@
 package com.tecknobit.nova.ui.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,16 +12,20 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.NonRestartableComposable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection.Companion.Next
 import androidx.compose.ui.focus.FocusDirection.Companion.Previous
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
@@ -80,6 +85,8 @@ fun SplitText(
 
 @Composable
 @NonRestartableComposable
+@TestOnly
+// TODO: ALLOW MORE CUSTOMIZATION IN THE OFFICIAL COMPONENT 
 private fun SplitBox(
     currentTextSlices: ArrayList<MutableState<String>>,
     boxShape: Shape,
@@ -87,13 +94,43 @@ private fun SplitBox(
     textSlice: MutableState<String>,
     currentBox: Int
 ) {
-    val lastIndex = currentTextSlices.lastIndex
-    val isLast = currentBox == lastIndex
+    val isLast = currentBox == currentTextSlices.lastIndex
     val keyboardManager = LocalSoftwareKeyboardController.current
+    val selectedBorderColor = MaterialTheme.colorScheme.inversePrimary
+    var selectedBoxColor by remember { mutableStateOf(Color.Transparent) }
+    var hasFocus by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
+            .onKeyEvent { event ->
+                if (event.key == Key.Backspace) {
+                    textSlice.value = ""
+                    if (currentBox > 0) {
+                        currentTextSlices[currentBox - 1].value = ""
+                        focusManager.moveFocus(Previous)
+                    }
+                }
+                false
+            }
+            .onFocusChanged {
+                hasFocus = it.hasFocus
+                selectedBoxColor = if (hasFocus)
+                    selectedBorderColor
+                else
+                    Color.Transparent
+            }
+            .border(
+                color = selectedBoxColor,
+                width = 2.dp,
+                shape = boxShape
+            )
             .size(50.dp),
-        shape = boxShape
+        shape = boxShape,
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = if (hasFocus)
+                3.dp
+            else
+                1.dp
+        )
     ) {
         Box(
             modifier = Modifier
@@ -102,33 +139,27 @@ private fun SplitBox(
         ) {
             BasicTextField(
                 modifier = Modifier
-                    .onKeyEvent { event ->
-                        if (event.key == Key.Backspace) {
-                            textSlice.value = ""
-                            if (currentBox > 0)
-                                focusManager.moveFocus(Previous)
-                        }
-                        true
-                    }
                     .align(Alignment.Center),
                 value = textSlice.value,
-                onValueChange = {
-                    if (textSlice.value.isNotEmpty() && !isLast) {
-                        currentTextSlices[currentBox + 1].value = it..ifEmpty {
-                            ""
-                        }
-                        focusManager.moveFocus(Next)
-                    } else if (it.isNotEmpty())
-                        textSlice.value = it.first().toString()
-
-                    /*if(it.isEmpty()) {
-                        textSlice.value = ""
-                        if(currentBox > 0)
-                            focusManager.moveFocus(Previous)
-
+                onValueChange = { slice ->
+                    val sliceLength = slice.length
+                    if (sliceLength == currentTextSlices.size) {
+                        pasteSlices(
+                            splits = sliceLength,
+                            currentTextSlices = currentTextSlices,
+                            slice = slice
+                        )
                     } else {
-
-                    }*/
+                        if (slice.isEmpty())
+                            textSlice.value = slice
+                        else {
+                            if (!isLast) {
+                                textSlice.value = slice.first().toString()
+                                focusManager.moveFocus(Next)
+                            } else
+                                textSlice.value = slice.last().toString()
+                        }
+                    }
                 },
                 textStyle = boxTextStyle,
                 cursorBrush = SolidColor(Color.Transparent),
@@ -145,5 +176,15 @@ private fun SplitBox(
                 )
             )
         }
+    }
+}
+
+private fun pasteSlices(
+    splits: Int,
+    currentTextSlices: ArrayList<MutableState<String>>,
+    slice: String
+) {
+    repeat(splits) { offset ->
+        currentTextSlices[offset].value = slice.drop(offset).first().toString()
     }
 }

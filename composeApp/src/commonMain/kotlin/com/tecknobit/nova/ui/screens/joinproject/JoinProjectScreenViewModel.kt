@@ -10,6 +10,7 @@ import com.tecknobit.equinox.inputs.InputValidator.HOST_ADDRESS_KEY
 import com.tecknobit.equinox.inputs.InputValidator.isHostValid
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
 import com.tecknobit.nova.helpers.utils.NovaRequester
+import com.tecknobit.nova.navigator
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
@@ -125,6 +126,7 @@ class JoinProjectScreenViewModel(
             userId = activeLocalSession.id,
             userToken = activeLocalSession.token
         )
+        navigator.goBack()
     }
 
 }
