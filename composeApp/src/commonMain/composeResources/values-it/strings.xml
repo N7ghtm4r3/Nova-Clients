@@ -112,5 +112,4 @@
     <string name="loading_data">Caricamento dati</string>
     <string name="join_with_code">entra con il codice</string>
     <string name="insert_join_code">Inserisci il codice</string>
-    <string name="digit_the_host">Digita host</string>
 </resources>

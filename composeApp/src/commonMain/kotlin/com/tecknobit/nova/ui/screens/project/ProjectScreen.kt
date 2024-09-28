@@ -190,7 +190,7 @@ class ProjectScreen(
     @Composable
     @NonRestartableComposable
     private fun Actions() {
-        if(activeLocalSession.isVendor) {
+        if (activeLocalSession.isVendor || amITheProjectAuthor) {
             IconButton(
                 onClick = {
                     /*suspendRefresher()
@@ -333,7 +333,6 @@ class ProjectScreen(
             )
         }
     }
-
 
     @Composable
     private fun AddRelease() {

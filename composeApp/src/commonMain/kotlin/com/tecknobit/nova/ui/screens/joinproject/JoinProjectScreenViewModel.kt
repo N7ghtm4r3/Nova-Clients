@@ -72,7 +72,6 @@ class JoinProjectScreenViewModel(
     fun joinWithCode(
         joinCode: String
     ) {
-        println(joinCode)
         if (!isHostValid(host.value)) {
             hostError.value = true
             return

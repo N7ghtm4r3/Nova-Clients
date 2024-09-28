@@ -205,7 +205,7 @@ class JoinProjectScreen(
         ) {
             Column(
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(1f)
                     .fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom,
             ) {

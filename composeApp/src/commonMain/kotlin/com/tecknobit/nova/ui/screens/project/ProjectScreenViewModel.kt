@@ -12,6 +12,7 @@ import com.tecknobit.novacore.NovaInputValidator.isReleaseVersionValid
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.project.Project.returnProjectInstance
+import com.tecknobit.novacore.records.release.Release
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -28,9 +29,6 @@ class ProjectScreenViewModel(
     lateinit var releaseNotes: MutableState<String>
 
     lateinit var releaseNotesError: MutableState<Boolean>
-
-    //lateinit var releaseVersionErrorMessage: MutableState<String>
-    //lateinit var releaseNotesErrorMessage = remember { mutableStateOf("") }
 
     private val _project = MutableStateFlow<Project?>(
         value = null
@@ -115,6 +113,31 @@ class ProjectScreenViewModel(
             request = {
                 requester.addRelease(
                     projectId = _project.value!!.id,
+                    releaseVersion = releaseVersion.value,
+                    releaseNotes = releaseNotes.value
+                )
+            },
+            onSuccess = {
+                releaseVersion.value = ""
+                releaseVersionError.value = false
+                releaseNotes.value = ""
+                releaseNotesError.value = false
+                onSuccess.invoke()
+            },
+            onFailure = { showSnackbarMessage(it) }
+        )
+    }
+
+    fun editRelease(
+        release: Release,
+        onSuccess: () -> Unit
+    ) {
+        validateReleasePayload()
+        requester.sendRequest(
+            request = {
+                requester.editRelease(
+                    projectId = _project.value!!.id,
+                    releaseId = release.id,
                     releaseVersion = releaseVersion.value,
                     releaseNotes = releaseNotes.value
                 )
