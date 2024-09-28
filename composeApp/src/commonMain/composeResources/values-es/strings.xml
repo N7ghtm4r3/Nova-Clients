@@ -110,4 +110,7 @@
     <string name="preview">Avance</string>
     <string name="i_am_a_customer">Soy un/a cliente</string>
     <string name="loading_data">Carga de datos</string>
+    <string name="join_with_code">únete con el código</string>
+    <string name="insert_join_code">Inserte el código de unión</string>
+    <string name="digit_the_host">Diga el anfitrión</string>
 </resources>

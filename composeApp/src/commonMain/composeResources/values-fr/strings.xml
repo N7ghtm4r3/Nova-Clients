@@ -110,4 +110,7 @@
     <string name="preview">Aperçu</string>
     <string name="i_am_a_customer">Je suis client</string>
     <string name="loading_data">Chargement des données</string>
+    <string name="join_with_code">s\'inscrire avec le code</string>
+    <string name="insert_join_code">Insérer le code de jointure</string>
+    <string name="digit_the_host">Digit l\'hôte</string>
 </resources>

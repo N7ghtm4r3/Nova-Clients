@@ -50,7 +50,7 @@ private lateinit var focusManager: FocusManager
 @TestOnly
 fun SplitText(
     modifier: Modifier = Modifier,
-    splits: Int,
+    splitsTextState: SplitTextState,
     spacingBetweenBoxes: Dp = 10.dp,
     boxShape: Shape = CardDefaults.shape,
     boxTextStyle: TextStyle = TextStyle(
@@ -60,20 +60,17 @@ fun SplitText(
     )
 ) {
     focusManager = LocalFocusManager.current
-    val textSlices = arrayListOf<MutableState<String>>()
-    repeat(splits) {
-        textSlices.add(remember { mutableStateOf("") })
-    }
+    splitsTextState.CreateSlices()
     LazyRow(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(spacingBetweenBoxes)
     ) {
         itemsIndexed(
-            items = textSlices
+            items = splitsTextState.textSlices
         ) { index, textSlice ->
             SplitBox(
-                currentTextSlices = textSlices,
+                currentTextSlices = splitsTextState.textSlices,
                 boxShape = boxShape,
                 boxTextStyle = boxTextStyle,
                 textSlice = textSlice,
@@ -105,7 +102,8 @@ private fun SplitBox(
                 if (event.key == Key.Backspace) {
                     textSlice.value = ""
                     if (currentBox > 0) {
-                        currentTextSlices[currentBox - 1].value = ""
+                        if (!isLast)
+                            currentTextSlices[currentBox - 1].value = ""
                         focusManager.moveFocus(Previous)
                     }
                 }
