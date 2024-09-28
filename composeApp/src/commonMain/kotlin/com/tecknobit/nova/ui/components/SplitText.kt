@@ -3,6 +3,7 @@ package com.tecknobit.nova.ui.components
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.NonRestartableComposable
@@ -49,7 +51,8 @@ private lateinit var focusManager: FocusManager
 @NonRestartableComposable
 @TestOnly
 fun SplitText(
-    modifier: Modifier = Modifier,
+    columnModifier: Modifier = Modifier,
+    rowModifier: Modifier = Modifier,
     splitsTextState: SplitTextState,
     spacingBetweenBoxes: Dp = 10.dp,
     boxShape: Shape = CardDefaults.shape,
@@ -57,24 +60,36 @@ fun SplitText(
         fontSize = 30.sp,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center
-    )
+    ),
+    infoText: String? = null
 ) {
     focusManager = LocalFocusManager.current
     splitsTextState.CreateSlices()
-    LazyRow(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(spacingBetweenBoxes)
+    Column(
+        modifier = columnModifier
     ) {
-        itemsIndexed(
-            items = splitsTextState.textSlices
-        ) { index, textSlice ->
-            SplitBox(
-                currentTextSlices = splitsTextState.textSlices,
-                boxShape = boxShape,
-                boxTextStyle = boxTextStyle,
-                textSlice = textSlice,
-                currentBox = index
+        LazyRow(
+            modifier = rowModifier,
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(spacingBetweenBoxes)
+        ) {
+            itemsIndexed(
+                items = splitsTextState.textSlices
+            ) { index, textSlice ->
+                SplitBox(
+                    currentTextSlices = splitsTextState.textSlices,
+                    boxShape = boxShape,
+                    boxTextStyle = boxTextStyle,
+                    textSlice = textSlice,
+                    currentBox = index
+                )
+            }
+        }
+        infoText?.let {
+            Text(
+                text = infoText,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }

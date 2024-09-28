@@ -7,9 +7,9 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tecknobit.equinoxcompose.components.EquinoxTextField
+import com.tecknobit.equinoxcompose.components.EquinoxOutlinedTextField
 import com.tecknobit.nova.fontFamily
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.components.SplitText
@@ -48,14 +48,12 @@ import com.tecknobit.nova.ui.components.rememberSplitTextState
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.novacore.NovaInputValidator.isHostValid
 import nova.composeapp.generated.resources.Res
-import nova.composeapp.generated.resources.digit_the_host
 import nova.composeapp.generated.resources.host
 import nova.composeapp.generated.resources.insert_join_code
 import nova.composeapp.generated.resources.join
 import nova.composeapp.generated.resources.join_project
 import nova.composeapp.generated.resources.join_with_code
 import nova.composeapp.generated.resources.wrong_host_address
-import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import qrscanner.QrCodeScanner
 
@@ -177,7 +175,7 @@ class JoinProjectScreen(
                     modifier = Modifier
                         .padding(
                             top = 16.dp,
-                            bottom = TopAppBarDefaults.TopAppBarExpandedHeight
+                            bottom = 32.dp
                         )
                         .shadow(
                             elevation = 3.dp,
@@ -203,22 +201,23 @@ class JoinProjectScreen(
     ) {
         Column(
             modifier = modifier,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            JoinCodeInnerSection(
-                header = Res.string.insert_join_code,
-                height = 100.dp
+            Column(
+                modifier = Modifier
+                    .weight(2f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Bottom,
             ) {
                 SplitText(
-                    splitsTextState = splitTextState
+                    splitsTextState = splitTextState,
+                    infoText = stringResource(Res.string.insert_join_code)
                 )
-            }
-            JoinCodeInnerSection(
-                header = Res.string.digit_the_host,
-                height = 200.dp
-            ) {
-                EquinoxTextField(
+                EquinoxOutlinedTextField(
+                    modifier = Modifier
+                        .padding(
+                            top = 16.dp
+                        ),
                     width = 350.dp,
                     value = viewModel.host,
                     label = Res.string.host,
@@ -232,8 +231,8 @@ class JoinProjectScreen(
             }
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .weight(1f)
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.Bottom
             ) {
                 TextButton(
@@ -249,35 +248,6 @@ class JoinProjectScreen(
                     )
                 }
             }
-        }
-    }
-
-    @Composable
-    @NonRestartableComposable
-    private fun JoinCodeInnerSection(
-        header: StringResource,
-        height: Dp,
-        innerContent: @Composable () -> Unit
-    ) {
-        Column(
-            modifier = Modifier
-                .height(height),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(5.dp)
-        ) {
-            Text(
-                modifier = Modifier
-                    .then(
-                        if (enableScanOption)
-                            Modifier.fillMaxWidth()
-                        else
-                            Modifier
-                    ),
-                text = stringResource(header),
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 18.sp
-            )
-            innerContent.invoke()
         }
     }
 
