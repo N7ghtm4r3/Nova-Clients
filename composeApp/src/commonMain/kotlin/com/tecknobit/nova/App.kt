@@ -19,6 +19,8 @@ import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
 import com.tecknobit.nova.theme.NovaTheme
 import com.tecknobit.nova.ui.screens.NovaScreen
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.ADD_MEMBERS_DIALOG
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.ADD_MEMBERS_SCREEN
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.AUTH_SCREEN
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.JOIN_PROJECT_DIALOG
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.JOIN_PROJECT_SCREEN
@@ -31,6 +33,7 @@ import com.tecknobit.nova.ui.screens.NovaScreen.Companion.SPLASH_SCREEN
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.WORK_ON_PROJECT_DIALOG
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.WORK_ON_PROJECT_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen
+import com.tecknobit.nova.ui.screens.addmembers.AddMembersScreen
 import com.tecknobit.nova.ui.screens.auth.AuthScreen
 import com.tecknobit.nova.ui.screens.joinproject.JoinProjectScreen
 import com.tecknobit.nova.ui.screens.profile.ProfileScreen
@@ -158,13 +161,14 @@ fun App() {
                 dialog(
                     route = WORK_ON_PROJECT_DIALOG
                 ) { backstackEntry ->
-                    val project = backstackEntry.stateHolder.get<Project?>(PROJECT_KEY)
+                    val stateHolder = backstackEntry.stateHolder
+                    val project = stateHolder.get<Project?>(PROJECT_KEY)
                     DialogScreen(
                         dialogScreen = WorkOnProjectDialog(
                             project = project
                         )
                     )
-                    backstackEntry.stateHolder.remove(PROJECT_KEY)
+                    stateHolder.remove(PROJECT_KEY)
                 }
                 scene(
                     route = JOIN_PROJECT_SCREEN
@@ -188,6 +192,26 @@ fun App() {
                     val projectId = backstackEntry.path<String>(PROJECT_IDENTIFIER_KEY)!!
                     ProjectScreen(
                         projectId = projectId
+                    ).ShowContent()
+                }
+                dialog(
+                    route = ADD_MEMBERS_DIALOG
+                ) { backstackEntry ->
+                    val stateHolder = backstackEntry.stateHolder
+                    val project = stateHolder.get<Project>(PROJECT_KEY)!!
+                    DialogScreen(
+                        dialogScreen = AddMembersScreen(
+                            project = project
+                        )
+                    )
+                    stateHolder.remove(PROJECT_KEY)
+                }
+                scene(
+                    route = ADD_MEMBERS_SCREEN
+                ) { backstackEntry ->
+                    val project = backstackEntry.stateHolder.get<Project>(PROJECT_KEY)!!
+                    AddMembersScreen(
+                        project = project
                     ).ShowContent()
                 }
                 scene(

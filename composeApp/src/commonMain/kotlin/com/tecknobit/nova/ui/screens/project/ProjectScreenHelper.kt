@@ -255,3 +255,7 @@ private fun ExpandReleaseNotes(
         }
     }
 }
+
+expect fun addMembers(
+    project: Project
+)

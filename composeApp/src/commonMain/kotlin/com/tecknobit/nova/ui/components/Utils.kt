@@ -298,12 +298,12 @@ fun ReleaseStandardEvent.getMessage(): StringResource {
 /**
  * **customerColor** -> color for the [Role.Customer]
  */
-private val customerColor = Alpha.createColor()
+val customerColor = Alpha.createColor()
 
 /**
  * **vendorColor** -> color for the [Role.Vendor]
  */
-private val vendorColor = Beta.createColor()
+val vendorColor = Beta.createColor()
 
 /**
  * Function to create a badge for a [Role]

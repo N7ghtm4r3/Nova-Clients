@@ -195,8 +195,9 @@ class ProjectScreen(
         if (activeLocalSession.isVendor || amITheProjectAuthor) {
             IconButton(
                 onClick = {
-                    /*suspendRefresher()
-                    showAddMembers.value = true*/
+                    addMembers(
+                        project = project.value!!
+                    )
                 }
             ) {
                 Icon(
@@ -205,7 +206,6 @@ class ProjectScreen(
                     tint = Color.White
                 )
             }
-            //AddMembers()
         }
         IconButton(
             onClick = { showMembers.value = true }

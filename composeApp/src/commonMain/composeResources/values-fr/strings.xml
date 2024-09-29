@@ -112,4 +112,9 @@
     <string name="loading_data">Chargement des données</string>
     <string name="join_with_code">s\'inscrire avec le code</string>
     <string name="insert_join_code">Insérer le code de jointure</string>
+    <string name="edit_release">Editer la version</string>
+    <string name="mark_as_tester">Marquer comme testeur</string>
+    <string name="mark_as_tester_text">En marquant le membre comme testeur, il pourra commenter et tester les actifs liés au projet en cours. L\'action ne peut pas être annulée, confirmez-vous \?</string>
+    <string name="add_members">Ajouter des membres</string>
+    <string name="delete">Supprimer</string>
 </resources>

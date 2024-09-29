@@ -112,4 +112,9 @@
     <string name="loading_data">Caricamento dati</string>
     <string name="join_with_code">entra con il codice</string>
     <string name="insert_join_code">Inserisci il codice</string>
+    <string name="edit_release">Modifica del rilascio</string>
+    <string name="mark_as_tester">Contrassegnare come tester</string>
+    <string name="mark_as_tester_text">Contrassegnando il membro come Tester, potrà commentare e testare le risorse relative al progetto corrente. L\'azione non può essere annullata, confermate\?</string>
+    <string name="add_members">Aggiungi membri</string>
+    <string name="delete">Cancellare</string>
 </resources>
