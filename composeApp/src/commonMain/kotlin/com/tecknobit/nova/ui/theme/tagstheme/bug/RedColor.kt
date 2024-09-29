@@ -1,4 +1,4 @@
-package com.tecknobit.nova.theme.tagstheme.bug
+package com.tecknobit.nova.ui.theme.tagstheme.bug
 import androidx.compose.ui.graphics.Color
 
 /**

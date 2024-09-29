@@ -8,8 +8,8 @@ import com.tecknobit.equinox.Requester.Companion.RESPONSE_MESSAGE_KEY
 import com.tecknobit.equinoxcompose.helpers.session.setHasBeenDisconnectedValue
 import com.tecknobit.equinoxcompose.helpers.session.setServerOfflineValue
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
-import com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_primary
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
+import com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_primary
 import com.tecknobit.novacore.NovaInputValidator.isProjectNameValid
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.NovaUser.returnUsersList

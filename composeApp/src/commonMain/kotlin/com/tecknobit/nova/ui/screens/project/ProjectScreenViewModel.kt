@@ -77,6 +77,22 @@ class ProjectScreenViewModel(
         )
     }
 
+    fun markAsTester(
+        member: NovaUser,
+        onSuccess: () -> Unit
+    ) {
+        requester.sendRequest(
+            request = {
+                requester.markAsTester(
+                    projectId = _project.value!!.id,
+                    memberId = member.id
+                )
+            },
+            onSuccess = { onSuccess.invoke() },
+            onFailure = { showSnackbarMessage(it) }
+        )
+    }
+
     fun removeMember(
         member: NovaUser
     ) {

@@ -113,4 +113,6 @@
     <string name="join_with_code">join with code</string>
     <string name="insert_join_code">Insert the join code</string>
     <string name="edit_release">Edit release</string>
+    <string name="mark_as_tester">Mark as tester</string>
+    <string name="mark_as_tester_text">By marking the member as a Tester, him/her will be able to comment and test the assets related to the current project. The action cannot be undone, do you confirm?</string>
 </resources>

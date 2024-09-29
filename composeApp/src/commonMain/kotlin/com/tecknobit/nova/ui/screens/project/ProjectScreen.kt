@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.filled.LibraryBooks
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Group
@@ -52,6 +53,7 @@ import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
 import com.tecknobit.equinoxcompose.components.EquinoxOutlinedTextField
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
 import com.tecknobit.nova.navigator
+import com.tecknobit.nova.theme.TesterThemeColor
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.components.MemberListItem
 import com.tecknobit.nova.ui.screens.NovaScreen
@@ -69,6 +71,8 @@ import nova.composeapp.generated.resources.dismiss
 import nova.composeapp.generated.resources.edit_release
 import nova.composeapp.generated.resources.leave_from_project
 import nova.composeapp.generated.resources.leave_project_alert_message
+import nova.composeapp.generated.resources.mark_as_tester
+import nova.composeapp.generated.resources.mark_as_tester_text
 import nova.composeapp.generated.resources.no_releases_yet
 import nova.composeapp.generated.resources.release_notes
 import nova.composeapp.generated.resources.release_version
@@ -256,8 +260,11 @@ class ProjectScreen(
     private fun Member(
         member: NovaUser
     ) {
+        val markUserAsTester = remember { mutableStateOf(false) }
+        val memberIsTester = member.isTester(project.value)
         MemberListItem(
             member = member,
+            isTester = memberIsTester,
             trailingContent = {
                 if(amITheProjectAuthor && activeLocalSession.id != member.id) {
                     IconButton(
@@ -273,8 +280,51 @@ class ProjectScreen(
                         )
                     }
                 }
-            }
+            },
+            onRoleClick = if ((amITheProjectAuthor || activeLocalSession.isVendor) && !memberIsTester) {
+                {
+                    markUserAsTester.value = true
+                }
+            } else
+                null
         )
+        if (markUserAsTester.value) {
+            MarkUserAsTester(
+                show = markUserAsTester,
+                member = member
+            )
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun MarkUserAsTester(
+        show: MutableState<Boolean>,
+        member: NovaUser
+    ) {
+        MaterialTheme(
+            colorScheme = TesterThemeColor
+        ) {
+            EquinoxAlertDialog(
+                modifier = Modifier
+                    .widthIn(
+                        max = 400.dp
+                    ),
+                show = show,
+                viewModel = viewModel,
+                icon = Icons.Default.BugReport,
+                title = string.mark_as_tester,
+                text = string.mark_as_tester_text,
+                confirmAction = {
+                    viewModel.markAsTester(
+                        member = member,
+                        onSuccess = { show.value = false }
+                    )
+                },
+                confirmText = string.confirm,
+                dismissText = string.dismiss
+            )
+        }
     }
 
     @Composable

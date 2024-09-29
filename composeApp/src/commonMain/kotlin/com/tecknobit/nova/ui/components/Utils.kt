@@ -9,7 +9,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,8 +25,10 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.nova.ui.theme.tester.primaryLight
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.NovaUser.DEFAULT_PROFILE_PIC
+import com.tecknobit.novacore.records.NovaUser.Role
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.*
@@ -308,107 +310,80 @@ private val vendorColor = Beta.createColor()
  *
  * @param background: the background color to use, default is [gray_background]
  * @param role: the role to use to create the badge
+ * @param onRoleClick: the click action to mark the user as [Role.Tester] if allowed
  */
 @Composable
 fun UserRoleBadge(
     background: Color = gray_background,
-    role: NovaUser.Role
+    role: Role,
+    onRoleClick: (() -> Unit)? = null
 ) {
-    val badgeColor = if(role == NovaUser.Role.Customer)
-        customerColor
-    else
-        vendorColor
-    OutlinedCard (
-        modifier = Modifier
-            .requiredWidthIn(
-                min = 65.dp,
-                max = 100.dp
-            )
-            .wrapContentWidth()
-            .height(25.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = background
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = badgeColor
+    val badgeColor = when (role) {
+        Role.Customer -> customerColor
+        Role.Vendor -> vendorColor
+        else -> primaryLight
+    }
+    val modifier = Modifier
+        .requiredWidthIn(
+            min = 65.dp,
+            max = 100.dp
         )
-    ) {
-        Column (
-            modifier = Modifier
-                .padding(
-                    start = 10.dp,
-                    end = 10.dp
-                )
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        .wrapContentWidth()
+        .height(25.dp)
+    val colors = CardDefaults.cardColors(
+        containerColor = background
+    )
+    val border = BorderStroke(
+        width = 1.dp,
+        color = badgeColor
+    )
+    if (onRoleClick != null) {
+        OutlinedCard(
+            modifier = modifier,
+            colors = colors,
+            border = border,
+            onClick = onRoleClick
         ) {
-            Text(
-                text = role.name,
-                fontWeight = FontWeight.Bold,
-                color = badgeColor
+            UserRoleBadgeContent(
+                role = role,
+                badgeColor = badgeColor
+            )
+        }
+    } else {
+        OutlinedCard(
+            modifier = modifier,
+            colors = colors,
+            border = border
+        ) {
+            UserRoleBadgeContent(
+                role = role,
+                badgeColor = badgeColor
             )
         }
     }
 }
 
-/**
- * Function to create a badge for a [Role]
- *
- * @param role: the role to use to create the badge
- * @param selected: whether the badge is selected or not
- * @param onClick: the action to execute when the badge is clicked
- */
 @Composable
-fun UserRoleBadge(
-    role: NovaUser.Role,
-    selected: MutableState<Boolean>,
-    onClick: () -> Unit
+@NonRestartableComposable
+private fun UserRoleBadgeContent(
+    role: Role,
+    badgeColor: Color
 ) {
-    val badgeColor = if(role == NovaUser.Role.Customer)
-        customerColor
-    else
-        vendorColor
-    OutlinedCard (
+    Column(
         modifier = Modifier
-            .requiredWidthIn(
-                min = 65.dp,
-                max = 100.dp
+            .padding(
+                start = 10.dp,
+                end = 10.dp
             )
-            .wrapContentWidth()
-            .height(35.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if(selected.value)
-                badgeColor
-            else
-                gray_background
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = badgeColor
-        ),
-        onClick = onClick
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column (
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    start = 10.dp,
-                    end = 10.dp
-                ),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = role.name,
-                fontWeight = FontWeight.Bold,
-                color = if(selected.value)
-                    Color.White
-                else
-                    badgeColor
-            )
-        }
+        Text(
+            text = role.name,
+            fontWeight = FontWeight.Bold,
+            color = badgeColor
+        )
     }
 }
 

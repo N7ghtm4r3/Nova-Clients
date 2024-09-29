@@ -22,7 +22,9 @@ import com.tecknobit.novacore.records.NovaUser
 @NonRestartableComposable
 fun MemberListItem(
     member: NovaUser,
-    trailingContent: @Composable () -> Unit
+    trailingContent: @Composable () -> Unit,
+    isTester: Boolean = false,
+    onRoleClick: (() -> Unit)? = null
 ) {
     ListItem(
         colors = ListItemDefaults.colors(
@@ -44,7 +46,11 @@ fun MemberListItem(
                     text = "${member.name} ${member.surname}"
                 )
                 UserRoleBadge(
-                    role = member.role
+                    role = if (isTester)
+                        NovaUser.Role.Tester
+                    else
+                        member.role,
+                    onRoleClick = onRoleClick
                 )
             }
         },

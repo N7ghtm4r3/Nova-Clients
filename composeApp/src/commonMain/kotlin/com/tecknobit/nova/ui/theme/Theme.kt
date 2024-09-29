@@ -4,6 +4,35 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import com.tecknobit.nova.ui.theme.tester.backgroundLight
+import com.tecknobit.nova.ui.theme.tester.errorContainerLight
+import com.tecknobit.nova.ui.theme.tester.errorLight
+import com.tecknobit.nova.ui.theme.tester.inverseOnSurfaceLight
+import com.tecknobit.nova.ui.theme.tester.inversePrimaryLight
+import com.tecknobit.nova.ui.theme.tester.inverseSurfaceLight
+import com.tecknobit.nova.ui.theme.tester.onBackgroundLight
+import com.tecknobit.nova.ui.theme.tester.onErrorContainerLight
+import com.tecknobit.nova.ui.theme.tester.onErrorLight
+import com.tecknobit.nova.ui.theme.tester.onPrimaryContainerLight
+import com.tecknobit.nova.ui.theme.tester.onPrimaryLight
+import com.tecknobit.nova.ui.theme.tester.onSecondaryContainerLight
+import com.tecknobit.nova.ui.theme.tester.onSecondaryLight
+import com.tecknobit.nova.ui.theme.tester.onSurfaceLight
+import com.tecknobit.nova.ui.theme.tester.onSurfaceVariantLight
+import com.tecknobit.nova.ui.theme.tester.onTertiaryContainerLight
+import com.tecknobit.nova.ui.theme.tester.onTertiaryLight
+import com.tecknobit.nova.ui.theme.tester.outlineLight
+import com.tecknobit.nova.ui.theme.tester.outlineVariantLight
+import com.tecknobit.nova.ui.theme.tester.primaryContainerLight
+import com.tecknobit.nova.ui.theme.tester.primaryLight
+import com.tecknobit.nova.ui.theme.tester.scrimLight
+import com.tecknobit.nova.ui.theme.tester.secondaryContainerLight
+import com.tecknobit.nova.ui.theme.tester.secondaryLight
+import com.tecknobit.nova.ui.theme.tester.surfaceDimLight
+import com.tecknobit.nova.ui.theme.tester.surfaceLight
+import com.tecknobit.nova.ui.theme.tester.surfaceVariantLight
+import com.tecknobit.nova.ui.theme.tester.tertiaryContainerLight
+import com.tecknobit.nova.ui.theme.tester.tertiaryLight
 
 /**
  * **LightColors** default light colors scheme
@@ -79,35 +108,35 @@ private val DarkColors = darkColorScheme(
  * **RedSchemeColors** red light colors scheme
  */
 val RedSchemeColors = lightColorScheme(
-    primary = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_primary,
-    onPrimary = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onPrimary,
-    primaryContainer = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_primaryContainer,
-    onPrimaryContainer = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onPrimaryContainer,
-    secondary = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_secondary,
-    onSecondary = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onSecondary,
-    secondaryContainer = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_secondaryContainer,
-    onSecondaryContainer = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onSecondaryContainer,
-    tertiary = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_tertiary,
-    onTertiary = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onTertiary,
-    tertiaryContainer = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_tertiaryContainer,
-    onTertiaryContainer = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onTertiaryContainer,
-    error = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_error,
-    errorContainer = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_errorContainer,
-    onError = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onError,
-    onErrorContainer = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onErrorContainer,
-    background = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_background,
-    onBackground = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onBackground,
-    surface = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_surface,
-    onSurface = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onSurface,
-    surfaceVariant = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_surfaceVariant,
-    onSurfaceVariant = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_onSurfaceVariant,
-    outline = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_outline,
-    inverseOnSurface = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_inverseOnSurface,
-    inverseSurface = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_inverseSurface,
-    inversePrimary = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_inversePrimary,
-    surfaceTint = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_surfaceTint,
-    outlineVariant = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_outlineVariant,
-    scrim = com.tecknobit.nova.theme.tagstheme.bug.md_theme_light_scrim,
+    primary = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_primary,
+    onPrimary = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onPrimary,
+    primaryContainer = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_primaryContainer,
+    onPrimaryContainer = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onPrimaryContainer,
+    secondary = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_secondary,
+    onSecondary = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onSecondary,
+    secondaryContainer = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_secondaryContainer,
+    onSecondaryContainer = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onSecondaryContainer,
+    tertiary = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_tertiary,
+    onTertiary = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onTertiary,
+    tertiaryContainer = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_tertiaryContainer,
+    onTertiaryContainer = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onTertiaryContainer,
+    error = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_error,
+    errorContainer = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_errorContainer,
+    onError = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onError,
+    onErrorContainer = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onErrorContainer,
+    background = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_background,
+    onBackground = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onBackground,
+    surface = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_surface,
+    onSurface = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onSurface,
+    surfaceVariant = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_surfaceVariant,
+    onSurfaceVariant = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_onSurfaceVariant,
+    outline = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_outline,
+    inverseOnSurface = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_inverseOnSurface,
+    inverseSurface = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_inverseSurface,
+    inversePrimary = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_inversePrimary,
+    surfaceTint = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_surfaceTint,
+    outlineVariant = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_outlineVariant,
+    scrim = com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_scrim,
 )
 
 /**
@@ -213,6 +242,41 @@ val BlueSchemeColors = lightColorScheme(
     surfaceTint = com.tecknobit.nova.theme.tagstheme.tip.md_theme_light_surfaceTint,
     outlineVariant = com.tecknobit.nova.theme.tagstheme.tip.md_theme_light_outlineVariant,
     scrim = com.tecknobit.nova.theme.tagstheme.tip.md_theme_light_scrim,
+)
+
+/**
+ * **TesterThemeColor** the color scheme for the [Role.Tester]
+ */
+val TesterThemeColor = lightColorScheme(
+    primary = primaryLight,
+    onPrimary = onPrimaryLight,
+    primaryContainer = primaryContainerLight,
+    onPrimaryContainer = onPrimaryContainerLight,
+    secondary = secondaryLight,
+    onSecondary = onSecondaryLight,
+    secondaryContainer = secondaryContainerLight,
+    onSecondaryContainer = onSecondaryContainerLight,
+    tertiary = tertiaryLight,
+    onTertiary = onTertiaryLight,
+    tertiaryContainer = tertiaryContainerLight,
+    onTertiaryContainer = onTertiaryContainerLight,
+    error = errorLight,
+    errorContainer = errorContainerLight,
+    onError = onErrorLight,
+    onErrorContainer = onErrorContainerLight,
+    background = backgroundLight,
+    onBackground = onBackgroundLight,
+    surface = surfaceLight,
+    onSurface = onSurfaceLight,
+    surfaceVariant = surfaceVariantLight,
+    onSurfaceVariant = onSurfaceVariantLight,
+    outline = outlineLight,
+    inverseOnSurface = inverseOnSurfaceLight,
+    inverseSurface = inverseSurfaceLight,
+    inversePrimary = inversePrimaryLight,
+    surfaceTint = surfaceDimLight,
+    outlineVariant = outlineVariantLight,
+    scrim = scrimLight,
 )
 
 /**
