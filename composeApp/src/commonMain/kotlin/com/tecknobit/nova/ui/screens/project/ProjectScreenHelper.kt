@@ -46,6 +46,7 @@ import com.tecknobit.nova.ReleaseStatusBadge
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.thinFontFamily
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.RELEASE_SCREEN
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.release.Release
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
@@ -59,7 +60,8 @@ import org.jetbrains.compose.resources.stringResource
 @NonRestartableComposable
 expect fun Releases(
     paddingValues: PaddingValues,
-    project: Project
+    project: Project,
+    onEdit: (Release) -> Unit
 )
 
 @Composable
@@ -67,7 +69,8 @@ expect fun Releases(
 fun ReleaseItem(
     fillMaxHeight: Boolean = false,
     project: Project,
-    release: Release
+    release: Release,
+    onEdit: (Release) -> Unit
 ) {
     val releaseNotes = rememberRichTextState()
     releaseNotes.setMarkdown(release.releaseNotes)
@@ -82,9 +85,12 @@ fun ReleaseItem(
                     navigator.navigate("$RELEASE_SCREEN/${project.id}/${release.id}")
                 },
                 onDoubleClick = { expandReleaseNotes.value = true },
-                onLongClick = {
-                    // TODO: TO SET
-                }
+                onLongClick = if (!activeLocalSession.isTester) {
+                    {
+                        onEdit.invoke(release)
+                    }
+                } else
+                    null
             ),
         colors = CardDefaults
             .outlinedCardColors(

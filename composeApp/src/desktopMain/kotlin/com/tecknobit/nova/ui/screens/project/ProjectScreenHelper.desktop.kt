@@ -11,12 +11,14 @@ import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tecknobit.novacore.records.project.Project
+import com.tecknobit.novacore.records.release.Release
 
 @NonRestartableComposable
 @Composable
 actual fun Releases(
     paddingValues: PaddingValues,
-    project: Project
+    project: Project,
+    onEdit: (Release) -> Unit
 ) {
     LazyVerticalGrid(
         modifier = Modifier
@@ -35,7 +37,8 @@ actual fun Releases(
             ReleaseItem(
                 fillMaxHeight = true,
                 project = project,
-                release = release
+                release = release,
+                onEdit = onEdit
             )
         }
     }

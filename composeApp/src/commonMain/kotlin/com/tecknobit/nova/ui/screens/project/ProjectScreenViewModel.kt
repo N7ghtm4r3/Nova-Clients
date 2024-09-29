@@ -3,6 +3,7 @@ package com.tecknobit.nova.ui.screens.project
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import com.tecknobit.equinox.Requester.Companion.RESPONSE_MESSAGE_KEY
+import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
 import com.tecknobit.equinoxcompose.helpers.session.setHasBeenDisconnectedValue
 import com.tecknobit.equinoxcompose.helpers.session.setServerOfflineValue
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
@@ -21,6 +22,13 @@ class ProjectScreenViewModel(
 ) : EquinoxViewModel(
     snackbarHostState = snackbarHostState
 ) {
+
+    /**
+     * **addRelease** -> state used to display the [EquinoxAlertDialog] to add a new release
+     */
+    lateinit var addRelease: MutableState<Boolean>
+
+    lateinit var releaseToEdit: MutableState<Release?>
 
     lateinit var releaseVersion: MutableState<String>
 
@@ -44,24 +52,27 @@ class ProjectScreenViewModel(
         execRefreshingRoutine(
             currentContext = ProjectScreen::class.java,
             routine = {
-                requester.sendRequest(
-                    request = {
-                        requester.getProject(
-                            projectId = projectId
-                        )
-                    },
-                    onSuccess = { response ->
-                        _project.value = returnProjectInstance(response.getJSONObject(RESPONSE_MESSAGE_KEY))
-                        setServerOfflineValue(false)
-                    },
-                    onFailure = {
-                        if(!projectDeleted)
-                            setHasBeenDisconnectedValue(true)
-                    },
-                    onConnectionError = {
-                        setServerOfflineValue(true)
-                    }
-                )
+                if (releaseToEdit.value == null && !addRelease.value) {
+                    requester.sendRequest(
+                        request = {
+                            requester.getProject(
+                                projectId = projectId
+                            )
+                        },
+                        onSuccess = { response ->
+                            _project.value =
+                                returnProjectInstance(response.getJSONObject(RESPONSE_MESSAGE_KEY))
+                            setServerOfflineValue(false)
+                        },
+                        onFailure = {
+                            if (!projectDeleted)
+                                setHasBeenDisconnectedValue(true)
+                        },
+                        onConnectionError = {
+                            setServerOfflineValue(true)
+                        }
+                    )
+                }
             }
         )
     }
@@ -105,9 +116,7 @@ class ProjectScreenViewModel(
         )
     }
 
-    fun addRelease(
-        onSuccess: () -> Unit
-    ) {
+    fun addRelease() {
         validateReleasePayload()
         requester.sendRequest(
             request = {
@@ -122,7 +131,7 @@ class ProjectScreenViewModel(
                 releaseVersionError.value = false
                 releaseNotes.value = ""
                 releaseNotesError.value = false
-                onSuccess.invoke()
+                addRelease.value = false
             },
             onFailure = { showSnackbarMessage(it) }
         )
@@ -130,9 +139,18 @@ class ProjectScreenViewModel(
 
     fun editRelease(
         release: Release,
+        releaseVersion: MutableState<String>,
+        releaseVersionError: MutableState<Boolean>,
+        releaseNotes: MutableState<String>,
+        releaseNotesError: MutableState<Boolean>,
         onSuccess: () -> Unit
     ) {
-        validateReleasePayload()
+        validateReleasePayload(
+            releaseVersion = releaseVersion,
+            releaseVersionError = releaseVersionError,
+            releaseNotes = releaseNotes,
+            releaseNotesError = releaseNotesError
+        )
         requester.sendRequest(
             request = {
                 requester.editRelease(
@@ -154,12 +172,26 @@ class ProjectScreenViewModel(
     }
 
     private fun validateReleasePayload() {
+        validateReleasePayload(
+            releaseVersion = releaseVersion,
+            releaseVersionError = releaseVersionError,
+            releaseNotes = releaseNotes,
+            releaseNotesError = releaseNotesError
+        )
+    }
+
+    private fun validateReleasePayload(
+        releaseVersion: MutableState<String>,
+        releaseVersionError: MutableState<Boolean>,
+        releaseNotes: MutableState<String>,
+        releaseNotesError: MutableState<Boolean>
+    ) {
         if (!isReleaseVersionValid(releaseVersion.value)) {
             releaseVersionError.value = true
             return
         }
         if (!areReleaseNotesValid(releaseNotes.value)) {
-            releaseVersionError.value = true
+            releaseNotesError.value = true
             return
         }
     }

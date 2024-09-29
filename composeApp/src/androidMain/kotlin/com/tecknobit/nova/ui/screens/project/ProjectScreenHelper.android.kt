@@ -13,12 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.novacore.records.project.Project
+import com.tecknobit.novacore.records.release.Release
 
 @NonRestartableComposable
 @Composable
 actual fun Releases(
     paddingValues: PaddingValues,
-    project: Project
+    project: Project,
+    onEdit: (Release) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -36,7 +38,8 @@ actual fun Releases(
         ) { release ->
             ReleaseItem(
                 project = project,
-                release = release
+                release = release,
+                onEdit = onEdit
             )
         }
     }
