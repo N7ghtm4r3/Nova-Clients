@@ -26,10 +26,8 @@ import com.tecknobit.novacore.records.NovaUser.MEMBER_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.NovaUser.NAME_KEY
 import com.tecknobit.novacore.records.NovaUser.PASSWORD_KEY
 import com.tecknobit.novacore.records.NovaUser.PROJECTS_KEY
-import com.tecknobit.novacore.records.NovaUser.ROLE_KEY
 import com.tecknobit.novacore.records.NovaUser.Role
 import com.tecknobit.novacore.records.NovaUser.SURNAME_KEY
-import com.tecknobit.novacore.records.project.JoiningQRCode.CREATE_JOIN_CODE_KEY
 import com.tecknobit.novacore.records.project.JoiningQRCode.JOIN_CODE_KEY
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.project.Project.LOGO_URL_KEY
@@ -247,23 +245,17 @@ class NovaRequester(
      * Function to execute the request to add new members to a project
      *
      * @param projectId: the project identifier
-     * @param mailingList: the mailing list of the members to ada
-     * @param role: the role to attribute at the members
-     * @param createJoinCode: whether create a textual join code
+     * @param mailingList: the mailing list of the members to add
      *
      * @return the result of the request as [JSONObject]
      */
     @RequestPath(path = "/api/v1/{id}/projects/{projectId}/addMembers", method = PUT)
     fun addMembers(
         projectId: String,
-        mailingList: String,
-        role: Role,
-        createJoinCode: Boolean
+        mailingList: List<Pair<String, Role>>,
     ) : JSONObject {
         val payload = Params()
         payload.addParam(PROJECT_MEMBERS_KEY, JSONArray(mailingList))
-        payload.addParam(ROLE_KEY, role)
-        payload.addParam(CREATE_JOIN_CODE_KEY, createJoinCode)
         return execPut(
             endpoint = assembleProjectsEndpointPath(projectId + ADD_MEMBERS_ENDPOINT),
             payload = payload
