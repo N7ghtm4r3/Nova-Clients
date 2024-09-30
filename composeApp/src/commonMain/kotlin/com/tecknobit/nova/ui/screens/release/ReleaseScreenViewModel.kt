@@ -3,7 +3,10 @@ package com.tecknobit.nova.ui.screens.release
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.tecknobit.apimanager.apis.sockets.SocketManager.StandardResponseCode
+import com.tecknobit.apimanager.apis.sockets.SocketManager.StandardResponseCode.valueOf
 import com.tecknobit.equinox.Requester.Companion.RESPONSE_MESSAGE_KEY
+import com.tecknobit.equinox.Requester.Companion.RESPONSE_STATUS_KEY
 import com.tecknobit.equinoxcompose.helpers.session.setHasBeenDisconnectedValue
 import com.tecknobit.equinoxcompose.helpers.session.setServerOfflineValue
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
@@ -15,8 +18,11 @@ import com.tecknobit.novacore.records.release.Release.ReleaseStatus
 import com.tecknobit.novacore.records.release.events.RejectedTag
 import com.tecknobit.novacore.records.release.events.ReleaseEvent
 import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import java.io.File
 
 class ReleaseScreenViewModel(
@@ -25,11 +31,15 @@ class ReleaseScreenViewModel(
     snackbarHostState = snackbarHostState
 ) {
 
+    lateinit var uploadingAssetsComment: MutableState<String>
+
+    lateinit var uploadingAssetsCommentError: MutableState<Boolean>
+
     lateinit var requestedToUpload: MutableState<Boolean>
 
     lateinit var uploadingAssets: MutableState<Boolean>
 
-    lateinit var uploadingStatus: MutableState<Boolean>
+    lateinit var uploadingStatus: MutableState<StandardResponseCode?>
 
     lateinit var assetsToUpload: SnapshotStateList<File>
 
@@ -101,23 +111,38 @@ class ReleaseScreenViewModel(
     fun uploadAssets(
         projectId: String,
         releaseId: String,
-        comment: String,
-        assets: List<File>
     ) {
-        if (assets.isEmpty() || isTagCommentValid(comment));
-        requester.sendRequest(
-            request = {
-                uploadingAssets.value = true
-                requester.uploadAsset(
-                    projectId = projectId,
-                    releaseId = releaseId,
-                    comment = comment,
-                    assets = assets
+        if (!isTagCommentValid(uploadingAssetsComment.value)) {
+            uploadingAssetsCommentError.value = true
+            return
+        }
+        if (assetsToUpload.isNotEmpty()) {
+            uploadingAssets.value = true
+            CoroutineScope(Dispatchers.Default).launch {
+                requester.sendRequest(
+                    request = {
+                        requester.uploadAsset(
+                            projectId = projectId,
+                            releaseId = releaseId,
+                            comment = uploadingAssetsComment.value,
+                            assets = assetsToUpload
+                        )
+                    },
+                    onResponse = { response ->
+                        uploadingAssets.value = false
+                        uploadingStatus.value = valueOf(response.getString(RESPONSE_STATUS_KEY))
+                    }
                 )
-            },
-            onSuccess = { uploadingStatus.value = true },
-            onFailure = { uploadingStatus.value = false }
-        )
+            }
+        }
+    }
+
+    fun resetUploadingInstances() {
+        assetsToUpload.clear()
+        uploadingStatus.value = null
+        requestedToUpload.value = false
+        uploadingAssetsComment.value = ""
+        restartRefresher()
     }
 
     fun createAndDownloadReport(

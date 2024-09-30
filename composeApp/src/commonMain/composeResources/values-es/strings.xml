@@ -119,4 +119,8 @@
     <string name="delete">Borrar</string>
     <string name="failed_to_create_qrcode">Error al crear el QR-Code</string>
     <string name="retry">Reintentar</string>
+    <string name="assets_summary">Resumen de activos</string>
+    <string name="uploading_assets">Cargar activos</string>
+    <string name="uploading_assets_failed">Error en la carga de los activos</string>
+    <string name="uploading_assets_successful">Carga correcta de los activos</string>
 </resources>

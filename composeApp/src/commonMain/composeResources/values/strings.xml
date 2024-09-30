@@ -119,4 +119,8 @@
     <string name="delete">Delete</string>
     <string name="failed_to_create_qrcode">Failed to create the QR-Code</string>
     <string name="retry">Retry</string>
+    <string name="assets_summary">Assets summary</string>
+    <string name="uploading_assets">Uploading assets</string>
+    <string name="uploading_assets_failed">Uploading of the assets failed</string>
+    <string name="uploading_assets_successful">Uploading of the assets successful</string>
 </resources>

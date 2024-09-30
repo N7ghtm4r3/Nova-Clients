@@ -13,12 +13,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.requiredWidthIn
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -27,6 +28,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.EventBusy
 import androidx.compose.material.icons.filled.Info
@@ -34,9 +36,12 @@ import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -79,9 +84,11 @@ import com.pushpal.jetlime.JetLimeColumn
 import com.pushpal.jetlime.JetLimeDefaults
 import com.pushpal.jetlime.JetLimeEventDefaults
 import com.pushpal.jetlime.JetLimeExtendedEvent
+import com.tecknobit.apimanager.apis.sockets.SocketManager.StandardResponseCode.SUCCESSFUL
 import com.tecknobit.equinoxcompose.components.EmptyListUI
 import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
 import com.tecknobit.equinoxcompose.components.EquinoxTextField
+import com.tecknobit.equinoxcompose.components.ErrorUI
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
 import com.tecknobit.nova.ReleaseStatusBadge
 import com.tecknobit.nova.ReleaseTagBadge
@@ -91,6 +98,7 @@ import com.tecknobit.nova.navigator
 import com.tecknobit.nova.theme.BlueSchemeColors
 import com.tecknobit.nova.theme.LightblueSchemeColors
 import com.tecknobit.nova.theme.RedSchemeColors
+import com.tecknobit.nova.theme.TesterThemeColor
 import com.tecknobit.nova.theme.Typography
 import com.tecknobit.nova.theme.VioletSchemeColors
 import com.tecknobit.nova.theme.gray_background
@@ -124,6 +132,7 @@ import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
 import io.github.vinceglb.filekit.core.PickerMode
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.approve
+import nova.composeapp.generated.resources.assets_summary
 import nova.composeapp.generated.resources.close
 import nova.composeapp.generated.resources.comment
 import nova.composeapp.generated.resources.comment_the_asset
@@ -142,8 +151,12 @@ import nova.composeapp.generated.resources.promote_release_as_beta
 import nova.composeapp.generated.resources.promote_release_as_latest
 import nova.composeapp.generated.resources.reasons
 import nova.composeapp.generated.resources.reject
+import nova.composeapp.generated.resources.retry
 import nova.composeapp.generated.resources.tags
 import nova.composeapp.generated.resources.test
+import nova.composeapp.generated.resources.uploading_assets
+import nova.composeapp.generated.resources.uploading_assets_failed
+import nova.composeapp.generated.resources.uploading_assets_successful
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
@@ -393,25 +406,144 @@ class ReleaseScreen(
     private fun UploadAssets() {
         Dialog(
             onDismissRequest = {
-                viewModel.assetsToUpload.clear()
-                viewModel.requestedToUpload.value = false
-                viewModel.restartRefresher()
+                if (!viewModel.uploadingAssets.value)
+                    viewModel.resetUploadingInstances()
             }
         ) {
             Surface(
                 modifier = Modifier
-                    .heightIn(
-                        max = 500.dp
-                    )
-                    .widthIn(
-                        max = 400.dp
+                    .size(
+                        width = 400.dp,
+                        height = 500.dp
                     ),
                 shape = RoundedCornerShape(10.dp),
                 color = gray_background
             ) {
+                UploadingSummary()
+                WaitingUploadingStatus()
+                UploadingResult()
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun UploadingSummary() {
+        AnimatedVisibility(
+            visible = !viewModel.uploadingAssets.value && viewModel.uploadingStatus.value == null
+        ) {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .padding(
+                            top = 16.dp,
+                            start = 16.dp
+                        ),
+                    text = stringResource(Res.string.assets_summary),
+                    fontSize = 22.sp,
+                    fontStyle = Typography.titleLarge.fontStyle
+                )
+                EquinoxTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = viewModel.uploadingAssetsComment,
+                    label = Res.string.comment,
+                    isError = viewModel.uploadingAssetsCommentError,
+                    validator = { isTagCommentValid(it) },
+                    maxLines = 3
+                )
                 UploadingAssets(
+                    modifier = Modifier
+                        .weight(2f),
                     uploadingAssets = viewModel.assetsToUpload
                 )
+                TextButton(
+                    modifier = Modifier
+                        .align(Alignment.End),
+                    onClick = {
+                        viewModel.uploadAssets(
+                            projectId = projectId,
+                            releaseId = releaseId
+                        )
+                    }
+                ) {
+                    Text(
+                        text = stringResource(Res.string.confirm)
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun WaitingUploadingStatus() {
+        AnimatedVisibility(
+            visible = viewModel.uploadingAssets.value
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(150.dp),
+                    strokeWidth = 10.dp
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(
+                            top = 32.dp
+                        ),
+                    text = stringResource(Res.string.uploading_assets),
+                    fontFamily = thinFontFamily
+                )
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun UploadingResult() {
+        AnimatedVisibility(
+            visible = viewModel.uploadingStatus.value != null
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                val hasBeenSuccessful = viewModel.uploadingStatus.value == SUCCESSFUL
+                val theme: ColorScheme = if (hasBeenSuccessful)
+                    TesterThemeColor
+                else
+                    RedSchemeColors
+                MaterialTheme(
+                    colorScheme = theme
+                ) {
+                    if (hasBeenSuccessful) {
+                        ErrorUI(
+                            errorIcon = Icons.Outlined.Done,
+                            errorColor = MaterialTheme.colorScheme.primary,
+                            errorMessage = Res.string.uploading_assets_successful,
+                            retryText = Res.string.close,
+                            retryAction = { viewModel.resetUploadingInstances() }
+                        )
+                    } else {
+                        ErrorUI(
+                            errorIcon = Icons.Filled.Cancel,
+                            errorColor = MaterialTheme.colorScheme.primary,
+                            errorMessage = Res.string.uploading_assets_failed,
+                            retryText = Res.string.retry,
+                            retryAction = { viewModel.uploadingStatus.value = null }
+                        )
+                    }
+                }
             }
         }
     }
@@ -1135,19 +1267,24 @@ class ReleaseScreen(
         deleteRelease = remember { mutableStateOf(false) }
         promoteRelease = remember { mutableStateOf(false) }
         launcher = rememberFilePickerLauncher(mode = PickerMode.Multiple()) { files ->
+            // TODO: REINSERT THE WORKAROUND METHOD TO GET THE FILE 
             files?.forEach { asset ->
                 val assetPath = asset.path
                 assetPath?.let {
                     viewModel.assetsToUpload.add(File(assetPath))
                 }
             }
-            if (viewModel.assetsToUpload.isNotEmpty())
+            if (viewModel.assetsToUpload.isNotEmpty()) {
+                viewModel.suspendRefresher()
                 viewModel.requestedToUpload.value = true
+            }
         }
+        viewModel.uploadingAssetsComment = remember { mutableStateOf("") }
+        viewModel.uploadingAssetsCommentError = remember { mutableStateOf(false) }
         viewModel.requestedToUpload = remember { mutableStateOf(false) }
         viewModel.assetsToUpload = remember { mutableStateListOf() }
         viewModel.uploadingAssets = remember { mutableStateOf(false) }
-        viewModel.uploadingStatus = remember { mutableStateOf(false) }
+        viewModel.uploadingStatus = remember { mutableStateOf(null) }
     }
 
 }
