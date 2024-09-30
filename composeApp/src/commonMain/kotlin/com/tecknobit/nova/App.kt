@@ -209,10 +209,12 @@ fun App() {
                 scene(
                     route = ADD_MEMBERS_SCREEN
                 ) { backstackEntry ->
-                    val project = backstackEntry.stateHolder.get<Project>(PROJECT_KEY)!!
-                    AddMembersScreen(
-                        project = project
-                    ).ShowContent()
+                    val project = backstackEntry.stateHolder.get<Project?>(PROJECT_KEY)
+                    project?.let {
+                        AddMembersScreen(
+                            project = project
+                        ).ShowContent()
+                    }
                 }
                 scene(
                     route = "$RELEASE_SCREEN/{project_id}/{release_id}"

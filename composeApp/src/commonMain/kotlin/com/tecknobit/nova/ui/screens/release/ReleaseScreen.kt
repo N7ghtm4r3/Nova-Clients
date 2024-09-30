@@ -1090,17 +1090,6 @@ class ReleaseScreen(
         }
     }
 
-    @Composable
-    override fun CollectStates() {
-        super.CollectStates()
-        release = viewModel.release.collectAsState()
-        release.value?.let { release: Release ->
-            releaseStatus = release.status
-        }
-        deleteRelease = remember { mutableStateOf(false) }
-        promoteRelease = remember { mutableStateOf(false) }
-    }
-
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(this::class.java)
@@ -1143,6 +1132,17 @@ class ReleaseScreen(
     override fun onStop() {
         super.onStop()
         viewModel.suspendRefresher()
+    }
+
+    @Composable
+    override fun CollectStates() {
+        super.CollectStates()
+        release = viewModel.release.collectAsState()
+        release.value?.let { release: Release ->
+            releaseStatus = release.status
+        }
+        deleteRelease = remember { mutableStateOf(false) }
+        promoteRelease = remember { mutableStateOf(false) }
     }
 
 }

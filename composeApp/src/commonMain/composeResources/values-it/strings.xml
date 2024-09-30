@@ -117,4 +117,6 @@
     <string name="mark_as_tester_text">Contrassegnando il membro come Tester, potrà commentare e testare le risorse relative al progetto corrente. L\'azione non può essere annullata, confermate\?</string>
     <string name="add_members">Aggiungi membri</string>
     <string name="delete">Cancellare</string>
+    <string name="failed_to_create_qrcode">Impossibile creare il codice QR</string>
+    <string name="retry">Riprova</string>
 </resources>

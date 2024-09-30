@@ -1,5 +1,6 @@
 package com.tecknobit.nova.helpers.utils
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.tecknobit.apimanager.annotations.RequestPath
 import com.tecknobit.apimanager.annotations.Wrapper
 import com.tecknobit.apimanager.apis.APIRequest.Params
@@ -26,6 +27,7 @@ import com.tecknobit.novacore.records.NovaUser.MEMBER_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.NovaUser.NAME_KEY
 import com.tecknobit.novacore.records.NovaUser.PASSWORD_KEY
 import com.tecknobit.novacore.records.NovaUser.PROJECTS_KEY
+import com.tecknobit.novacore.records.NovaUser.ROLE_KEY
 import com.tecknobit.novacore.records.NovaUser.Role
 import com.tecknobit.novacore.records.NovaUser.SURNAME_KEY
 import com.tecknobit.novacore.records.project.JoiningQRCode.JOIN_CODE_KEY
@@ -245,17 +247,24 @@ class NovaRequester(
      * Function to execute the request to add new members to a project
      *
      * @param projectId: the project identifier
-     * @param mailingList: the mailing list of the members to add
+     * @param invitedMembers: the mailing list of the members to add with their role
      *
      * @return the result of the request as [JSONObject]
      */
     @RequestPath(path = "/api/v1/{id}/projects/{projectId}/addMembers", method = PUT)
     fun addMembers(
         projectId: String,
-        mailingList: List<Pair<String, Role>>,
+        invitedMembers: SnapshotStateList<Pair<String, Role>>,
     ) : JSONObject {
         val payload = Params()
-        payload.addParam(PROJECT_MEMBERS_KEY, JSONArray(mailingList))
+        val jMembers = JSONArray()
+        invitedMembers.forEach { member ->
+            val jMember = JSONObject()
+            jMember.put(EMAIL_KEY, member.first)
+            jMember.put(ROLE_KEY, member.second)
+            jMembers.put(jMember)
+        }
+        payload.addParam(PROJECT_MEMBERS_KEY, jMembers)
         return execPut(
             endpoint = assembleProjectsEndpointPath(projectId + ADD_MEMBERS_ENDPOINT),
             payload = payload
@@ -270,6 +279,7 @@ class NovaRequester(
      * @param name: the name of the user
      * @param surname: the surname of the user
      * @param password: the password of the user
+     * @param role: the role of the user
      *
      * @return the result of the request as [JSONObject]
      *
@@ -281,7 +291,8 @@ class NovaRequester(
         email: String,
         name: String,
         surname: String,
-        password: String
+        password: String,
+        role: Role
     ) : JSONObject {
         val payload = Params()
         payload.addParam(IDENTIFIER_KEY, id)
@@ -290,7 +301,8 @@ class NovaRequester(
             email = email,
             name = name,
             surname = surname,
-            password = password
+            password = password,
+            role = role
         )
     }
 
@@ -302,6 +314,7 @@ class NovaRequester(
      * @param name: the name of the user
      * @param surname: the surname of the user
      * @param password: the password of the user
+     * @param role: the role of the user
      *
      * @return the result of the request as [JSONObject]
      *
@@ -313,7 +326,8 @@ class NovaRequester(
         email: String,
         name: String,
         surname: String,
-        password: String
+        password: String,
+        role: Role
     ) : JSONObject {
         val payload = Params()
         payload.addParam(JOIN_CODE_KEY, joinCode)
@@ -322,7 +336,8 @@ class NovaRequester(
             email = email,
             name = name,
             surname = surname,
-            password = password
+            password = password,
+            role = role
         )
     }
 
@@ -334,6 +349,7 @@ class NovaRequester(
      * @param name: the name of the user
      * @param surname: the surname of the user
      * @param password: the password of the user
+     * @param role: the role of the user
      *
      * @return the result of the request as [JSONObject]
      *
@@ -344,13 +360,15 @@ class NovaRequester(
         email: String,
         name: String,
         surname: String,
-        password: String
+        password: String,
+        role: Role
     ) : JSONObject {
         payload.addParam(EMAIL_KEY, email)
         payload.addParam(PASSWORD_KEY, password)
         payload.addParam(NAME_KEY, name)
         payload.addParam(SURNAME_KEY, surname)
         payload.addParam(PASSWORD_KEY, password)
+        payload.addParam(ROLE_KEY, role)
         return execPost(
             endpoint = "$PROJECTS_KEY$JOIN_ENDPOINT",
             payload = payload

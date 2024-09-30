@@ -209,12 +209,6 @@ class ProjectsScreen : NovaScreen() {
         }
     }
 
-    @Composable
-    override fun CollectStates() {
-        super.CollectStates()
-        projects = viewModel.projects.collectAsState()
-    }
-
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(this::class.java)
@@ -253,6 +247,12 @@ class ProjectsScreen : NovaScreen() {
     override fun onStop() {
         super.onStop()
         viewModel.suspendRefresher()
+    }
+
+    @Composable
+    override fun CollectStates() {
+        super.CollectStates()
+        projects = viewModel.projects.collectAsState()
     }
 
 }

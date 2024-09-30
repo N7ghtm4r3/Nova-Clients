@@ -117,4 +117,6 @@
     <string name="mark_as_tester_text">By marking the member as a Tester, him/her will be able to comment and test the assets related to the current project. The action cannot be undone, do you confirm?</string>
     <string name="add_members">Add members</string>
     <string name="delete">Delete</string>
+    <string name="failed_to_create_qrcode">Failed to create the QR-Code</string>
+    <string name="retry">Retry</string>
 </resources>

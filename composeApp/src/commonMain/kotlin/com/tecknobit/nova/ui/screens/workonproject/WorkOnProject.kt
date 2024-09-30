@@ -286,15 +286,6 @@ abstract class WorkOnProject(
         )
     }
 
-    @Composable
-    override fun CollectStates() {
-        super.CollectStates()
-        potentialMembers = viewModel.potentialMembers.collectAsState()
-        viewModel.membersAdded = mutableStateListOf()
-        if (!isInAddMode)
-            viewModel.membersAdded.addAll(project!!.projectMembers.map { member -> member.id })
-    }
-
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(WorkOnProject::class.java)
@@ -338,6 +329,15 @@ abstract class WorkOnProject(
     override fun onDestroy() {
         super.onDestroy()
         viewModel.suspendRefresher()
+    }
+
+    @Composable
+    override fun CollectStates() {
+        super.CollectStates()
+        potentialMembers = viewModel.potentialMembers.collectAsState()
+        viewModel.membersAdded = mutableStateListOf()
+        if (!isInAddMode)
+            viewModel.membersAdded.addAll(project!!.projectMembers.map { member -> member.id })
     }
 
 }

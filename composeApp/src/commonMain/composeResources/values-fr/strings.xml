@@ -117,4 +117,6 @@
     <string name="mark_as_tester_text">En marquant le membre comme testeur, il pourra commenter et tester les actifs liés au projet en cours. L\'action ne peut pas être annulée, confirmez-vous \?</string>
     <string name="add_members">Ajouter des membres</string>
     <string name="delete">Supprimer</string>
+    <string name="failed_to_create_qrcode">Échec de la création du QR-Code</string>
+    <string name="retry">Réessayer</string>
 </resources>

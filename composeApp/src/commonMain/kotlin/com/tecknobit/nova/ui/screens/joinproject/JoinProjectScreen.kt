@@ -338,6 +338,11 @@ class JoinProjectScreen(
         }
     }
 
+    override fun onCreate() {
+        super.onCreate()
+        viewModel.setActiveContext(this::class.java)
+    }
+
     @Composable
     override fun CollectStates() {
         super.CollectStates()
@@ -346,11 +351,6 @@ class JoinProjectScreen(
         splitTextState = rememberSplitTextState(
             splits = 6
         )
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        viewModel.setActiveContext(this::class.java)
     }
 
 }

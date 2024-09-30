@@ -56,7 +56,8 @@ class JoinProjectScreenViewModel(
                     email = activeLocalSession.email,
                     name = activeLocalSession.name,
                     surname = activeLocalSession.surname,
-                    password = activeLocalSession.password
+                    password = activeLocalSession.password,
+                    role = activeLocalSession.role
                 )
             },
             onSuccess = { response ->
@@ -83,7 +84,8 @@ class JoinProjectScreenViewModel(
                     email = activeLocalSession.email,
                     name = activeLocalSession.name,
                     surname = activeLocalSession.surname,
-                    password = activeLocalSession.password
+                    password = activeLocalSession.password,
+                    role = activeLocalSession.role
                 )
             },
             onSuccess = { response ->

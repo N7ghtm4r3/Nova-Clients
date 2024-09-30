@@ -117,4 +117,6 @@
     <string name="mark_as_tester_text">Al marcar al miembro como Probador, podrá comentar y probar los activos relacionados con el proyecto actual. La acción no se puede deshacer, ¿confirma\?</string>
     <string name="add_members">Añadir miembros</string>
     <string name="delete">Borrar</string>
+    <string name="failed_to_create_qrcode">Error al crear el QR-Code</string>
+    <string name="retry">Reintentar</string>
 </resources>

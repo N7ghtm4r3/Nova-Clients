@@ -490,23 +490,6 @@ class ProjectScreen(
         )
     }
 
-    @Composable
-    override fun CollectStates() {
-        super.CollectStates()
-        project = viewModel.project.collectAsState()
-        project.value?.let { project: Project ->
-            amITheProjectAuthor = project.amITheProjectAuthor(activeLocalSession.id)
-        }
-        showMembers = remember { mutableStateOf(false) }
-        workOnProject = remember { mutableStateOf(false) }
-        viewModel.addRelease = remember { mutableStateOf(false) }
-        viewModel.releaseVersion = remember { mutableStateOf("") }
-        viewModel.releaseVersionError = remember { mutableStateOf(false) }
-        viewModel.releaseNotes = remember { mutableStateOf("") }
-        viewModel.releaseNotesError = remember { mutableStateOf(false) }
-        viewModel.releaseToEdit = remember { mutableStateOf(null) }
-    }
-
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(this::class.java)
@@ -548,6 +531,23 @@ class ProjectScreen(
     override fun onStop() {
         super.onStop()
         viewModel.suspendRefresher()
+    }
+
+    @Composable
+    override fun CollectStates() {
+        super.CollectStates()
+        project = viewModel.project.collectAsState()
+        project.value?.let { project: Project ->
+            amITheProjectAuthor = project.amITheProjectAuthor(activeLocalSession.id)
+        }
+        showMembers = remember { mutableStateOf(false) }
+        workOnProject = remember { mutableStateOf(false) }
+        viewModel.addRelease = remember { mutableStateOf(false) }
+        viewModel.releaseVersion = remember { mutableStateOf("") }
+        viewModel.releaseVersionError = remember { mutableStateOf(false) }
+        viewModel.releaseNotes = remember { mutableStateOf("") }
+        viewModel.releaseNotesError = remember { mutableStateOf(false) }
+        viewModel.releaseToEdit = remember { mutableStateOf(null) }
     }
 
 }
