@@ -71,12 +71,14 @@ class ProfileScreen : NovaScreen() {
             type = PickerType.Image,
             mode = PickerMode.Single,
         ) { picture ->
-            viewModel.changeProfilePic(
-                imagePath = getProfilePicPath(
-                    picture = picture
-                ),
-                profilePic = profilePic
-            )
+            if (picture != null) {
+                picture.path?.let { path ->
+                    viewModel.changeProfilePic(
+                        imagePath = path,
+                        profilePic = profilePic
+                    )
+                }
+            }
         }
         mySessions = remember { mutableStateListOf() }
         Card (

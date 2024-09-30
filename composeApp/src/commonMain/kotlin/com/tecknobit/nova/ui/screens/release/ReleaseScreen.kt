@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.requiredWidthIn
@@ -46,6 +47,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -67,6 +69,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material.RichText
@@ -93,6 +96,7 @@ import com.tecknobit.nova.theme.VioletSchemeColors
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.theme.md_theme_light_primary
 import com.tecknobit.nova.thinFontFamily
+import com.tecknobit.nova.ui.components.UploadingAssets
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.novacore.NovaInputValidator.areRejectionReasonsValid
@@ -115,6 +119,9 @@ import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag.Bug
 import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag.Issue
 import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag.LayoutChange
 import com.tecknobit.novacore.records.release.events.ReleaseStandardEvent
+import io.github.vinceglb.filekit.compose.PickerResultLauncher
+import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
+import io.github.vinceglb.filekit.core.PickerMode
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.approve
 import nova.composeapp.generated.resources.close
@@ -140,6 +147,7 @@ import nova.composeapp.generated.resources.test
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
+import java.io.File
 
 @OptIn(ExperimentalRichTextApi::class)
 class ReleaseScreen(
@@ -154,6 +162,8 @@ class ReleaseScreen(
         )
 
     }
+
+    private lateinit var launcher: PickerResultLauncher
 
     private lateinit var release: State<Release?>
 
@@ -293,71 +303,18 @@ class ReleaseScreen(
     @NonRestartableComposable
     private fun FAButton() {
         val isReleaseApproved = releaseStatus == Approved
-        if (releaseStatus != Latest && activeLocalSession.isVendor && releaseStatus != Verifying) {
-            var uploadAsset by remember { mutableStateOf(false) }
-            /*MultipleFilePicker(
-                show = uploadAsset,
-                fileExtensions = ALLOWED_ASSETS_TYPE
-            ) { assets ->
-                isUploading = true
-                val closeAction = {
-                    isUploading = false
-                    refreshItem()
-                }
-                CoroutineScope(Dispatchers.Default).launch {
-                    suspendRefresher()
-                    val assetsFile = mutableListOf<File>()
-                    if(!assets.isNullOrEmpty()) {
-                        assets.forEach { asset ->
-                            assetsFile.add(
-                                File(asset.path)
-                            )
-                        }
-                    }
-                    requester.sendRequest(
-                        request = {
-                            requester.uploadAsset(
-                                projectId = currentProject.value!!.id,
-                                releaseId = currentRelease.value!!.id,
-                                assets = assetsFile
-                            )
-                        },
-                        onSuccess = {
-                            closeAction.invoke()
-                        },
-                        onFailure = { response ->
-                            snackbarLauncher.showSnack(
-                                message = response.getString(RESPONSE_MESSAGE_KEY)
-                            )
-                            closeAction.invoke()
-                        }
-                    )
-                }
-                uploadAsset = false
-            }*/
+        AnimatedVisibility(
+            visible = releaseStatus != Latest && activeLocalSession.isVendor && releaseStatus != Verifying
+        ) {
             FloatingActionButton(
                 containerColor = md_theme_light_primary,
                 onClick = {
-                    /*if(!isUploading) {
-                        if(isReleaseApproved) {
-                            suspendRefresher()
-                            showPromoteRelease.value = true
-                        } else
-                            uploadAsset = true
-                    }*/
-
                     if (isReleaseApproved)
                         promoteRelease.value = true
                     else
-                        uploadAsset = true
+                        launcher.launch()
                 }
             ) {
-                // TODO: TO SET
-                /*if(isUploading) {
-                    CircularProgressIndicator(
-                        color = Color.White
-                    )
-                } else {*/
                 Icon(
                     imageVector = if (isReleaseApproved)
                         Icons.Default.Verified
@@ -366,8 +323,9 @@ class ReleaseScreen(
                     contentDescription = null,
                     tint = Color.White
                 )
-                //}
             }
+            if (viewModel.requestedToUpload.value)
+                UploadAssets()
             PromoteRelease()
         }
     }
@@ -422,6 +380,39 @@ class ReleaseScreen(
                 confirmText = Res.string.confirm,
                 dismissText = Res.string.dismiss
             )
+        }
+    }
+
+    /**
+     * Function to create and display the UI to promote the [release]
+     *
+     * No-any params required
+     */
+    @Composable
+    @NonRestartableComposable
+    private fun UploadAssets() {
+        Dialog(
+            onDismissRequest = {
+                viewModel.assetsToUpload.clear()
+                viewModel.requestedToUpload.value = false
+                viewModel.restartRefresher()
+            }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .heightIn(
+                        max = 500.dp
+                    )
+                    .widthIn(
+                        max = 400.dp
+                    ),
+                shape = RoundedCornerShape(10.dp),
+                color = gray_background
+            ) {
+                UploadingAssets(
+                    uploadingAssets = viewModel.assetsToUpload
+                )
+            }
         }
     }
 
@@ -1110,7 +1101,7 @@ class ReleaseScreen(
      */
     override fun onResume() {
         super.onResume()
-        if (!deleteRelease.value && !promoteRelease.value)
+        if (!deleteRelease.value && !promoteRelease.value && !viewModel.requestedToUpload.value)
             viewModel.restartRefresher()
     }
 
@@ -1143,6 +1134,20 @@ class ReleaseScreen(
         }
         deleteRelease = remember { mutableStateOf(false) }
         promoteRelease = remember { mutableStateOf(false) }
+        launcher = rememberFilePickerLauncher(mode = PickerMode.Multiple()) { files ->
+            files?.forEach { asset ->
+                val assetPath = asset.path
+                assetPath?.let {
+                    viewModel.assetsToUpload.add(File(assetPath))
+                }
+            }
+            if (viewModel.assetsToUpload.isNotEmpty())
+                viewModel.requestedToUpload.value = true
+        }
+        viewModel.requestedToUpload = remember { mutableStateOf(false) }
+        viewModel.assetsToUpload = remember { mutableStateListOf() }
+        viewModel.uploadingAssets = remember { mutableStateOf(false) }
+        viewModel.uploadingStatus = remember { mutableStateOf(false) }
     }
 
 }

@@ -17,12 +17,21 @@ import com.tecknobit.novacore.records.release.events.ReleaseEvent
 import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.io.File
 
 class ReleaseScreenViewModel(
     snackbarHostState: SnackbarHostState
 ) : EquinoxViewModel(
     snackbarHostState = snackbarHostState
 ) {
+
+    lateinit var requestedToUpload: MutableState<Boolean>
+
+    lateinit var uploadingAssets: MutableState<Boolean>
+
+    lateinit var uploadingStatus: MutableState<Boolean>
+
+    lateinit var assetsToUpload: SnapshotStateList<File>
 
     lateinit var commentAsset: MutableState<Boolean>
 
@@ -86,6 +95,28 @@ class ReleaseScreenViewModel(
                     }
                 )
             }
+        )
+    }
+
+    fun uploadAssets(
+        projectId: String,
+        releaseId: String,
+        comment: String,
+        assets: List<File>
+    ) {
+        if (assets.isEmpty() || isTagCommentValid(comment));
+        requester.sendRequest(
+            request = {
+                uploadingAssets.value = true
+                requester.uploadAsset(
+                    projectId = projectId,
+                    releaseId = releaseId,
+                    comment = comment,
+                    assets = assets
+                )
+            },
+            onSuccess = { uploadingStatus.value = true },
+            onFailure = { uploadingStatus.value = false }
         )
     }
 

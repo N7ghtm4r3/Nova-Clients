@@ -604,19 +604,19 @@ class NovaRequester(
     fun uploadAsset(
         projectId: String,
         releaseId: String,
-        assets: List<File>,
-        comment: String
+        comment: String,
+        assets: List<File>
     ) : JSONObject {
         val body = MultipartBody.Builder().setType(MultipartBody.FORM)
         assets.forEach { asset ->
             body.addFormDataPart(
+                COMMENT_KEY,
+                comment
+            )
+            body.addFormDataPart(
                 ASSETS_UPLOADED_KEY,
                 asset.name,
                 asset.readBytes().toRequestBody("*/*".toMediaType())
-            )
-            body.addFormDataPart(
-                COMMENT_KEY,
-                comment
             )
         }
         return execMultipartRequest(

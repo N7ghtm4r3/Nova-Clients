@@ -47,7 +47,6 @@ import com.tecknobit.nova.getProjectLogoUrl
 import com.tecknobit.nova.imageLoader
 import com.tecknobit.nova.ui.components.MemberListItem
 import com.tecknobit.nova.ui.screens.NovaScreen
-import com.tecknobit.nova.ui.screens.profile.getProfilePicPath
 import com.tecknobit.novacore.NovaInputValidator.isProjectNameValid
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.project.Project
@@ -145,12 +144,12 @@ abstract class WorkOnProject(
             type = PickerType.Image,
             mode = PickerMode.Single,
         ) { picture ->
-            val logoPath = getProfilePicPath(
-                picture = picture
-            )
-            logoPath?.let {
-                viewModel.logoPic.value = logoPath
-                viewModel.logoPicBordersColor.value = Color.Transparent
+            if (picture != null) {
+                val logoPath = picture.path
+                logoPath?.let {
+                    viewModel.logoPic.value = logoPath
+                    viewModel.logoPicBordersColor.value = Color.Transparent
+                }
             }
         }
         Box(

@@ -151,15 +151,12 @@ class ProfileScreenViewModel(
     }
 
     // TODO: TO COMMENT
-    // TODO: TO CLEAR LISTS
     fun logout(
         onLogout : () -> Unit
     ) {
         localSessionsHelper.deleteAllSessions()
         requester.setUserCredentials(null, null)
         onLogout.invoke()
-        /*projects.clear()
-        notifications.clear()*/
     }
 
     /**
