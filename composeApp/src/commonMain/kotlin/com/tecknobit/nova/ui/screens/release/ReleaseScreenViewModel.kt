@@ -10,10 +10,12 @@ import com.tecknobit.equinox.Requester.Companion.RESPONSE_STATUS_KEY
 import com.tecknobit.equinoxcompose.helpers.session.setHasBeenDisconnectedValue
 import com.tecknobit.equinoxcompose.helpers.session.setServerOfflineValue
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
+import com.tecknobit.nova.getReportUrl
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
 import com.tecknobit.novacore.NovaInputValidator.areRejectionReasonsValid
 import com.tecknobit.novacore.NovaInputValidator.isTagCommentValid
 import com.tecknobit.novacore.records.release.Release
+import com.tecknobit.novacore.records.release.Release.RELEASE_REPORT_PATH
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
 import com.tecknobit.novacore.records.release.events.RejectedTag
 import com.tecknobit.novacore.records.release.events.ReleaseEvent
@@ -156,25 +158,11 @@ class ReleaseScreenViewModel(
                     releaseId = releaseId
                 )
             },
-            onSuccess = {
-                // TODO: TO SET
-                /*
-                val report = response.getString(RELEASE_REPORT_PATH)
-                        resourcesCoroutine.launch {
-                            runBlocking {
-                                async {
-                                    Desktop.getDesktop().open(
-                                        APIRequest.downloadFile(
-                                            getReportUrl(report),
-                                            "${FileSystemView.getFileSystemView().homeDirectory}/Nova/" + report,
-                                            true
-                                        )
-                                    )
-                                }.await()
-                                refreshItem()
-                            }
-                        }
-                 */
+            onSuccess = { response ->
+                val reportUrl = getReportUrl(response.getString(RELEASE_REPORT_PATH))
+                CoroutineScope(Dispatchers.Default).launch {
+                    downloadReport(reportUrl)
+                }
             },
             onFailure = { showSnackbarMessage(it) }
         )

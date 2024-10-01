@@ -420,7 +420,7 @@ class ReleaseScreen(
                 color = gray_background
             ) {
                 UploadingSummary()
-                WaitingUploadingStatus()
+                WaitingUploadingResult()
                 UploadingResult()
             }
         }
@@ -479,7 +479,7 @@ class ReleaseScreen(
 
     @Composable
     @NonRestartableComposable
-    private fun WaitingUploadingStatus() {
+    private fun WaitingUploadingResult() {
         AnimatedVisibility(
             visible = viewModel.uploadingAssets.value
         ) {
@@ -850,8 +850,7 @@ class ReleaseScreen(
      */
     @Composable
     @NonRestartableComposable
-    private fun CommentRelease(
-    ) {
+    private fun CommentRelease() {
         Column(
             modifier = Modifier
                 .padding(
@@ -1267,12 +1266,12 @@ class ReleaseScreen(
         deleteRelease = remember { mutableStateOf(false) }
         promoteRelease = remember { mutableStateOf(false) }
         launcher = rememberFilePickerLauncher(mode = PickerMode.Multiple()) { files ->
-            // TODO: REINSERT THE WORKAROUND METHOD TO GET THE FILE 
             files?.forEach { asset ->
-                val assetPath = asset.path
-                assetPath?.let {
+                val assetPath = getAsset(
+                    asset = asset
+                )
+                if (assetPath != null)
                     viewModel.assetsToUpload.add(File(assetPath))
-                }
             }
             if (viewModel.assetsToUpload.isNotEmpty()) {
                 viewModel.suspendRefresher()

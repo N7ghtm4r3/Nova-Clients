@@ -20,9 +20,10 @@ class AssetDownloader (
     companion object {
 
         /**
-         * ***NOVA_ASSETS_PATH* the path where store the asset downloaded
+         * ***lastDownloadToWait* the timestamp of the last download to wait before open the archive manager
+         * of the device
          */
-        const val NOVA_ASSETS_PATH: String = "Nova/"
+        var lastDownloadToWait = -1L
 
     }
 
@@ -32,21 +33,20 @@ class AssetDownloader (
     private val downloader = context.getSystemService(DownloadManager::class.java)
 
     /**
-     * ***lastDownloadToWait* the timestamp of the last download to wait before open the archive manager
-     * of the device
-     */
-    var lastDownloadToWait = -1L
-
-    /**
      * Function to download the asset
      *
      * @param url: the url to reach and install the asset
      */
-    fun downloadAsset(url: String) {
-        val assetName = url.split("/").last()
+    fun downloadAsset(
+        url: String
+    ) {
+        val assetName = url.substringAfterLast("/")
         val request = DownloadManager.Request(url.toUri())
             .setTitle(assetName)
-            .setDestinationInExternalPublicDir(DIRECTORY_DOWNLOADS, "$NOVA_ASSETS_PATH$assetName")
+            .setDestinationInExternalPublicDir(
+                DIRECTORY_DOWNLOADS,
+                assetName
+            )
         lastDownloadToWait = downloader.enqueue(request)
     }
 
