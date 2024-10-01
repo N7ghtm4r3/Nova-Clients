@@ -1,11 +1,14 @@
 package com.tecknobit.nova.ui.screens.release
 
+import android.app.DownloadManager
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.os.Environment.DIRECTORY_DOWNLOADS
+import android.os.Environment.getExternalStoragePublicDirectory
 import android.provider.OpenableColumns
 import com.tecknobit.apimanager.annotations.Wrapper
 import com.tecknobit.nova.helpers.utils.AppContext
-import com.tecknobit.nova.helpers.utils.download.AssetDownloader
 import io.github.vinceglb.filekit.core.PlatformFile
 import java.io.File
 import java.io.FileOutputStream
@@ -64,7 +67,7 @@ actual fun downloadReport(
     report: String
 ) {
     downloadAssets(
-        containerDirectoryPath = REPORTS_FOLDER,
+        containerDirectoryPath = getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).path,
         assets = listOf(report)
     )
 }
@@ -73,10 +76,16 @@ actual fun downloadAssets(
     containerDirectoryPath: String,
     assets: List<String>
 ) {
-    val downloader = AssetDownloader(AppContext.get())
-    assets.forEach { assetUrl ->
-        downloader.downloadAsset(
-            url = assetUrl
-        )
-    }
+    performAssetsDownload(
+        containerDirectoryPath = getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).path,
+        assets = assets
+    )
+}
+
+actual fun openAsset(
+    asset: File
+) {
+    val fileManager = Intent(DownloadManager.ACTION_VIEW_DOWNLOADS)
+    fileManager.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    AppContext.get().startActivity(fileManager)
 }

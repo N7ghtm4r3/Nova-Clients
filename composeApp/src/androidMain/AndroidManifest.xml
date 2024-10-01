@@ -34,14 +34,6 @@
         </activity>
 
         <receiver
-                android:name=".helpers.utils.download.DownloadCompletedReceiver"
-                android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
-            </intent-filter>
-        </receiver>
-
-        <receiver
                 android:name=".helpers.utils.ui.NotificationsReceiver"
                 android:enabled="true"
                 android:exported="true">
