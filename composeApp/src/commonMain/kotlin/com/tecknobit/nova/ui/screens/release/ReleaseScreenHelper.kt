@@ -1,6 +1,7 @@
 package com.tecknobit.nova.ui.screens.release
 
 import com.tecknobit.apimanager.annotations.Wrapper
+import com.tecknobit.novacore.records.release.events.AssetUploadingEvent.AssetUploaded
 import io.github.vinceglb.filekit.core.PlatformFile
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -24,21 +25,28 @@ expect fun getAsset(
 ): String?
 
 @Wrapper
+expect fun downloadAssetsUploaded(
+    assetsUploaded: List<AssetUploaded>
+)
+
+@Wrapper
 expect fun downloadReport(
     report: String
 )
 
 expect fun downloadAssets(
     containerDirectoryPath: String,
+    getAssetName: (Int) -> String,
     assets: List<String>
 )
 
 fun performAssetsDownload(
     containerDirectoryPath: String,
+    getAssetName: (Int) -> String,
     assets: List<String>
 ) {
     val lastAsset = assets.last()
-    assets.forEach { assetUrl ->
+    assets.forEachIndexed { index, assetUrl ->
         val client: OkHttpClient = if (assetUrl.startsWith(HTTPS_PROTOCOL)) {
             sslContext.init(null, validateSelfSignedCertificate(), SecureRandom())
             OkHttpClient().newBuilder()
@@ -54,7 +62,7 @@ fun performAssetsDownload(
             .url(assetUrl)
             .build()
         val response = client.newCall(request).execute()
-        val asset = File(containerDirectoryPath, assetUrl.substringAfterLast("/"))
+        val asset = File(containerDirectoryPath, getAssetName(index))
         response.body?.byteStream()?.use { inputStream ->
             FileOutputStream(asset).use { outputStream ->
                 inputStream.copyTo(outputStream)

@@ -81,14 +81,17 @@ class ProjectScreenViewModel(
         member: NovaUser,
         onSuccess: () -> Unit
     ) {
+        val memberId = member.id
         requester.sendRequest(
             request = {
                 requester.markAsTester(
                     projectId = _project.value!!.id,
-                    memberId = member.id
+                    memberId = memberId
                 )
             },
-            onSuccess = { onSuccess.invoke() },
+            onSuccess = {
+                onSuccess.invoke()
+            },
             onFailure = { showSnackbarMessage(it) }
         )
     }

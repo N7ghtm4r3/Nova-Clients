@@ -22,9 +22,11 @@ import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
@@ -44,9 +46,12 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
@@ -90,6 +95,7 @@ import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
 import com.tecknobit.equinoxcompose.components.EquinoxTextField
 import com.tecknobit.equinoxcompose.components.ErrorUI
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
+import com.tecknobit.nova.Logo
 import com.tecknobit.nova.ReleaseStatusBadge
 import com.tecknobit.nova.ReleaseTagBadge
 import com.tecknobit.nova.createColor
@@ -104,11 +110,12 @@ import com.tecknobit.nova.theme.VioletSchemeColors
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.theme.md_theme_light_primary
 import com.tecknobit.nova.thinFontFamily
-import com.tecknobit.nova.ui.components.UploadingAssets
+import com.tecknobit.nova.ui.components.UploadedAssets
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.novacore.NovaInputValidator.areRejectionReasonsValid
 import com.tecknobit.novacore.NovaInputValidator.isTagCommentValid
+import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.release.Release
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Alpha
@@ -119,6 +126,7 @@ import com.tecknobit.novacore.records.release.Release.ReleaseStatus.New
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Rejected
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus.Verifying
 import com.tecknobit.novacore.records.release.events.AssetUploadingEvent
+import com.tecknobit.novacore.records.release.events.AssetUploadingEvent.AssetUploaded
 import com.tecknobit.novacore.records.release.events.RejectedReleaseEvent
 import com.tecknobit.novacore.records.release.events.RejectedTag
 import com.tecknobit.novacore.records.release.events.ReleaseEvent
@@ -141,6 +149,7 @@ import nova.composeapp.generated.resources.delete_release
 import nova.composeapp.generated.resources.delete_release_alert_message
 import nova.composeapp.generated.resources.description
 import nova.composeapp.generated.resources.dismiss
+import nova.composeapp.generated.resources.downloading_assets
 import nova.composeapp.generated.resources.new_asset_has_been_uploaded
 import nova.composeapp.generated.resources.no_events_yet
 import nova.composeapp.generated.resources.promote_alpha_release_alert_message
@@ -152,6 +161,7 @@ import nova.composeapp.generated.resources.promote_release_as_latest
 import nova.composeapp.generated.resources.reasons
 import nova.composeapp.generated.resources.reject
 import nova.composeapp.generated.resources.retry
+import nova.composeapp.generated.resources.select_assets_to_download
 import nova.composeapp.generated.resources.tags
 import nova.composeapp.generated.resources.test
 import nova.composeapp.generated.resources.uploading_assets
@@ -179,6 +189,10 @@ class ReleaseScreen(
     private lateinit var launcher: PickerResultLauncher
 
     private lateinit var release: State<Release?>
+
+    private lateinit var amITester: MutableState<Boolean>
+
+    private lateinit var releaseProject: Project
 
     private var releaseStatus: ReleaseStatus = New
 
@@ -240,7 +254,7 @@ class ReleaseScreen(
     private fun ReleaseTitle() {
         Column {
             Text(
-                text = release.value!!.project.name,
+                text = releaseProject.name,
                 color = Color.White,
                 fontSize = 22.sp
             )
@@ -270,7 +284,7 @@ class ReleaseScreen(
             )
         }
         AnimatedVisibility(
-            visible = !activeLocalSession.isTester
+            visible = !amITester.value
         ) {
             IconButton(
                 onClick = { deleteRelease.value = true }
@@ -316,8 +330,9 @@ class ReleaseScreen(
     @NonRestartableComposable
     private fun FAButton() {
         val isReleaseApproved = releaseStatus == Approved
+        val authorizedToUpload = (activeLocalSession.isVendor && !amITester.value)
         AnimatedVisibility(
-            visible = releaseStatus != Latest && activeLocalSession.isVendor && releaseStatus != Verifying
+            visible = authorizedToUpload && releaseStatus != Latest && releaseStatus != Verifying
         ) {
             FloatingActionButton(
                 containerColor = md_theme_light_primary,
@@ -396,17 +411,12 @@ class ReleaseScreen(
         }
     }
 
-    /**
-     * Function to create and display the UI to promote the [release]
-     *
-     * No-any params required
-     */
     @Composable
     @NonRestartableComposable
     private fun UploadAssets() {
         Dialog(
             onDismissRequest = {
-                if (!viewModel.uploadingAssets.value)
+                if (!viewModel.waitingAssetsManagement.value)
                     viewModel.resetUploadingInstances()
             }
         ) {
@@ -420,7 +430,9 @@ class ReleaseScreen(
                 color = gray_background
             ) {
                 UploadingSummary()
-                WaitingUploadingResult()
+                WaitingManagementResult(
+                    info = Res.string.uploading_assets
+                )
                 UploadingResult()
             }
         }
@@ -430,7 +442,7 @@ class ReleaseScreen(
     @NonRestartableComposable
     private fun UploadingSummary() {
         AnimatedVisibility(
-            visible = !viewModel.uploadingAssets.value && viewModel.uploadingStatus.value == null
+            visible = !viewModel.waitingAssetsManagement.value && viewModel.uploadingStatus.value == null
         ) {
             Column(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
@@ -454,54 +466,37 @@ class ReleaseScreen(
                     validator = { isTagCommentValid(it) },
                     maxLines = 3
                 )
-                UploadingAssets(
+                UploadedAssets(
                     modifier = Modifier
                         .weight(2f),
                     uploadingAssets = viewModel.assetsToUpload
                 )
-                TextButton(
+                Row(
                     modifier = Modifier
-                        .align(Alignment.End),
-                    onClick = {
-                        viewModel.uploadAssets(
-                            projectId = projectId,
-                            releaseId = releaseId
+                        .align(Alignment.End)
+                ) {
+                    TextButton(
+                        onClick = {
+                            viewModel.resetUploadingInstances()
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.dismiss)
                         )
                     }
-                ) {
-                    Text(
-                        text = stringResource(Res.string.confirm)
-                    )
+                    TextButton(
+                        onClick = {
+                            viewModel.uploadAssets(
+                                projectId = projectId,
+                                releaseId = releaseId
+                            )
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.confirm)
+                        )
+                    }
                 }
-            }
-        }
-    }
-
-    @Composable
-    @NonRestartableComposable
-    private fun WaitingUploadingResult() {
-        AnimatedVisibility(
-            visible = viewModel.uploadingAssets.value
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(150.dp),
-                    strokeWidth = 10.dp
-                )
-                Text(
-                    modifier = Modifier
-                        .padding(
-                            top = 32.dp
-                        ),
-                    text = stringResource(Res.string.uploading_assets),
-                    fontFamily = thinFontFamily
-                )
             }
         }
     }
@@ -770,6 +765,7 @@ class ReleaseScreen(
             visible = releaseStatus != Approved && releaseStatus != Latest && !event.isCommented
         ) {
             viewModel.commentAsset = remember { mutableStateOf(false) }
+            val chooseAssetsToDownload = remember { mutableStateOf(false) }
             CommentAssetsUploaded(
                 event = event
             )
@@ -778,24 +774,36 @@ class ReleaseScreen(
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(5.dp)
             ) {
+                val assetsUploaded = event.assetsUploaded
+                val singleAssetAvailable = assetsUploaded.size == 1
                 Button(
                     shape = RoundedCornerShape(
                         size = 10.dp
                     ),
                     onClick = {
-                        event.assetsUploaded.forEach { asset ->
-                            // TODO: TO SET
-                            /*downloadAndOpenAsset(
-                                asset = asset
-                            )*/
+                        if (singleAssetAvailable) {
+                            viewModel.downloadTestAssets(
+                                assetsUploaded = assetsUploaded
+                            )
+                        } else {
+                            viewModel.suspendRefresher()
+                            chooseAssetsToDownload.value = true
                         }
                     }
                 ) {
                     Text(
                         text = stringResource(Res.string.test)
                     )
+                    if (viewModel.requestedToDownload.value && !singleAssetAvailable)
+                        DownloadAssets()
+                    if (chooseAssetsToDownload.value) {
+                        ChooseAssetsToDownload(
+                            show = chooseAssetsToDownload,
+                            assetsUploaded = assetsUploaded
+                        )
+                    }
                 }
-                if (!activeLocalSession.isVendor) {
+                if (activeLocalSession.isCustomer || amITester.value) {
                     Button(
                         shape = RoundedCornerShape(
                             size = 10.dp
@@ -807,6 +815,186 @@ class ReleaseScreen(
                         )
                     }
                 }
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun ChooseAssetsToDownload(
+        show: MutableState<Boolean>,
+        assetsUploaded: List<AssetUploaded>
+    ) {
+        val selectionList = remember { mutableStateListOf<AssetUploaded>() }
+        if (selectionList.isEmpty())
+            selectionList.addAll(assetsUploaded)
+        Dialog(
+            onDismissRequest = {
+                show.value = false
+                viewModel.restartRefresher()
+            }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .size(
+                        width = 400.dp,
+                        height = 500.dp
+                    ),
+                shape = RoundedCornerShape(10.dp),
+                color = gray_background
+            ) {
+                AnimatedVisibility(
+                    visible = !viewModel.waitingAssetsManagement.value
+                ) {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(
+                                    top = 16.dp,
+                                    start = 16.dp
+                                ),
+                            text = stringResource(Res.string.select_assets_to_download),
+                            fontSize = 22.sp,
+                            color = Color.Black,
+                            fontStyle = Typography.titleLarge.fontStyle
+                        )
+                        LazyColumn(
+                            modifier = Modifier
+                                .weight(2f),
+                            contentPadding = PaddingValues(
+                                top = 16.dp
+                            )
+                        ) {
+                            itemsIndexed(
+                                items = selectionList
+                            ) { index, asset ->
+                                ListItem(
+                                    colors = ListItemDefaults.colors(
+                                        containerColor = Color.Transparent
+                                    ),
+                                    leadingContent = {
+                                        Logo(
+                                            url = asset.url
+                                        )
+                                    },
+                                    headlineContent = {
+                                        Text(
+                                            text = asset.name
+                                        )
+                                    },
+                                    trailingContent = {
+                                        AnimatedVisibility(
+                                            visible = selectionList.size > 1
+                                        ) {
+                                            IconButton(
+                                                onClick = { selectionList.removeAt(index) }
+                                            ) {
+                                                Icon(
+                                                    imageVector = Icons.Default.DeleteForever,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.error
+                                                )
+                                            }
+                                        }
+                                    }
+                                )
+                                HorizontalDivider()
+                            }
+                        }
+                        Row(
+                            modifier = Modifier
+                                .align(Alignment.End)
+                        ) {
+                            TextButton(
+                                onClick = {
+                                    show.value = false
+                                    viewModel.restartRefresher()
+                                }
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.dismiss)
+                                )
+                            }
+                            TextButton(
+                                onClick = {
+                                    viewModel.downloadTestAssets(
+                                        assetsUploaded = selectionList,
+                                        onSuccess = { show.value = false }
+                                    )
+                                }
+                            ) {
+                                Text(
+                                    text = stringResource(Res.string.confirm)
+                                )
+                            }
+                        }
+                    }
+                }
+                WaitingManagementResult(
+                    info = Res.string.downloading_assets
+                )
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun DownloadAssets() {
+        viewModel.suspendRefresher()
+        Dialog(
+            onDismissRequest = {
+                if (!viewModel.waitingAssetsManagement.value) {
+                    viewModel.resetDownloadingInstances()
+                    viewModel.restartRefresher()
+                }
+            }
+        ) {
+            Surface(
+                modifier = Modifier
+                    .size(
+                        width = 400.dp,
+                        height = 500.dp
+                    ),
+                shape = RoundedCornerShape(10.dp),
+                color = gray_background
+            ) {
+                WaitingManagementResult(
+                    info = Res.string.downloading_assets
+                )
+            }
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun WaitingManagementResult(
+        info: StringResource
+    ) {
+        AnimatedVisibility(
+            visible = viewModel.waitingAssetsManagement.value
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(150.dp),
+                    strokeWidth = 10.dp
+                )
+                Text(
+                    modifier = Modifier
+                        .padding(
+                            top = 32.dp
+                        ),
+                    text = stringResource(info),
+                    fontFamily = thinFontFamily,
+                    color = Color.Black
+                )
             }
         }
     }
@@ -964,8 +1152,7 @@ class ReleaseScreen(
                     items = ReleaseTag.entries.toTypedArray()
                 ) { tag ->
                     RejectedTagButton(
-                        tag = tag,
-                        rejectedTags = viewModel.rejectedTags
+                        tag = tag
                     )
                 }
             }
@@ -975,8 +1162,7 @@ class ReleaseScreen(
     @Composable
     @NonRestartableComposable
     private fun RejectedTagButton(
-        tag: ReleaseTag,
-        rejectedTags: MutableList<ReleaseTag>
+        tag: ReleaseTag
     ) {
         var isAdded by remember { mutableStateOf(false) }
         val tagColor = tag.createColor()
@@ -1003,9 +1189,10 @@ class ReleaseScreen(
             onClick = {
                 isAdded = !isAdded
                 if (isAdded)
-                    rejectedTags.add(tag)
+                    viewModel.rejectedTags.add(tag)
                 else
-                    rejectedTags.remove(tag)
+
+                    viewModel.rejectedTags.remove(tag)
             }
         ) {
             Text(
@@ -1050,6 +1237,7 @@ class ReleaseScreen(
                         mutableStateOf(false)
                     }
                     ReleaseTagBadge(
+                        isTester = amITester.value,
                         tag = tag,
                         isLastEvent = release.value!!.isLastEvent(event),
                         onClick = { showAlert.value = true }
@@ -1090,7 +1278,7 @@ class ReleaseScreen(
             },
             typography = Typography,
         ) {
-            val isInputMode = tag.comment == null || tag.comment.isEmpty()
+            val isInputMode = tag.comment.isNullOrEmpty()
             viewModel.rejectedTagDescription = remember { mutableStateOf("") }
             viewModel.rejectedTagDescriptionError = remember { mutableStateOf(false) }
             val isInputButton = @Composable {
@@ -1259,9 +1447,12 @@ class ReleaseScreen(
     @Composable
     override fun CollectStates() {
         super.CollectStates()
+        amITester = remember { mutableStateOf(false) }
         release = viewModel.release.collectAsState()
         release.value?.let { release: Release ->
             releaseStatus = release.status
+            releaseProject = release.project
+            amITester.value = releaseProject.amITheProjectAuthor(activeLocalSession.id)
         }
         deleteRelease = remember { mutableStateOf(false) }
         promoteRelease = remember { mutableStateOf(false) }
@@ -1281,8 +1472,9 @@ class ReleaseScreen(
         viewModel.uploadingAssetsComment = remember { mutableStateOf("") }
         viewModel.uploadingAssetsCommentError = remember { mutableStateOf(false) }
         viewModel.requestedToUpload = remember { mutableStateOf(false) }
+        viewModel.requestedToDownload = remember { mutableStateOf(false) }
         viewModel.assetsToUpload = remember { mutableStateListOf() }
-        viewModel.uploadingAssets = remember { mutableStateOf(false) }
+        viewModel.waitingAssetsManagement = remember { mutableStateOf(false) }
         viewModel.uploadingStatus = remember { mutableStateOf(null) }
     }
 

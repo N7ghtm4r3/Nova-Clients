@@ -85,7 +85,7 @@ fun ReleaseItem(
                     navigator.navigate("$RELEASE_SCREEN/${project.id}/${release.id}")
                 },
                 onDoubleClick = { expandReleaseNotes.value = true },
-                onLongClick = if (!activeLocalSession.isTester) {
+                onLongClick = if (!activeLocalSession.isTester(project)) {
                     {
                         onEdit.invoke(release)
                     }

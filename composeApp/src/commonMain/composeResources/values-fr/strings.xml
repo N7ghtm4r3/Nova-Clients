@@ -121,6 +121,8 @@
     <string name="retry">Réessayer</string>
     <string name="assets_summary">Résumé des actifs</string>
     <string name="uploading_assets">Téléchargement des actifs</string>
+    <string name="downloading_assets">Téléchargement des actifs</string>
     <string name="uploading_assets_failed">Le téléchargement des actifs a échoué</string>
     <string name="uploading_assets_successful">Téléchargement des actifs réussi</string>
+    <string name="select_assets_to_download">Sélectionnez les actifs à télécharger</string>
 </resources>

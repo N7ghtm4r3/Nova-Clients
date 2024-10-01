@@ -718,7 +718,7 @@ class NovaRequester(
         if(reasons != null)
             payload.addParam(REASONS_KEY, reasons)
         if (tags != null)
-            payload.addParam(TAGS_KEY, JSONArray(tags))
+            payload.addParam(TAGS_KEY, JSONArray(tags.map { tag -> tag.name }))
         return execPost(
             endpoint = assembleReleasesEndpointPath(
                 projectId = projectId,

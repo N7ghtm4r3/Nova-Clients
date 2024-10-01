@@ -121,6 +121,8 @@
     <string name="retry">Retry</string>
     <string name="assets_summary">Assets summary</string>
     <string name="uploading_assets">Uploading assets</string>
+    <string name="downloading_assets">Downloading the assets</string>
     <string name="uploading_assets_failed">Uploading of the assets failed</string>
     <string name="uploading_assets_successful">Uploading of the assets successful</string>
+    <string name="select_assets_to_download">Select the assets to download</string>
 </resources>

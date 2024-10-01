@@ -12,11 +12,7 @@ class LocalSessionHelper(
     val databaseDriverFactory: DatabaseDriverFactory
 ) : LocalSessionUtils {
 
-    private val sqlDriver: SqlDriver
-
-    init {
-        sqlDriver = databaseDriverFactory.createDriver()
-    }
+    private val sqlDriver: SqlDriver = databaseDriverFactory.createDriver()
 
     private var database = Nova(
         driver = sqlDriver
@@ -178,7 +174,7 @@ class LocalSessionHelper(
         sessionValue: String
     ) {
         database.transaction {
-            val updateQuery = "UPDATE $SESSIONS_TABLE SET $key = ?"
+            val updateQuery = "UPDATE $SESSIONS_TABLE SET $key = ? WHERE is_active='1'"
             sqlDriver.execute(
                 identifier = null,
                 sql = updateQuery,

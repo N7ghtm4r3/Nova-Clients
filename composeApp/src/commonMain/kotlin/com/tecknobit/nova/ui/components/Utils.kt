@@ -187,6 +187,7 @@ fun ReleaseStatus.createColor(): Color {
  */
 @Composable
 fun ReleaseTagBadge(
+    isTester: Boolean,
     tag: RejectedTag,
     isLastEvent: Boolean,
     onClick: () -> Unit = {}
@@ -213,7 +214,8 @@ fun ReleaseTagBadge(
         width = 1.dp,
         color = textColor
     )
-    if(((activeLocalSession.isVendor && tag.comment.isNullOrEmpty()) || !isLastEvent)) {
+    val notAuthorizedUser = activeLocalSession.isVendor && !isTester
+    if (((notAuthorizedUser && tag.comment.isNullOrEmpty()) || !isLastEvent)) {
         OutlinedCard(
             modifier = modifier,
             colors = colors,

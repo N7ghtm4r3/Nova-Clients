@@ -17,6 +17,7 @@ import com.tecknobit.novacore.NovaInputValidator.isTagCommentValid
 import com.tecknobit.novacore.records.release.Release
 import com.tecknobit.novacore.records.release.Release.RELEASE_REPORT_PATH
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
+import com.tecknobit.novacore.records.release.events.AssetUploadingEvent.AssetUploaded
 import com.tecknobit.novacore.records.release.events.RejectedTag
 import com.tecknobit.novacore.records.release.events.ReleaseEvent
 import com.tecknobit.novacore.records.release.events.ReleaseEvent.ReleaseTag
@@ -39,7 +40,9 @@ class ReleaseScreenViewModel(
 
     lateinit var requestedToUpload: MutableState<Boolean>
 
-    lateinit var uploadingAssets: MutableState<Boolean>
+    lateinit var requestedToDownload: MutableState<Boolean>
+
+    lateinit var waitingAssetsManagement: MutableState<Boolean>
 
     lateinit var uploadingStatus: MutableState<StandardResponseCode?>
 
@@ -119,7 +122,7 @@ class ReleaseScreenViewModel(
             return
         }
         if (assetsToUpload.isNotEmpty()) {
-            uploadingAssets.value = true
+            waitingAssetsManagement.value = true
             CoroutineScope(Dispatchers.Default).launch {
                 requester.sendRequest(
                     request = {
@@ -131,7 +134,7 @@ class ReleaseScreenViewModel(
                         )
                     },
                     onResponse = { response ->
-                        uploadingAssets.value = false
+                        waitingAssetsManagement.value = false
                         uploadingStatus.value = valueOf(response.getString(RESPONSE_STATUS_KEY))
                     }
                 )
@@ -145,6 +148,27 @@ class ReleaseScreenViewModel(
         requestedToUpload.value = false
         uploadingAssetsComment.value = ""
         restartRefresher()
+    }
+
+    fun downloadTestAssets(
+        assetsUploaded: List<AssetUploaded>,
+        onSuccess: () -> Unit = {}
+    ) {
+        requestedToDownload.value = true
+        CoroutineScope(Dispatchers.Default).launch {
+            waitingAssetsManagement.value = true
+            downloadAssetsUploaded(
+                assetsUploaded = assetsUploaded
+            )
+        }.invokeOnCompletion {
+            resetDownloadingInstances()
+            onSuccess.invoke()
+        }
+    }
+
+    fun resetDownloadingInstances() {
+        requestedToDownload.value = false
+        waitingAssetsManagement.value = false
     }
 
     fun createAndDownloadReport(
@@ -161,7 +185,9 @@ class ReleaseScreenViewModel(
             onSuccess = { response ->
                 val reportUrl = getReportUrl(response.getString(RELEASE_REPORT_PATH))
                 CoroutineScope(Dispatchers.Default).launch {
-                    downloadReport(reportUrl)
+                    downloadReport(
+                        report = reportUrl
+                    )
                 }
             },
             onFailure = { showSnackbarMessage(it) }

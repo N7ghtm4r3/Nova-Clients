@@ -8,7 +8,9 @@ import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.os.Environment.getExternalStoragePublicDirectory
 import android.provider.OpenableColumns
 import com.tecknobit.apimanager.annotations.Wrapper
+import com.tecknobit.nova.getAssetUrl
 import com.tecknobit.nova.helpers.utils.AppContext
+import com.tecknobit.novacore.records.release.events.AssetUploadingEvent
 import io.github.vinceglb.filekit.core.PlatformFile
 import java.io.File
 import java.io.FileOutputStream
@@ -63,21 +65,35 @@ private fun getFilePath(
 }
 
 @Wrapper
+actual fun downloadAssetsUploaded(
+    assetsUploaded: List<AssetUploadingEvent.AssetUploaded>
+) {
+    downloadAssets(
+        containerDirectoryPath = getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).path,
+        getAssetName = { index -> assetsUploaded[index].name },
+        assets = assetsUploaded.map { asset -> getAssetUrl(asset.url) }
+    )
+}
+
+@Wrapper
 actual fun downloadReport(
     report: String
 ) {
     downloadAssets(
         containerDirectoryPath = getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).path,
+        getAssetName = { report.substringAfterLast("/") },
         assets = listOf(report)
     )
 }
 
 actual fun downloadAssets(
     containerDirectoryPath: String,
+    getAssetName: (Int) -> String,
     assets: List<String>
 ) {
     performAssetsDownload(
-        containerDirectoryPath = getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS).path,
+        containerDirectoryPath = containerDirectoryPath,
+        getAssetName = getAssetName,
         assets = assets
     )
 }

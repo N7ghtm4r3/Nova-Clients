@@ -26,7 +26,7 @@ private const val BYTES_TO_MEGABYTE_RATE = 1_000_000
 
 @Composable
 @NonRestartableComposable
-fun UploadingAssets(
+fun UploadedAssets(
     modifier: Modifier = Modifier,
     uploadingAssets: SnapshotStateList<File>
 ) {

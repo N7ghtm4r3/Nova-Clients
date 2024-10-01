@@ -121,6 +121,8 @@
     <string name="retry">Riprova</string>
     <string name="assets_summary">Sintesi delle attività</string>
     <string name="uploading_assets">Caricamento delle risorse</string>
+    <string name="downloading_assets">Scaricare le risorse</string>
     <string name="uploading_assets_failed">Il caricamento delle risorse non è riuscito</string>
     <string name="uploading_assets_successful">Caricamento degli asset riuscito</string>
+    <string name="select_assets_to_download">Selezionare le risorse da scaricare</string>
 </resources>
