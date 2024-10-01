@@ -20,13 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.tecknobit.nova.Logo
+import com.tecknobit.novacore.records.release.events.AssetUploadingEvent.AssetUploaded
 import java.io.File
 
 private const val BYTES_TO_MEGABYTE_RATE = 1_000_000
 
 @Composable
 @NonRestartableComposable
-fun UploadedAssets(
+fun AssetsToUpload(
     modifier: Modifier = Modifier,
     uploadingAssets: SnapshotStateList<File>
 ) {
@@ -40,7 +41,7 @@ fun UploadedAssets(
             items = uploadingAssets,
             key = { asset -> asset.absolutePath },
         ) { asset ->
-            UploadedAsset(
+            AssetToUpload(
                 uploadingAssets = uploadingAssets,
                 asset = asset
             )
@@ -51,7 +52,7 @@ fun UploadedAssets(
 
 @Composable
 @NonRestartableComposable
-private fun UploadedAsset(
+private fun AssetToUpload(
     uploadingAssets: SnapshotStateList<File>,
     asset: File
 ) {
@@ -80,6 +81,69 @@ private fun UploadedAsset(
             ) {
                 IconButton(
                     onClick = { uploadingAssets.remove(asset) }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.DeleteForever,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.error
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+@NonRestartableComposable
+fun AssetsToDownload(
+    modifier: Modifier = Modifier,
+    selectionList: SnapshotStateList<AssetUploaded>
+) {
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(
+            top = 16.dp
+        )
+    ) {
+        items(
+            items = selectionList,
+            key = { asset -> asset.id }
+        ) { asset ->
+            AssetToDownload(
+                selectionList = selectionList,
+                asset = asset
+            )
+            HorizontalDivider()
+        }
+    }
+}
+
+@Composable
+@NonRestartableComposable
+private fun AssetToDownload(
+    selectionList: SnapshotStateList<AssetUploaded>,
+    asset: AssetUploaded
+) {
+    ListItem(
+        colors = ListItemDefaults.colors(
+            containerColor = Color.Transparent
+        ),
+        leadingContent = {
+            Logo(
+                url = asset.url
+            )
+        },
+        headlineContent = {
+            Text(
+                text = asset.name
+            )
+        },
+        trailingContent = {
+            AnimatedVisibility(
+                visible = selectionList.size > 1
+            ) {
+                IconButton(
+                    onClick = { selectionList.remove(asset) }
                 ) {
                     Icon(
                         imageVector = Icons.Default.DeleteForever,

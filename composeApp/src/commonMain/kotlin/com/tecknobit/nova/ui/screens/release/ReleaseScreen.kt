@@ -22,11 +22,9 @@ import androidx.compose.foundation.layout.requiredWidthIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Comment
@@ -46,18 +44,14 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -79,7 +73,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material.RichText
@@ -95,7 +88,6 @@ import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
 import com.tecknobit.equinoxcompose.components.EquinoxTextField
 import com.tecknobit.equinoxcompose.components.ErrorUI
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
-import com.tecknobit.nova.Logo
 import com.tecknobit.nova.ReleaseStatusBadge
 import com.tecknobit.nova.ReleaseTagBadge
 import com.tecknobit.nova.createColor
@@ -110,7 +102,10 @@ import com.tecknobit.nova.theme.VioletSchemeColors
 import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.theme.md_theme_light_primary
 import com.tecknobit.nova.thinFontFamily
-import com.tecknobit.nova.ui.components.UploadedAssets
+import com.tecknobit.nova.ui.components.AssetsDialog
+import com.tecknobit.nova.ui.components.AssetsToDownload
+import com.tecknobit.nova.ui.components.AssetsToUpload
+import com.tecknobit.nova.ui.components.DialogsActions
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.novacore.NovaInputValidator.areRejectionReasonsValid
@@ -414,27 +409,17 @@ class ReleaseScreen(
     @Composable
     @NonRestartableComposable
     private fun UploadAssets() {
-        Dialog(
+        AssetsDialog(
             onDismissRequest = {
                 if (!viewModel.waitingAssetsManagement.value)
                     viewModel.resetUploadingInstances()
             }
         ) {
-            Surface(
-                modifier = Modifier
-                    .size(
-                        width = 400.dp,
-                        height = 500.dp
-                    ),
-                shape = RoundedCornerShape(10.dp),
-                color = gray_background
-            ) {
-                UploadingSummary()
-                WaitingManagementResult(
-                    info = Res.string.uploading_assets
-                )
-                UploadingResult()
-            }
+            UploadingSummary()
+            WaitingManagementResult(
+                info = Res.string.uploading_assets
+            )
+            UploadingResult()
         }
     }
 
@@ -466,37 +451,22 @@ class ReleaseScreen(
                     validator = { isTagCommentValid(it) },
                     maxLines = 3
                 )
-                UploadedAssets(
+                AssetsToUpload(
                     modifier = Modifier
                         .weight(2f),
                     uploadingAssets = viewModel.assetsToUpload
                 )
-                Row(
+                DialogsActions(
                     modifier = Modifier
-                        .align(Alignment.End)
-                ) {
-                    TextButton(
-                        onClick = {
-                            viewModel.resetUploadingInstances()
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.dismiss)
+                        .align(Alignment.End),
+                    dismissAction = { viewModel.resetUploadingInstances() },
+                    confirmAction = {
+                        viewModel.uploadAssets(
+                            projectId = projectId,
+                            releaseId = releaseId
                         )
                     }
-                    TextButton(
-                        onClick = {
-                            viewModel.uploadAssets(
-                                projectId = projectId,
-                                releaseId = releaseId
-                            )
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(Res.string.confirm)
-                        )
-                    }
-                }
+                )
             }
         }
     }
@@ -797,7 +767,7 @@ class ReleaseScreen(
                     if (viewModel.requestedToDownload.value && !singleAssetAvailable)
                         DownloadAssets()
                     if (chooseAssetsToDownload.value) {
-                        ChooseAssetsToDownload(
+                        ChoseAssetsToDownload(
                             show = chooseAssetsToDownload,
                             assetsUploaded = assetsUploaded
                         )
@@ -821,119 +791,70 @@ class ReleaseScreen(
 
     @Composable
     @NonRestartableComposable
-    private fun ChooseAssetsToDownload(
+    private fun ChoseAssetsToDownload(
+        show: MutableState<Boolean>,
+        assetsUploaded: List<AssetUploaded>
+    ) {
+        AssetsDialog(
+            onDismissRequest = {
+                show.value = false
+                viewModel.restartRefresher()
+            }
+        ) {
+            AssetsSelector(
+                show = show,
+                assetsUploaded = assetsUploaded
+            )
+            WaitingManagementResult(
+                info = Res.string.downloading_assets
+            )
+        }
+    }
+
+    @Composable
+    @NonRestartableComposable
+    private fun AssetsSelector(
         show: MutableState<Boolean>,
         assetsUploaded: List<AssetUploaded>
     ) {
         val selectionList = remember { mutableStateListOf<AssetUploaded>() }
         if (selectionList.isEmpty())
             selectionList.addAll(assetsUploaded)
-        Dialog(
-            onDismissRequest = {
-                show.value = false
-                viewModel.restartRefresher()
-            }
+        AnimatedVisibility(
+            visible = !viewModel.waitingAssetsManagement.value
         ) {
-            Surface(
-                modifier = Modifier
-                    .size(
-                        width = 400.dp,
-                        height = 500.dp
-                    ),
-                shape = RoundedCornerShape(10.dp),
-                color = gray_background
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
-                AnimatedVisibility(
-                    visible = !viewModel.waitingAssetsManagement.value
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .padding(
-                                    top = 16.dp,
-                                    start = 16.dp
-                                ),
-                            text = stringResource(Res.string.select_assets_to_download),
-                            fontSize = 22.sp,
-                            color = Color.Black,
-                            fontStyle = Typography.titleLarge.fontStyle
+                Text(
+                    modifier = Modifier
+                        .padding(
+                            top = 16.dp,
+                            start = 16.dp
+                        ),
+                    text = stringResource(Res.string.select_assets_to_download),
+                    fontSize = 22.sp,
+                    color = Color.Black,
+                    fontStyle = Typography.titleLarge.fontStyle
+                )
+                AssetsToDownload(
+                    modifier = Modifier
+                        .weight(2f),
+                    selectionList = selectionList
+                )
+                DialogsActions(
+                    modifier = Modifier
+                        .align(Alignment.End),
+                    dismissAction = {
+                        show.value = false
+                        viewModel.restartRefresher()
+                    },
+                    confirmAction = {
+                        viewModel.downloadTestAssets(
+                            assetsUploaded = selectionList,
+                            onSuccess = { show.value = false }
                         )
-                        LazyColumn(
-                            modifier = Modifier
-                                .weight(2f),
-                            contentPadding = PaddingValues(
-                                top = 16.dp
-                            )
-                        ) {
-                            itemsIndexed(
-                                items = selectionList
-                            ) { index, asset ->
-                                ListItem(
-                                    colors = ListItemDefaults.colors(
-                                        containerColor = Color.Transparent
-                                    ),
-                                    leadingContent = {
-                                        Logo(
-                                            url = asset.url
-                                        )
-                                    },
-                                    headlineContent = {
-                                        Text(
-                                            text = asset.name
-                                        )
-                                    },
-                                    trailingContent = {
-                                        AnimatedVisibility(
-                                            visible = selectionList.size > 1
-                                        ) {
-                                            IconButton(
-                                                onClick = { selectionList.removeAt(index) }
-                                            ) {
-                                                Icon(
-                                                    imageVector = Icons.Default.DeleteForever,
-                                                    contentDescription = null,
-                                                    tint = MaterialTheme.colorScheme.error
-                                                )
-                                            }
-                                        }
-                                    }
-                                )
-                                HorizontalDivider()
-                            }
-                        }
-                        Row(
-                            modifier = Modifier
-                                .align(Alignment.End)
-                        ) {
-                            TextButton(
-                                onClick = {
-                                    show.value = false
-                                    viewModel.restartRefresher()
-                                }
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.dismiss)
-                                )
-                            }
-                            TextButton(
-                                onClick = {
-                                    viewModel.downloadTestAssets(
-                                        assetsUploaded = selectionList,
-                                        onSuccess = { show.value = false }
-                                    )
-                                }
-                            ) {
-                                Text(
-                                    text = stringResource(Res.string.confirm)
-                                )
-                            }
-                        }
                     }
-                }
-                WaitingManagementResult(
-                    info = Res.string.downloading_assets
                 )
             }
         }
@@ -943,7 +864,7 @@ class ReleaseScreen(
     @NonRestartableComposable
     private fun DownloadAssets() {
         viewModel.suspendRefresher()
-        Dialog(
+        AssetsDialog(
             onDismissRequest = {
                 if (!viewModel.waitingAssetsManagement.value) {
                     viewModel.resetDownloadingInstances()
@@ -951,19 +872,9 @@ class ReleaseScreen(
                 }
             }
         ) {
-            Surface(
-                modifier = Modifier
-                    .size(
-                        width = 400.dp,
-                        height = 500.dp
-                    ),
-                shape = RoundedCornerShape(10.dp),
-                color = gray_background
-            ) {
-                WaitingManagementResult(
-                    info = Res.string.downloading_assets
-                )
-            }
+            WaitingManagementResult(
+                info = Res.string.downloading_assets
+            )
         }
     }
 
