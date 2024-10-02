@@ -13,6 +13,21 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@Volatile
+private var fetchNotifications: Boolean = true
+
+fun startNotificationsFetching() {
+    fetchNotifications = true
+}
+
+fun stopNotificationsFetching() {
+    fetchNotifications = false
+}
+
+fun notificationsFetching(): Boolean {
+    return fetchNotifications
+}
+
 @Composable
 expect fun CheckForUpdatesAndLaunch()
 
@@ -48,7 +63,7 @@ expect fun setLocale()
 fun refreshList() {
     if (activeLocalSession.isHostSet) {
         GlobalScope.launch {
-            while (true) {
+            while (fetchNotifications && activeLocalSession.isHostSet) {
                 requester.sendRequest(
                     request = { requester.getNotifications() },
                     onSuccess = { response ->

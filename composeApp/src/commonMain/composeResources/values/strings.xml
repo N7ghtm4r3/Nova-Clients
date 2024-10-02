@@ -125,4 +125,6 @@
     <string name="uploading_assets_failed">Uploading of the assets failed</string>
     <string name="uploading_assets_successful">Uploading of the assets successful</string>
     <string name="select_assets_to_download">Select the assets to download</string>
+    <string name="open_nova">Open nova</string>
+    <string name="quit_nova">Quit</string>
 </resources>

@@ -17,9 +17,6 @@ import coil3.addLastModifiedToFileCacheKey
 import coil3.compose.LocalPlatformContext
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
-import com.mmk.kmpnotifier.notification.NotifierManager
-import com.mmk.kmpnotifier.notification.NotifierManager.Listener
-import com.mmk.kmpnotifier.notification.PayloadData
 import com.tecknobit.nova.theme.NovaTheme
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.ADD_MEMBERS_DIALOG
@@ -237,19 +234,6 @@ fun App() {
             }
         }
     }
-
-
-
-
-    NotifierManager.addListener(object : Listener {
-
-        override fun onPayloadData(data: PayloadData) {
-            super.onPayloadData(data)
-            navigator.navigate(data[DESTINATION_KEY].toString())
-        }
-
-    })
-
 }
 
 @Composable

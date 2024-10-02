@@ -1,7 +1,10 @@
 package com.tecknobit.nova.cache
 
 import app.cash.sqldelight.db.SqlDriver
+import com.tecknobit.equinox.FetcherManager
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
+import com.tecknobit.nova.navigator
+import com.tecknobit.nova.ui.screens.NovaScreen.Companion.SPLASH_SCREEN
 import com.tecknobit.novacore.helpers.LocalSessionUtils
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession
 import com.tecknobit.novacore.helpers.LocalSessionUtils.SESSIONS_TABLE
@@ -184,6 +187,13 @@ class LocalSessionHelper(
                 }
             )
         }
+    }
+
+    // TODO: TO COMMENT
+    fun logout() {
+        deleteAllSessions()
+        FetcherManager.setActiveContext(this::class.java)
+        navigator.navigate(SPLASH_SCREEN)
     }
 
     /**

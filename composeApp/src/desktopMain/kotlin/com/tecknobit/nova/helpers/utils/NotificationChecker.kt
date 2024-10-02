@@ -16,7 +16,10 @@ import com.tecknobit.novacore.records.project.Project.PROJECT_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_KEY
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.new_assets_are_ready_to_be_tested
@@ -41,31 +44,38 @@ class NotificationChecker {
      *
      * No-any params required
      */
+    @OptIn(DelicateCoroutinesApi::class)
     fun execCheckRoutine() {
-        val localSessionHelper = LocalSessionHelper(DatabaseDriverFactory())
-        for (session in localSessionHelper.getSessions()) {
-            if (session.isHostSet) {
-                val requester = NovaRequester(
-                    session.hostAddress,
-                    session.id,
-                    session.token,
-                    false
-                )
-                val response = JsonHelper(requester.getNotifications())
-                try {
-                    if (response.getString(Requester.RESPONSE_STATUS_KEY) == SUCCESSFUL.name) {
-                        val jNotifications = response.getJSONArray(RESPONSE_MESSAGE_KEY)
-                        for (j in 0 until jNotifications.length()) {
-                            val notification = NovaNotification(jNotifications.getJSONObject(j))
-                            if (!notification.isSent) {
-                                sendNotification(
-                                    notification = notification
-                                )
+        GlobalScope.launch {
+            while (!notificationsFetching()) {
+                val localSessionHelper = LocalSessionHelper(DatabaseDriverFactory())
+                for (session in localSessionHelper.getSessions()) {
+                    if (session.isHostSet) {
+                        val requester = NovaRequester(
+                            session.hostAddress,
+                            session.id,
+                            session.token,
+                            false
+                        )
+                        val response = JsonHelper(requester.getNotifications())
+                        try {
+                            if (response.getString(Requester.RESPONSE_STATUS_KEY) == SUCCESSFUL.name) {
+                                val jNotifications = response.getJSONArray(RESPONSE_MESSAGE_KEY)
+                                for (j in 0 until jNotifications.length()) {
+                                    val notification =
+                                        NovaNotification(jNotifications.getJSONObject(j))
+                                    if (!notification.isSent) {
+                                        sendNotification(
+                                            notification = notification
+                                        )
+                                    }
+                                }
                             }
+                        } catch (ignored: JSONException) {
                         }
                     }
-                } catch (ignored: JSONException) {
                 }
+                delay(10000L)
             }
         }
     }
@@ -73,7 +83,6 @@ class NotificationChecker {
     /**
      * Method to create and send a notification
      *
-     * @param session: the session where the notifications are attached
      * @param notification: the notification details to send and create the related notification
      */
     private fun sendNotification(

@@ -8,17 +8,18 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts.StartIntentSenderForResult
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
-import com.mmk.kmpnotifier.notification.NotifierManager
-import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
 import com.mmk.kmpnotifier.permission.permissionUtil
 import com.tecknobit.equinoxcompose.helpers.session.setUpSession
 import com.tecknobit.nova.cache.LocalSessionHelper
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
 import com.tecknobit.nova.helpers.utils.launchApp
+import com.tecknobit.nova.theme.md_theme_light_primary
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECTS_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
 import io.github.vinceglb.filekit.core.FileKit
@@ -51,8 +52,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO: TO FIX BEHAVIOR
-        //enableEdgeToEdge()
         setContent {
             InitInstances()
             App()
@@ -73,22 +72,20 @@ class MainActivity : ComponentActivity() {
         localSessionsHelper = LocalSessionHelper(
             databaseDriverFactory = DatabaseDriverFactory()
         )
+        val systemUiController = rememberSystemUiController()
+        systemUiController.setSystemBarsColor(
+            color = md_theme_light_primary
+        )
+        systemUiController.setNavigationBarColor(
+            color = Color.Transparent
+        )
         setUpSession(
             serverOfflineMessage = "server_currently_offline_message",
             noInternetConnectionMessage = "no_internet_message",
             noInternetConnectionIcon = ImageVector.vectorResource(id = R.drawable.no_internet),
-            hasBeenDisconnectedAction = {
-                // TODO: TO SET
-                // the action to execute when the user has been disconnected
-            }
+            hasBeenDisconnectedAction = { localSessionsHelper.logout() }
         )
         FileKit.init(this)
-        NotifierManager.initialize(
-            configuration = NotificationPlatformConfiguration.Android(
-                notificationIconResId = R.drawable.logo,
-                showPushNotification = true,
-            )
-        )
     }
 
 }

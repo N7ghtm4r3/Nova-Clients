@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.app.update)
             implementation(libs.app.update.ktx)
             implementation(libs.sqldelight.android.driver)
+            implementation(libs.accompanist.systemuicontroller)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -53,7 +54,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             api(libs.precompose)
-            api("io.github.mirzemehdi:kmpnotifier:1.3.0")
+            api(libs.kmpnotifier)
             implementation(libs.apimanager)
             implementation(libs.novacore)
             implementation(libs.equinox)
