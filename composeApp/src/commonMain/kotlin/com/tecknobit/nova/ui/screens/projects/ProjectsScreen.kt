@@ -76,6 +76,7 @@ class ProjectsScreen : NovaScreen() {
     @Composable
     override fun ArrangeScreenContent() {
         CollectStates()
+        CloseApplicationOnNavBack()
         ManagedContent(
             viewModel = viewModel,
             content = {

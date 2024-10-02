@@ -60,9 +60,11 @@ class ProjectScreenViewModel(
                             )
                         },
                         onSuccess = { response ->
-                            _project.value =
-                                returnProjectInstance(response.getJSONObject(RESPONSE_MESSAGE_KEY))
-                            setServerOfflineValue(false)
+                            val jProject = response.getJSONObject(RESPONSE_MESSAGE_KEY)
+                            jProject?.let { projectData ->
+                                _project.value = returnProjectInstance(projectData)
+                                setServerOfflineValue(false)
+                            }
                         },
                         onFailure = {
                             if (!projectDeleted)

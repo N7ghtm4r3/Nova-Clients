@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.unit.dp
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.JOIN_PROJECT_DIALOG
@@ -55,4 +56,9 @@ actual fun workOnProject(
 
 actual fun joinProject() {
     navigator.navigate(JOIN_PROJECT_DIALOG)
+}
+
+@Composable
+@NonRestartableComposable
+actual fun CloseApplicationOnNavBack() {
 }

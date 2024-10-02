@@ -16,6 +16,10 @@ import kotlinx.coroutines.launch
 @Volatile
 private var fetchNotifications: Boolean = true
 
+fun isNotificationsFetchingEnable(): Boolean {
+    return fetchNotifications
+}
+
 fun startNotificationsFetching() {
     fetchNotifications = true
 }
@@ -39,11 +43,10 @@ fun initSession(): Boolean {
         requester = NovaRequester(
             userId = activeSession.id,
             userToken = activeSession.token,
-            host = activeSession.hostAddress,
-            debugMode = true // TODO: TO REMOVE
+            host = activeSession.hostAddress
         )
         setLocale()
-        refreshList()
+        fetchNotifications()
     } else {
         requester = NovaRequester(
             host = ""
@@ -60,24 +63,24 @@ fun initSession(): Boolean {
 expect fun setLocale()
 
 @OptIn(DelicateCoroutinesApi::class)
-fun refreshList() {
-    if (activeLocalSession.isHostSet) {
-        GlobalScope.launch {
-            while (fetchNotifications && activeLocalSession.isHostSet) {
-                requester.sendRequest(
-                    request = { requester.getNotifications() },
-                    onSuccess = { response ->
-                        val jNotifications = response.getJSONArray(RESPONSE_MESSAGE_KEY)
+fun fetchNotifications() {
+    GlobalScope.launch {
+        while (fetchNotifications && activeLocalSession.isHostSet) {
+            requester.sendRequest(
+                request = { requester.getNotifications() },
+                onSuccess = { response ->
+                    val jNotifications = response.getJSONArray(RESPONSE_MESSAGE_KEY)
+                    jNotifications?.let {
                         notifications.clear()
                         for (j in 0 until jNotifications.length()) {
                             val notification = NovaNotification(jNotifications.getJSONObject(j))
                             notifications.add(notification)
                         }
-                    },
-                    onFailure = {}
-                )
-                delay(5000L)
-            }
+                    }
+                },
+                onFailure = {}
+            )
+            delay(5000L)
         }
     }
 }

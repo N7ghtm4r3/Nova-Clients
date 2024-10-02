@@ -64,7 +64,7 @@ class NovaRequester(
     host = host,
     userId = userId,
     userToken = userToken,
-    debugMode = debugMode,
+    debugMode = true,
     connectionTimeout = 2000,
     connectionErrorMessage = DEFAULT_CONNECTION_ERROR_MESSAGE,
     enableCertificatesValidation = true

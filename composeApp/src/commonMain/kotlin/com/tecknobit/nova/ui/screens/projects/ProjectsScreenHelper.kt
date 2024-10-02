@@ -119,3 +119,7 @@ fun ProjectItem(
         }
     )
 }
+
+@Composable
+@NonRestartableComposable
+expect fun CloseApplicationOnNavBack()

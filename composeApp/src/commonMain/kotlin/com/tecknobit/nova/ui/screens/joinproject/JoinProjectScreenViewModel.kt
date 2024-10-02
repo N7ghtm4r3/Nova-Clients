@@ -77,6 +77,11 @@ class JoinProjectScreenViewModel(
             hostError.value = true
             return
         }
+        val requester = NovaRequester(
+            host = host.value,
+            userId = activeLocalSession.id,
+            userToken = activeLocalSession.token,
+        )
         requester.sendRequest(
             request = {
                 requester.joinWithCode(
@@ -110,7 +115,7 @@ class JoinProjectScreenViewModel(
                 userIdentifier,
                 token,
                 response.getString(PROFILE_PIC_KEY),
-                activeLocalSession.email,
+                activeLocalSession.name,
                 activeLocalSession.surname,
                 activeLocalSession.email,
                 activeLocalSession.password,

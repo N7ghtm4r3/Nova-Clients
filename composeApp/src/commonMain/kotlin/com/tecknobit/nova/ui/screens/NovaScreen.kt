@@ -18,6 +18,10 @@ import com.tecknobit.apimanager.annotations.Structure
 import com.tecknobit.equinox.environment.records.EquinoxItem
 import com.tecknobit.equinoxcompose.components.EmptyListUI
 import com.tecknobit.equinoxcompose.helpers.session.EquinoxScreen
+import com.tecknobit.nova.helpers.utils.fetchNotifications
+import com.tecknobit.nova.helpers.utils.isNotificationsFetchingEnable
+import com.tecknobit.nova.helpers.utils.startNotificationsFetching
+import com.tecknobit.nova.helpers.utils.stopNotificationsFetching
 import com.tecknobit.nova.navigator
 import nova.composeapp.generated.resources.Res.string
 import nova.composeapp.generated.resources.loading_data
@@ -98,6 +102,19 @@ abstract class NovaScreen: EquinoxScreen() {
                 subText = string.loading_data
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!isNotificationsFetchingEnable()) {
+            startNotificationsFetching()
+            fetchNotifications()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        stopNotificationsFetching()
     }
 
 }

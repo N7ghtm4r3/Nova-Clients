@@ -6,6 +6,7 @@ import io.github.vinceglb.filekit.core.PlatformFile
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -64,8 +65,11 @@ fun performAssetsDownload(
         val response = client.newCall(request).execute()
         val asset = File(containerDirectoryPath, getAssetName(index))
         response.body?.byteStream()?.use { inputStream ->
-            FileOutputStream(asset).use { outputStream ->
-                inputStream.copyTo(outputStream)
+            try {
+                FileOutputStream(asset).use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            } catch (_: FileNotFoundException) {
             }
         }
         if (lastAsset == assetUrl) {

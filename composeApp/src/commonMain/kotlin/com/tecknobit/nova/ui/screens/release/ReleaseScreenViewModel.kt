@@ -86,29 +86,30 @@ class ReleaseScreenViewModel(
         execRefreshingRoutine(
             currentContext = ReleaseScreen::class.java,
             routine = {
-                requester.sendRequest(
-                    request = {
-                        requester.getRelease(
-                            projectId = projectId,
-                            releaseId = releaseId
-                        )
-                    },
-                    onSuccess = { response ->
-                        _release.value = Release(
-                            response.getJSONObject(
-                                RESPONSE_MESSAGE_KEY
+                if (!requestedToUpload.value && !requestedToDownload.value) {
+                    requester.sendRequest(
+                        request = {
+                            requester.getRelease(
+                                projectId = projectId,
+                                releaseId = releaseId
                             )
-                        )
-                        setServerOfflineValue(false)
-                    },
-                    onFailure = {
-                        if (!releaseDeleted)
-                            setHasBeenDisconnectedValue(true)
-                    },
-                    onConnectionError = {
-                        setServerOfflineValue(true)
-                    }
-                )
+                        },
+                        onSuccess = { response ->
+                            val jRelease = response.getJSONObject(RESPONSE_MESSAGE_KEY)
+                            jRelease?.let { releaseData ->
+                                _release.value = Release(releaseData)
+                                setServerOfflineValue(false)
+                            }
+                        },
+                        onFailure = {
+                            if (!releaseDeleted)
+                                setHasBeenDisconnectedValue(true)
+                        },
+                        onConnectionError = {
+                            setServerOfflineValue(true)
+                        }
+                    )
+                }
             }
         )
     }
