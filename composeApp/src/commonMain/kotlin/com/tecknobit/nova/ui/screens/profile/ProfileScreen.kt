@@ -41,6 +41,7 @@ import com.tecknobit.nova.thinFontFamily
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
+import com.tecknobit.nova.ui.screens.release.getAsset
 import com.tecknobit.nova.ui.theme.tagstheme.bug.md_theme_light_primary
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession
 import io.github.vinceglb.filekit.compose.rememberFilePickerLauncher
@@ -71,13 +72,14 @@ class ProfileScreen : NovaScreen() {
             type = PickerType.Image,
             mode = PickerMode.Single,
         ) { picture ->
-            if (picture != null) {
-                picture.path?.let { path ->
-                    viewModel.changeProfilePic(
-                        imagePath = path,
-                        profilePic = profilePic
-                    )
-                }
+            val logoPath = getAsset(
+                asset = picture
+            )
+            if (logoPath != null) {
+                viewModel.changeProfilePic(
+                    imagePath = logoPath,
+                    profilePic = profilePic
+                )
             }
         }
         mySessions = remember { mutableStateListOf() }

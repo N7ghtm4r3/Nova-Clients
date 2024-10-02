@@ -56,31 +56,3 @@ actual fun setLocale() {
     }
     Locale.setDefault(Locale.forLanguageTag(tag))
 }
-
-// TODO: TO IMPLEMENT
-actual fun refreshList() {
-    /*if(activeLocalSession.isHostSet) {
-        refreshRoutine.launch {
-            while (true) {
-                if(!EXECUTING_REQUEST) {
-                    requester.sendRequest(
-                        request = {
-                            requester.getNotifications()
-                        },
-                        onSuccess = { response ->
-                            val jNotifications = response.getJSONArray(RESPONSE_MESSAGE_KEY)
-                            notifications.clear()
-                            for(j in 0 until jNotifications.length()) {
-                                val notification = NovaNotification(jNotifications.getJSONObject(j))
-                                if(!notification.isSent)
-                                    notifications.add(notification)
-                            }
-                        },
-                        onFailure = {}
-                    )
-                }
-                delay(1000L)
-            }
-        }
-    }*/
-}

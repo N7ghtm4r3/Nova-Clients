@@ -12,6 +12,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.mmk.kmpnotifier.notification.NotifierManager
+import com.mmk.kmpnotifier.notification.configuration.NotificationPlatformConfiguration
+import com.mmk.kmpnotifier.permission.permissionUtil
 import com.tecknobit.equinoxcompose.helpers.session.setUpSession
 import com.tecknobit.nova.cache.LocalSessionHelper
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
@@ -23,11 +26,6 @@ import io.github.vinceglb.filekit.core.FileKit
 class MainActivity : ComponentActivity() {
 
     companion object {
-
-        /**
-         * {@code DESTINATION_KEY} the key for the <b>"destination"</b> field
-         */
-        const val DESTINATION_KEY = "destination"
 
         /**
          * **appUpdateManager** the manager to check if there is an update available
@@ -61,6 +59,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        val permissionUtil by permissionUtil()
+        permissionUtil.askNotificationPermission()
+    }
+
     @Composable
     private fun InitInstances() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -69,7 +73,7 @@ class MainActivity : ComponentActivity() {
         localSessionsHelper = LocalSessionHelper(
             databaseDriverFactory = DatabaseDriverFactory()
         )
-       setUpSession(
+        setUpSession(
             serverOfflineMessage = "server_currently_offline_message",
             noInternetConnectionMessage = "no_internet_message",
             noInternetConnectionIcon = ImageVector.vectorResource(id = R.drawable.no_internet),
@@ -79,6 +83,12 @@ class MainActivity : ComponentActivity() {
             }
         )
         FileKit.init(this)
+        NotifierManager.initialize(
+            configuration = NotificationPlatformConfiguration.Android(
+                notificationIconResId = R.drawable.logo,
+                showPushNotification = true,
+            )
+        )
     }
 
 }

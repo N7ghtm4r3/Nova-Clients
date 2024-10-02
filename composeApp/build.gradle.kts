@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             api(libs.precompose)
+            api("io.github.mirzemehdi:kmpnotifier:1.3.0")
             implementation(libs.apimanager)
             implementation(libs.novacore)
             implementation(libs.equinox)

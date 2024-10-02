@@ -1363,7 +1363,7 @@ class ReleaseScreen(
         release.value?.let { release: Release ->
             releaseStatus = release.status
             releaseProject = release.project
-            amITester.value = releaseProject.amITheProjectAuthor(activeLocalSession.id)
+            amITester.value = activeLocalSession.isTester(releaseProject)
         }
         deleteRelease = remember { mutableStateOf(false) }
         promoteRelease = remember { mutableStateOf(false) }

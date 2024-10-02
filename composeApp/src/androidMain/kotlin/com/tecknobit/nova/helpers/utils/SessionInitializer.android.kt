@@ -11,7 +11,7 @@ import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import com.tecknobit.equinox.environment.records.EquinoxItem.IDENTIFIER_KEY
 import com.tecknobit.equinox.inputs.InputValidator.DEFAULT_LANGUAGE
 import com.tecknobit.equinox.inputs.InputValidator.LANGUAGES_SUPPORTED
-import com.tecknobit.nova.MainActivity.Companion.DESTINATION_KEY
+import com.tecknobit.nova.DESTINATION_KEY
 import com.tecknobit.nova.MainActivity.Companion.appUpdateManager
 import com.tecknobit.nova.MainActivity.Companion.launcher
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.AUTH_SCREEN
@@ -26,7 +26,7 @@ import com.tecknobit.novacore.records.project.Project.PROJECT_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.release.Release.RELEASE_KEY
 import kotlinx.coroutines.delay
-import java.util.*
+import java.util.Locale
 
 @Composable
 actual fun CheckForUpdatesAndLaunch() {
@@ -114,31 +114,4 @@ actual fun setLocale() {
     val configuration = resources.configuration
     configuration.locale = locale
     resources.updateConfiguration(configuration, resources.displayMetrics)
-}
-
-// TODO: TO IMPLEMENT
-actual fun refreshList() {
-    /*
-    if(activeLocalSession.isHostSet) {
-            refreshRoutine.launch {
-                while (true) {
-                    if(!EXECUTING_REQUEST) {
-                        requester.sendRequest(
-                            request = {
-                                requester.getNotifications()
-                            },
-                            onSuccess = { response ->
-                                val jNotifications = response.getJSONArray(RESPONSE_MESSAGE_KEY)
-                                notifications.clear()
-                                for(j in 0 until jNotifications.length())
-                                    notifications.add(NovaNotification(jNotifications.getJSONObject(j)))
-                            },
-                            onFailure = {}
-                        )
-                    }
-                    delay(1000L)
-                }
-            }
-        }
-     */
 }

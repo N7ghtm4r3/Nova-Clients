@@ -19,9 +19,11 @@ import com.tecknobit.nova.helpers.utils.CheckForUpdatesAndLaunch
 import com.tecknobit.nova.helpers.utils.NovaRequester
 import com.tecknobit.nova.theme.md_theme_light_primary
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession
+import com.tecknobit.novacore.records.NovaNotification
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.app_name
 import org.jetbrains.compose.resources.stringResource
+import java.util.concurrent.CopyOnWriteArrayList
 
 class Splashscreen: NovaScreen() {
 
@@ -42,6 +44,8 @@ class Splashscreen: NovaScreen() {
          * **activeLocalSession** -> the current active session that user is using
          */
         lateinit var activeLocalSession: NovaSession
+
+        val notifications: CopyOnWriteArrayList<NovaNotification> = CopyOnWriteArrayList()
 
     }
 

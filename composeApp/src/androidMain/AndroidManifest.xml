@@ -34,7 +34,7 @@
         </activity>
 
         <receiver
-                android:name=".helpers.utils.ui.NotificationsReceiver"
+            android:name=".helpers.utils.NotificationsReceiver"
                 android:enabled="true"
                 android:exported="true">
             <intent-filter>

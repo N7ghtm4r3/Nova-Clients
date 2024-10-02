@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,6 +49,7 @@ import com.tecknobit.nova.navigator
 import com.tecknobit.nova.thinFontFamily
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.RELEASE_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.notifications
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.release.Release
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus
@@ -104,9 +107,10 @@ fun ReleaseItem(
     ) {
         BadgedBox(
             badge = {
-                // TODO: TO SET
-                /*val notifications = release.getNotifications(notifications)
-                if(notifications > 0) {
+                val notifications = release.getNotifications(notifications)
+                androidx.compose.animation.AnimatedVisibility(
+                    visible = notifications > 0
+                ) {
                     Badge (
                         modifier = Modifier
                             .padding(
@@ -121,7 +125,7 @@ fun ReleaseItem(
                             text = "$notifications"
                         )
                     }
-                }*/
+                }
             }
         ) {
             Column(

@@ -47,6 +47,7 @@ import com.tecknobit.nova.getProjectLogoUrl
 import com.tecknobit.nova.imageLoader
 import com.tecknobit.nova.ui.components.MemberListItem
 import com.tecknobit.nova.ui.screens.NovaScreen
+import com.tecknobit.nova.ui.screens.release.getAsset
 import com.tecknobit.novacore.NovaInputValidator.isProjectNameValid
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.project.Project
@@ -145,7 +146,9 @@ abstract class WorkOnProject(
             mode = PickerMode.Single,
         ) { picture ->
             if (picture != null) {
-                val logoPath = picture.path
+                val logoPath = getAsset(
+                    asset = picture
+                )
                 logoPath?.let {
                     viewModel.logoPic.value = logoPath
                     viewModel.logoPicBordersColor.value = Color.Transparent

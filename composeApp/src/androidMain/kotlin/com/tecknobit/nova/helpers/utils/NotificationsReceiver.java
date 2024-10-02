@@ -1,4 +1,20 @@
-package com.tecknobit.nova.helpers.utils.ui;
+package com.tecknobit.nova.helpers.utils;
+
+import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
+import static android.app.PendingIntent.getActivity;
+import static android.content.Context.NOTIFICATION_SERVICE;
+import static android.media.RingtoneManager.getDefaultUri;
+import static com.tecknobit.apimanager.apis.sockets.SocketManager.StandardResponseCode.SUCCESSFUL;
+import static com.tecknobit.equinox.Requester.RESPONSE_MESSAGE_KEY;
+import static com.tecknobit.equinox.Requester.RESPONSE_STATUS_KEY;
+import static com.tecknobit.equinox.environment.records.EquinoxItem.IDENTIFIER_KEY;
+import static com.tecknobit.nova.AppKt.DESTINATION_KEY;
+import static com.tecknobit.novacore.records.NovaNotification.NOTIFICATIONS_KEY;
+import static com.tecknobit.novacore.records.NovaUser.PROJECTS_KEY;
+import static com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY;
+import static com.tecknobit.novacore.records.project.Project.PROJECT_KEY;
+import static com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY;
+import static com.tecknobit.novacore.records.release.Release.RELEASE_KEY;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -11,17 +27,25 @@ import android.graphics.BitmapFactory;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.os.StrictMode;
+
 import androidx.annotation.NonNull;
-import androidx.work.*;
+import androidx.work.Constraints;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
 import com.tecknobit.apimanager.formatters.JsonHelper;
 import com.tecknobit.nova.MainActivity;
 import com.tecknobit.nova.R;
 import com.tecknobit.nova.cache.LocalSessionHelper;
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory;
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession;
-import com.tecknobit.novacore.helpers.NovaRequester;
 import com.tecknobit.novacore.records.NovaNotification;
 import com.tecknobit.novacore.records.release.Release.ReleaseStatus;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -30,22 +54,6 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-
-import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
-import static android.app.PendingIntent.getActivity;
-import static android.content.Context.NOTIFICATION_SERVICE;
-import static android.media.RingtoneManager.getDefaultUri;
-import static com.tecknobit.apimanager.apis.sockets.SocketManager.StandardResponseCode.SUCCESSFUL;
-import static com.tecknobit.equinox.Requester.RESPONSE_MESSAGE_KEY;
-import static com.tecknobit.equinox.Requester.RESPONSE_STATUS_KEY;
-import static com.tecknobit.equinox.environment.records.EquinoxItem.IDENTIFIER_KEY;
-import static com.tecknobit.nova.MainActivity.DESTINATION_KEY;
-import static com.tecknobit.novacore.records.NovaNotification.NOTIFICATIONS_KEY;
-import static com.tecknobit.novacore.records.NovaUser.PROJECTS_KEY;
-import static com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY;
-import static com.tecknobit.novacore.records.project.Project.PROJECT_KEY;
-import static com.tecknobit.novacore.records.release.Release.RELEASE_IDENTIFIER_KEY;
-import static com.tecknobit.novacore.records.release.Release.RELEASE_KEY;
 
 /**
  * The {@code NotificationsReceiver} class is useful to receive the

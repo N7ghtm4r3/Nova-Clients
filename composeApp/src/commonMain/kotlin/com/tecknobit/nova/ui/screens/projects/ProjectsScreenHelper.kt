@@ -2,12 +2,14 @@
 
 package com.tecknobit.nova.ui.screens.projects
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -27,6 +29,7 @@ import com.tecknobit.nova.getProjectLogoUrl
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECT_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.nova.ui.screens.Splashscreen.Companion.notifications
 import com.tecknobit.novacore.records.project.Project
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.no_version_available_yet
@@ -72,17 +75,16 @@ fun ProjectItem(
         leadingContent = {
             BadgedBox(
                 badge = {
-                    // TODO: TO SET
-                    /*val notifications = project.getNotifications(
-                        notifications
-                    )
-                    if(notifications > 0) {
+                    val notifications = project.getNotifications(notifications)
+                    AnimatedVisibility(
+                        visible = notifications > 0
+                    ) {
                         Badge {
                             Text(
                                 text = "$notifications"
                             )
                         }
-                    }*/
+                    }
                 }
             ) {
                 Logo(
