@@ -42,6 +42,7 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.tecknobit.apimanager.annotations.Structure
 import com.tecknobit.equinoxcompose.components.EquinoxTextField
 import com.tecknobit.nova.imageLoader
 import com.tecknobit.nova.ui.components.MemberListItem
@@ -65,12 +66,25 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * The [WorkOnProject] class is used to add a new project or edit an existing project
+ *
+ * @param project: the project to edit if passed
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ * @see NovaScreen
+ */
+@Structure
 abstract class WorkOnProject(
     val project: Project?
 ) : NovaScreen() {
 
     companion object {
 
+        /**
+         * *viewModel* -> the support view model to manage the requests to the backend
+         */
         @JvmStatic
         protected val viewModel = WorkOnProjectViewModel(
             snackbarHostState = snackbarHostState
@@ -78,15 +92,31 @@ abstract class WorkOnProject(
 
     }
 
+    /**
+     * *potentialMembers* -> the list of the potential members to add to the project
+     */
     private lateinit var potentialMembers: State<List<NovaUser>>
 
+    /**
+     * *isInAddMode* -> whether the screen needs to edit or create a project
+     */
     private val isInAddMode = project == null
 
+    /**
+     * Function to arrange the content of the screen to display
+     *
+     * No-any params required
+     */
     @Composable
     override fun ArrangeScreenContent() {
         CollectStates()
     }
 
+    /**
+     * The title of the screen
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     protected fun ScreenTitle() {
@@ -100,6 +130,11 @@ abstract class WorkOnProject(
         )
     }
 
+    /**
+     * The form where the user can type the details of the project
+     *
+     * @param paddingValues: the padding values to apply to the form
+     */
     @Composable
     @NonRestartableComposable
     protected fun ProjectForm(
@@ -124,6 +159,11 @@ abstract class WorkOnProject(
         }
     }
 
+    /**
+     * The selector for the project logo
+     *
+     * @param modifier: the modifier to apply to the selector
+     */
     @Composable
     @NonRestartableComposable
     protected fun LogoSelector(
@@ -197,6 +237,11 @@ abstract class WorkOnProject(
         }
     }
 
+    /**
+     * The field where the user can insert the title of the project
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     protected fun ProjectTitleField() {
@@ -228,6 +273,11 @@ abstract class WorkOnProject(
         )
     }
 
+    /**
+     * The section where are displayed the potentials member to add or remove
+     *
+     * Mo-any params required
+     */
     @Composable
     @NonRestartableComposable
     protected fun ProjectMembersSection() {
@@ -237,6 +287,11 @@ abstract class WorkOnProject(
         ProjectMembersSectionsImpl()
     }
 
+    /**
+     * The list of the members available to be added or removed
+     *
+     * @param modifier: the modifier to apply to the list
+     */
     @Composable
     @NonRestartableComposable
     protected fun PotentialMembers(
@@ -272,10 +327,20 @@ abstract class WorkOnProject(
         }
     }
 
+    /**
+     * Function to arrange correctly the [PotentialMembers] section for each platform
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     protected abstract fun ProjectMembersSectionsImpl()
 
+    /**
+     * The header of a section
+     *
+     * @param header: the header title to naming that section
+     */
     @Composable
     @NonRestartableComposable
     private fun SectionHeader(
@@ -288,6 +353,11 @@ abstract class WorkOnProject(
         )
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been created
+     *
+     * No-any params required
+     */
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(WorkOnProject::class.java)
@@ -333,6 +403,11 @@ abstract class WorkOnProject(
         viewModel.suspendRefresher()
     }
 
+    /**
+     * Function to collect or instantiate the states of the screen
+     *
+     * No-any params required
+     */
     @Composable
     override fun CollectStates() {
         super.CollectStates()

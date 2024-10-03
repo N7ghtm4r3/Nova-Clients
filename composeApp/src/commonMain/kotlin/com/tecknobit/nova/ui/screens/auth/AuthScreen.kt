@@ -31,6 +31,13 @@ import nova.composeapp.generated.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * The [AuthScreen] class is used to execute the authentication by the user
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ * @see NovaScreen
+ */
 class AuthScreen : NovaScreen() {
 
     /**
@@ -321,6 +328,12 @@ class AuthScreen : NovaScreen() {
         }
     }
 
+    /**
+     * Function to select and to adapt the [FormSection] if the user whether the user is a [Role.Customer]
+     * or is a [Role.Vendor]
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun CustomerSelector() {

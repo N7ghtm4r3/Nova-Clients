@@ -17,6 +17,11 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/**
+ * Component to display and arrange correctly from each platform the projects in the UI
+ *
+ * @param projects: the projects list to display
+ */
 @Composable
 actual fun Projects(
     projects: List<Project>
@@ -44,6 +49,11 @@ actual fun Projects(
     }
 }
 
+/**
+ * Function to navigate to the section to allow the project creation or editing
+ *
+ * @param project: the project to edit if passed
+ */
 actual fun workOnProject(
     project: Project?
 ) {
@@ -54,10 +64,20 @@ actual fun workOnProject(
     navigator.navigate(WORK_ON_PROJECT_DIALOG)
 }
 
+/**
+ * Function to navigate to the section where the user can join in a project
+ *
+ * No-any params required
+ */
 actual fun joinProject() {
     navigator.navigate(JOIN_PROJECT_DIALOG)
 }
 
+/**
+ * Function to manage correctly the back navigation from the current screen
+ *
+ * No-any params required
+ */
 @Composable
 @NonRestartableComposable
 actual fun CloseApplicationOnNavBack() {

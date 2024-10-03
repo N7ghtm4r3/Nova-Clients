@@ -26,35 +26,80 @@ import com.tecknobit.nova.navigator
 import nova.composeapp.generated.resources.Res.string
 import nova.composeapp.generated.resources.loading_data
 
+/**
+ * The [NovaScreen] class is useful to provides the basic behavior of a Nova's UI screen
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ */
 @Structure
 abstract class NovaScreen: EquinoxScreen() {
 
     companion object {
 
+        /**
+         * **SPLASH_SCREEN** -> route to navigate to the [Splashscreen]
+         */
         const val SPLASH_SCREEN = "Splashscreen"
 
+        /**
+         * **AUTH_SCREEN** -> route to navigate to the [AuthScreen]
+         */
         const val AUTH_SCREEN = "AuthScreen"
 
+        /**
+         * **PROFILE_SCREEN** -> route to navigate to the [ProfileScreen]
+         */
         const val PROFILE_SCREEN = "ProfileScreen"
 
+        /**
+         * **PROFILE_DIALOG** -> route to navigate to the [ProfileScreen] as dialog
+         */
         const val PROFILE_DIALOG = "ProfileDialog"
 
+        /**
+         * **ProjectsScreen** -> route to navigate to the [ProjectsScreen]
+         */
         const val PROJECTS_SCREEN = "ProjectsScreen"
 
+        /**
+         * **WORK_ON_PROJECT_SCREEN** -> route to navigate to the [WorkOnProjectScreen]
+         */
         const val WORK_ON_PROJECT_SCREEN = "WorkOnProjectScreen"
 
+        /**
+         * **WORK_ON_PROJECT_DIALOG** -> route to navigate to the [WorkOnProjectScreenDialog]
+         */
         const val WORK_ON_PROJECT_DIALOG = "WorkOnProjectDialog"
 
+        /**
+         * **JOIN_PROJECT_SCREEN** -> route to navigate to the [JoinProjectScreen]
+         */
         const val JOIN_PROJECT_SCREEN = "JoinProjectScreen"
 
+        /**
+         * **JOIN_PROJECT_DIALOG** -> route to navigate to the [JoinProjectScreen] as dialog
+         */
         const val JOIN_PROJECT_DIALOG = "JoinProjectDialog"
 
+        /**
+         * **PROJECT_SCREEN** -> route to navigate to the [ProjectScreen]
+         */
         const val PROJECT_SCREEN = "ProjectScreen"
 
+        /**
+         * **ADD_MEMBERS_SCREEN** -> route to navigate to the [AddMembersScreen]
+         */
         const val ADD_MEMBERS_SCREEN = "AddMembersScreen"
 
+        /**
+         * **ADD_MEMBERS_DIALOG** -> route to navigate to the [AddMembersScreen] as dialog
+         */
         const val ADD_MEMBERS_DIALOG = "AddMembersDialog"
 
+        /**
+         * **RELEASE_SCREEN** -> route to navigate to the [ReleaseScreen]
+         */
         const val RELEASE_SCREEN = "ReleaseScreen"
 
         /**
@@ -64,11 +109,22 @@ abstract class NovaScreen: EquinoxScreen() {
 
     }
 
+    /**
+     * Function to collect or instantiate the states of the screen
+     *
+     * No-any params required
+     */
     @Composable
     protected open fun CollectStates() {
 
     }
 
+    /**
+     * Back navigation button
+     *
+     * @param modifier: the modifier to apply to the button
+     * @param tint: the tint color to use for the icon
+     */
     @Composable
     @NonRestartableComposable
     protected fun NavBackButton(
@@ -87,6 +143,11 @@ abstract class NovaScreen: EquinoxScreen() {
         }
     }
 
+    /**
+     * Loading screen to display when the data of an item is fetching
+     *
+     * @param item: the item to wait the loading of his data
+     */
     @Composable
     @NonRestartableComposable
     protected fun LoadingData(
@@ -104,6 +165,11 @@ abstract class NovaScreen: EquinoxScreen() {
         }
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been resumed
+     *
+     * No-any params required
+     */
     override fun onResume() {
         super.onResume()
         if (!isNotificationsFetchingEnable()) {
@@ -112,6 +178,11 @@ abstract class NovaScreen: EquinoxScreen() {
         }
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been paused
+     *
+     * No-any params required
+     */
     override fun onStop() {
         super.onStop()
         stopNotificationsFetching()

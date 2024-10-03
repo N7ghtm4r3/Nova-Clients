@@ -35,17 +35,37 @@ import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.no_version_available_yet
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Component to display and arrange correctly from each platform the projects in the UI
+ *
+ * @param projects: the projects list to display
+ */
 @Composable
 expect fun Projects(
     projects: List<Project>
 )
 
+/**
+ * Function to navigate to the section to allow the project creation or editing
+ *
+ * @param project: the project to edit if passed
+ */
 expect fun workOnProject(
     project: Project? = null
 )
 
+/**
+ * Function to navigate to the section where the user can join in a project
+ *
+ * No-any params required
+ */
 expect fun joinProject()
 
+/**
+ * Component to display the details about a project
+ *
+ * @param project: the project to display
+ */
 @Composable
 @NonRestartableComposable
 fun ProjectItem(
@@ -120,6 +140,11 @@ fun ProjectItem(
     )
 }
 
+/**
+ * Function to manage correctly the back navigation from the current screen
+ *
+ * No-any params required
+ */
 @Composable
 @NonRestartableComposable
 expect fun CloseApplicationOnNavBack()

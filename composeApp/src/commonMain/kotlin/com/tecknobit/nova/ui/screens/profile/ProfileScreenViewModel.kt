@@ -2,6 +2,8 @@ package com.tecknobit.nova.ui.screens.profile
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
+import androidx.lifecycle.ViewModel
+import com.tecknobit.equinox.FetcherManager.FetcherManagerWrapper
 import com.tecknobit.equinox.inputs.InputValidator.DEFAULT_LANGUAGE
 import com.tecknobit.equinox.inputs.InputValidator.LANGUAGES_SUPPORTED
 import com.tecknobit.equinox.inputs.InputValidator.isEmailValid
@@ -14,6 +16,18 @@ import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession
 import com.tecknobit.novacore.records.NovaUser.PROFILE_PIC_KEY
 import java.io.File
 
+/**
+ * The **ProfileScreenViewModel** class is the support class used by the [ProfileScreen] to execute
+ * the requests or the action to customize the profile data of the user
+ *
+ * @param snackbarHostState: the host to launch the snackbar messages
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see ViewModel
+ * @see FetcherManagerWrapper
+ * @see EquinoxViewModel
+ *
+ */
 class ProfileScreenViewModel(
     snackbarHostState: SnackbarHostState
 ) : EquinoxViewModel(
@@ -150,7 +164,11 @@ class ProfileScreenViewModel(
         )
     }
 
-    // TODO: TO COMMENT
+    /**
+     * Method to perform the logout action and clear the current local sessions stored
+     *
+     * No-any params required
+     */
     fun logout(
         onLogout : () -> Unit
     ) {
@@ -188,6 +206,12 @@ class ProfileScreenViewModel(
             postDeletion.invoke()
     }
 
+    /**
+     * Function to change the current [activeLocalSession]
+     *
+     * @param session: the new active session
+     * @param onChange: the action to execute when the change done
+     */
     fun changeCurrentLocalSession(
         session: NovaSession,
         onChange: () -> Unit

@@ -6,6 +6,11 @@ import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import com.tecknobit.nova.helpers.utils.AppContext
 import com.tecknobit.novacore.records.project.JoiningQRCode
 
+/**
+ * Function to share properly from each platform the details of the [joiningQRCode]
+ *
+ * @param joiningQRCode: the joining qrcode to share
+ */
 actual fun shareJoiningCode(
     joiningQRCode: JoiningQRCode
 ) {

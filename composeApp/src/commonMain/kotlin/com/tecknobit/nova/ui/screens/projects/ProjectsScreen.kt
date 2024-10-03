@@ -56,16 +56,29 @@ import nova.composeapp.generated.resources.projects
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * The [ProjectsScreen] class is used to retrieve and display the projects of the user
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ * @see NovaScreen
+ */
 class ProjectsScreen : NovaScreen() {
 
     companion object {
 
+        /**
+         * *viewModel* -> the support view model to manage the requests to the backend
+         */
         private val viewModel = ProjectsScreenViewModel(
             snackbarHostState = snackbarHostState
         )
 
     }
 
+    /**
+     * **projects** -> the projects list of the user
+     */
     private lateinit var projects: State<List<Project>>
 
     /**
@@ -122,6 +135,11 @@ class ProjectsScreen : NovaScreen() {
         )
     }
 
+    /**
+     * The user profile picture where clicking on it can be possible navigate to the [ProfileScreen]
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun UserDetails() {
@@ -168,6 +186,11 @@ class ProjectsScreen : NovaScreen() {
         }
     }
 
+    /**
+     * The section where are displayed the projects and their details
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun ProjectsSection() {
@@ -210,11 +233,21 @@ class ProjectsScreen : NovaScreen() {
         }
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been created
+     *
+     * No-any params required
+     */
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(this::class.java)
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been started
+     *
+     * No-any params required
+     */
     override fun onStart() {
         super.onStart()
         viewModel.getProjects()
@@ -250,6 +283,11 @@ class ProjectsScreen : NovaScreen() {
         viewModel.suspendRefresher()
     }
 
+    /**
+     * Function to collect or instantiate the states of the screen
+     *
+     * No-any params required
+     */
     @Composable
     override fun CollectStates() {
         super.CollectStates()

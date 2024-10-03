@@ -2,7 +2,9 @@ package com.tecknobit.nova.ui.screens.joinproject
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
+import androidx.lifecycle.ViewModel
 import com.tecknobit.apimanager.formatters.JsonHelper
+import com.tecknobit.equinox.FetcherManager.FetcherManagerWrapper
 import com.tecknobit.equinox.Requester.Companion.RESPONSE_MESSAGE_KEY
 import com.tecknobit.equinox.environment.records.EquinoxItem.IDENTIFIER_KEY
 import com.tecknobit.equinox.environment.records.EquinoxUser.TOKEN_KEY
@@ -18,6 +20,18 @@ import com.tecknobit.novacore.records.NovaUser.PROFILE_PIC_KEY
 import com.tecknobit.novacore.records.NovaUser.ROLE_KEY
 import com.tecknobit.novacore.records.NovaUser.Role
 
+/**
+ * The **JoinProjectScreenViewModel** class is the support class used by the [JoinProjectScreen] to execute
+ * the requests to join in a project
+ *
+ * @param snackbarHostState: the host to launch the snackbar messages
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see ViewModel
+ * @see FetcherManagerWrapper
+ * @see EquinoxViewModel
+ *
+ */
 class JoinProjectScreenViewModel(
     snackbarHostState: SnackbarHostState
 ) : EquinoxViewModel(
@@ -34,6 +48,11 @@ class JoinProjectScreenViewModel(
      */
     lateinit var hostError: MutableState<Boolean>
 
+    /**
+     * Function to execute the request to join in a project by a scan a join code
+     *
+     * @param content: the content scanned by the qrcode scanner
+     */
     fun joinWithScannedQR(
         content: String
     ) {
@@ -70,6 +89,11 @@ class JoinProjectScreenViewModel(
         )
     }
 
+    /**
+     * Function to execute the request to join in a project by a join code
+     *
+     * @param joinCode: the join code to use
+     */
     fun joinWithCode(
         joinCode: String
     ) {
@@ -103,6 +127,12 @@ class JoinProjectScreenViewModel(
         )
     }
 
+    /**
+     * Function to manage the response of a join request
+     *
+     * @param response: the response received
+     * @param hostAddress: the host address to use in the session
+     */
     private fun manageResponse(
         response: JsonHelper,
         hostAddress: String

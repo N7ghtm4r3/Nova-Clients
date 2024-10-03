@@ -81,10 +81,22 @@ import nova.composeapp.generated.resources.wrong_email
 import org.jetbrains.compose.resources.stringResource
 import qrgenerator.qrkitpainter.rememberQrKitPainter
 
+/**
+ * The [AddMembersScreen] class is used to add new members to the [project]
+ *
+ * @param project: the project where the user have to be added
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ * @see NovaScreen
+ */
 class AddMembersScreen(
     val project: Project
 ) : NovaScreen() {
 
+    /**
+     * *viewModel* -> the support view model to manage the requests to the backend
+     */
     private val viewModel = AddMembersScreenViewModel(
         snackbarHostState = snackbarHostState,
         project = project
@@ -162,6 +174,11 @@ class AddMembersScreen(
         }
     }
 
+    /**
+     * Section where the user can add the details of the new members to add
+     *
+     * @param paddingValues: the padding values to apply to the section
+     */
     @Composable
     @NonRestartableComposable
     private fun PotentialMembers(
@@ -199,6 +216,11 @@ class AddMembersScreen(
         }
     }
 
+    /**
+     * Form for the insertion of the details about the new member to add
+     *
+     * @param index: the position in the members list, is useful for the remove
+     */
     @Composable
     @NonRestartableComposable
     private fun MemberForm(
@@ -252,6 +274,13 @@ class AddMembersScreen(
         }
     }
 
+    /**
+     * Selector for the role of the member
+     *
+     * @param modifier: the modifier to apply to the selector
+     * @param index: the position in the members list, is useful for the remove
+     * @param role: the state to manage the role to use for the member
+     */
     @Composable
     @NonRestartableComposable
     private fun RoleSelector(
@@ -322,6 +351,12 @@ class AddMembersScreen(
         }
     }
 
+    /**
+     * Menu to select the role for the member
+     *
+     * @param selectRole: whether the menu is visible
+     * @param role: the state to manage the role to use for the member
+     */
     @Composable
     @NonRestartableComposable
     private fun RolesMenu(
@@ -350,6 +385,11 @@ class AddMembersScreen(
         }
     }
 
+    /**
+     * Section where is displayed the result about the qrcode creation
+     *
+     * @param paddingValues: the padding values to apply to the section
+     */
     @Composable
     @NonRestartableComposable
     private fun QRCodeResult(
@@ -369,6 +409,11 @@ class AddMembersScreen(
         }
     }
 
+    /**
+     * Section displayed when the qrcode has been generating
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun Loading() {
@@ -381,6 +426,11 @@ class AddMembersScreen(
         }
     }
 
+    /**
+     * Section where are displayed the data of the qrcode generated
+     *
+     * @param paddingValues: the padding values to apply to the section
+     */
     @Composable
     @NonRestartableComposable
     private fun QRCodeData(
@@ -444,6 +494,11 @@ class AddMembersScreen(
         }
     }
 
+    /**
+     * Section displayed when the qrcode generation failed
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun StatusFailed() {
@@ -465,16 +520,31 @@ class AddMembersScreen(
         }
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been created
+     *
+     * No-any params required
+     */
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(this::class.java)
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been started
+     *
+     * No-any params required
+     */
     override fun onStart() {
         super.onStart()
         viewModel.addEmptyItem()
     }
 
+    /**
+     * Function to collect or instantiate the states of the screen
+     *
+     * No-any params required
+     */
     @Composable
     override fun CollectStates() {
         super.CollectStates()

@@ -57,18 +57,33 @@ import nova.composeapp.generated.resources.wrong_host_address
 import org.jetbrains.compose.resources.stringResource
 import qrscanner.QrCodeScanner
 
+/**
+ * The [JoinProjectScreen] class is used to join in a project
+ *
+ * @param enableScanOption: whether enable the scan option
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ * @see NovaScreen
+ */
 class JoinProjectScreen(
     val enableScanOption: Boolean
 ) : NovaScreen() {
 
     companion object {
 
+        /**
+         * *viewModel* -> the support view model to manage the requests to the backend
+         */
         private val viewModel = JoinProjectScreenViewModel(
             snackbarHostState = snackbarHostState
         )
 
     }
 
+    /**
+     * *splitTextState* -> the text state used for the [SplitText] component
+     */
     private lateinit var splitTextState: SplitTextState
 
     /**
@@ -131,6 +146,11 @@ class JoinProjectScreen(
         }
     }
 
+    /**
+     * Section where the user can scan the joining qrcode
+     *
+     * @param qrCodeScannerModifier: the modifier to apply to the section
+     */
     @Composable
     @NonRestartableComposable
     private fun ScanOptionSection(
@@ -160,6 +180,11 @@ class JoinProjectScreen(
         )
     }
 
+    /**
+     * The QRCode scanner used to scan the joining qrcode
+     *
+     * @param modifier: the modifier to apply to the scanner
+     */
     @Composable
     @NonRestartableComposable
     private fun JoinQRCodeScanner(
@@ -194,6 +219,11 @@ class JoinProjectScreen(
         }
     }
 
+    /**
+     * Section where the user can join in a project by insert the join code
+     *
+     * @param modifier: the modifier to apply to the section
+     */
     @Composable
     @NonRestartableComposable
     private fun JoinWithCodeSection(
@@ -338,11 +368,21 @@ class JoinProjectScreen(
         }
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been created
+     *
+     * No-any params required
+     */
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(this::class.java)
     }
 
+    /**
+     * Function to collect or instantiate the states of the screen
+     *
+     * No-any params required
+     */
     @Composable
     override fun CollectStates() {
         super.CollectStates()

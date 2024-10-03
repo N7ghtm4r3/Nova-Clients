@@ -15,9 +15,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.graphics.Color
 import com.tecknobit.nova.navigator
+import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.theme.gray_background
 import com.tecknobit.novacore.records.project.Project
 
+/**
+ * The [WorkOnProjectScreen] class is used to add a new project or edit an existing project
+ *
+ * @param project: the project to edit if passed
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ * @see NovaScreen
+ * @see WorkOnProject
+ */
 class WorkOnProjectScreen(
     project: Project?
 ) : WorkOnProject(
@@ -69,6 +80,11 @@ class WorkOnProjectScreen(
         }
     }
 
+    /**
+     * Function to arrange correctly the [PotentialMembers] section for each platform
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     override fun ProjectMembersSectionsImpl() {

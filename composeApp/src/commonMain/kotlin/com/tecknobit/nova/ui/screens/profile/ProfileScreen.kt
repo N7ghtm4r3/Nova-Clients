@@ -52,12 +52,25 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * The [ProfileScreen] class is used to allow the user to customize his/her profile data
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ * @see NovaScreen
+ */
 class ProfileScreen : NovaScreen() {
 
+    /**
+     * *viewModel* -> the support view model to manage the requests to the backend
+     */
     private val viewModel = ProfileScreenViewModel(
         snackbarHostState = snackbarHostState
     )
 
+    /**
+     * *mySessions* -> the current local sessions of the user
+     */
     private lateinit var mySessions: SnapshotStateList<NovaSession>
 
     /**

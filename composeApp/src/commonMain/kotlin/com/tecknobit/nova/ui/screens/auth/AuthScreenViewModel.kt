@@ -2,7 +2,9 @@ package com.tecknobit.nova.ui.screens.auth
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
+import androidx.lifecycle.ViewModel
 import com.tecknobit.apimanager.formatters.JsonHelper
+import com.tecknobit.equinox.FetcherManager.FetcherManagerWrapper
 import com.tecknobit.equinox.environment.records.EquinoxItem.IDENTIFIER_KEY
 import com.tecknobit.equinox.environment.records.EquinoxUser.*
 import com.tecknobit.equinox.inputs.InputValidator.*
@@ -17,6 +19,18 @@ import com.tecknobit.novacore.records.NovaUser.*
 import com.tecknobit.novacore.records.NovaUser.Role.Vendor
 import java.util.*
 
+/**
+ * The **AuthScreenViewModel** class is the support class used by the [AuthScreen] to execute
+ * the authentication requests
+ *
+ * @param snackbarHostState: the host to launch the snackbar messages
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see ViewModel
+ * @see FetcherManagerWrapper
+ * @see EquinoxViewModel
+ *
+ */
 class AuthScreenViewModel(
     snackbarHostState: SnackbarHostState,
 ) : EquinoxViewModel(
@@ -109,8 +123,8 @@ class AuthScreenViewModel(
     }
 
     /**
-     * Function to execute the sign-up authentication request, if successful the [localUser] will
-     * be initialized with the data received by the request
+     * Function to execute the sign-up authentication request, if successful the [activeLocalSession]
+     * will be initialized with the data received by the request
      *
      * No-any params required
      */
@@ -129,6 +143,12 @@ class AuthScreenViewModel(
         }
     }
 
+    /**
+     * Function to execute the sign-up authentication request as [Role.Customer],
+     * if successful the [activeLocalSession] will be initialized with the data inserted
+     *
+     * @param language: the language of the user
+     */
     private fun customerSignUp(
         language: String
     ) {
@@ -148,6 +168,12 @@ class AuthScreenViewModel(
         navigator.navigate(PROJECTS_SCREEN)
     }
 
+    /**
+     * Function to execute the sign-up authentication request as [Role.Vendor],
+     * if successful the [activeLocalSession] will be initialized with the data received
+     *
+     * @param language: the language of the user
+     */
     private fun vendorSignUp(
         language: String
     ) {
