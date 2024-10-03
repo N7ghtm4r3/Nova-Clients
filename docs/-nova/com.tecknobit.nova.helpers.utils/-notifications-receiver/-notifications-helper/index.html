@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>NotificationsHelper</title>
+    <link href="../../../../images/logo-icon.svg" rel="icon" type="image/svg">
+    <script>var pathToRoot = "../../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+    <script type="text/javascript"
+            src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js"
+            async="async"></script>
+    <script type="text/javascript" src="../../../../scripts/sourceset_dependencies.js"
+            async="async"></script>
+    <link href="../../../../styles/style.css" rel="Stylesheet">
+    <link href="../../../../styles/main.css" rel="Stylesheet">
+    <link href="../../../../styles/prism.css" rel="Stylesheet">
+    <link href="../../../../styles/logo-styles.css" rel="Stylesheet">
+    <link href="../../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+    <script type="text/javascript" src="../../../../scripts/clipboard.js" async="async"></script>
+    <script type="text/javascript" src="../../../../scripts/navigation-loader.js"
+            async="async"></script>
+    <script type="text/javascript" src="../../../../scripts/platform-content-handler.js"
+            async="async"></script>
+    <script type="text/javascript" src="../../../../scripts/main.js" defer="defer"></script>
+    <script type="text/javascript" src="../../../../scripts/prism.js" async="async"></script>
+    <script type="text/javascript" src="../../../../scripts/symbol-parameters-wrapper_deferred.js"
+            defer="defer"></script>
+    <link href="../../../../images/logo-icon.svg">
+</head>
+<body>
+<div class="root">
+    <nav class="navigation" id="navigation-wrapper">
+        <div class="navigation--inner">
+            <div class="navigation-title">
+                <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+                <div class="library-name">
+                    <a class="library-name--link" href="../../../../index.html">
+                        Nova
+                    </a>
+                </div>
+                <div class="library-version">
+                </div>
+            </div>
+            <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active=""
+                        data-filter=":composeApp:dokkaHtml/androidMain">android
+                </button>
+            </div>
+        </div>
+        <div class="navigation-controls">
+            <button class="navigation-controls--btn navigation-controls--theme"
+                    id="theme-toggle-button" type="button">switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--search" id="searchBar"
+                 role="button">search in API
+            </div>
+        </div>
+    </nav>
+    <div id="container">
+        <div class="sidebar" id="leftColumn">
+            <div class="sidebar--inner" id="sideMenu"></div>
+        </div>
+        <div id="main">
+            <div class="main-content" data-page-type="classlike" id="content"
+                 pageIds="Nova::com.tecknobit.nova.helpers.utils/NotificationsReceiver.NotificationsHelper///PointingToDeclaration//816059161">
+                <div class="breadcrumbs"><a href="../../../../index.html">Nova</a><span
+                        class="delimiter">/</span><a href="../../index.html">com.tecknobit.nova.helpers.utils</a><span
+                        class="delimiter">/</span><a
+                        href="../index.html">NotificationsReceiver</a><span
+                        class="delimiter">/</span><span class="current">NotificationsHelper</span>
+                </div>
+                <div class="cover ">
+                    <h1 class="cover"><span>Notifications</span>
+                        <wbr></wbr>
+                        <span><span>Helper</span></span></h1>
+                    <div class="platform-hinted  with-platform-tabs"
+                         data-platform-hinted="data-platform-hinted">
+                        <div class="platform-bookmarks-row" data-toggle-list="data-toggle-list">
+                            <button class="platform-bookmark"
+                                    data-filterable-current=":composeApp:dokkaHtml/androidMain"
+                                    data-filterable-set=":composeApp:dokkaHtml/androidMain"
+                                    data-active="" data-toggle=":composeApp:dokkaHtml/androidMain">
+                                android
+                            </button>
+                        </div>
+                        <div class="content sourceset-dependent-content" data-active=""
+                             data-togglable=":composeApp:dokkaHtml/androidMain">
+                            <div class="symbol monospace"><span
+                                    class="token keyword">open </span><span class="token keyword">class </span><a
+                                    href="index.html">NotificationsHelper</a></div>
+                            <p class="paragraph">The <code
+                                    class="lang-kotlin">NotificationsHelper</code> class is useful
+                                to send the notifications to the user</p><span class="kdoc-tag"><h4
+                                class="">Author</h4><p
+                                class="paragraph">N7ghtm4r3 - Tecknobit</p></span></div>
+                    </div>
+                </div>
+                <div class="tabbedcontent">
+                    <div class="tabs-section" tabs-section="tabs-section">
+                        <button class="section-tab" data-active=""
+                                data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members
+                        </button>
+                    </div>
+                    <div class="tabs-section-body">
+                        <div data-togglable="CONSTRUCTOR">
+                            <h2 class="">Constructors</h2>
+                            <div class="table"><a data-name="-1857740209%2FConstructors%2F816059161"
+                                                  anchor-label="NotificationsHelper"
+                                                  id="-1857740209%2FConstructors%2F816059161"
+                                                  data-filterable-set=":composeApp:dokkaHtml/androidMain"></a>
+                                <div class="table-row" data-togglable="CONSTRUCTOR"
+                                     data-filterable-current=":composeApp:dokkaHtml/androidMain"
+                                     data-filterable-set=":composeApp:dokkaHtml/androidMain">
+                                    <div class="main-subrow keyValue ">
+                                        <div class=""><span class="inline-flex">
+                  <div><a href="-notifications-helper.html"><span>Notifications</span><wbr></wbr><span><span>Helper</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon"
+                                   pointing-to="-1857740209%2FConstructors%2F816059161"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+                                        <div>
+                                            <div class="title">
+                                                <div class="platform-hinted  with-platform-tabs"
+                                                     data-platform-hinted="data-platform-hinted">
+                                                    <div class="platform-bookmarks-row"
+                                                         data-toggle-list="data-toggle-list">
+                                                        <button class="platform-bookmark"
+                                                                data-filterable-current=":composeApp:dokkaHtml/androidMain"
+                                                                data-filterable-set=":composeApp:dokkaHtml/androidMain"
+                                                                data-active=""
+                                                                data-toggle=":composeApp:dokkaHtml/androidMain">
+                                                            android
+                                                        </button>
+                                                    </div>
+                                                    <div class="content sourceset-dependent-content"
+                                                         data-active=""
+                                                         data-togglable=":composeApp:dokkaHtml/androidMain">
+                                                        <div class="symbol monospace"><span
+                                                                class="token keyword">constructor</span><span
+                                                                class="token punctuation">(</span><span
+                                                                class="parameters "><span
+                                                                class="parameter ">context<span
+                                                                class="token operator">: </span><a
+                                                                href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a></span></span><span
+                                                                class="token punctuation">)</span>
+                                                        </div>
+                                                        <div class="brief ">Constructor to init the
+                                                            <a href="index.html">NotificationsHelper</a>
+                                                            class
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div data-togglable="FUNCTION">
+                            <h2 class="">Functions</h2>
+                            <div class="table"><a data-name="1719521823%2FFunctions%2F816059161"
+                                                  anchor-label="execCheckRoutine"
+                                                  id="1719521823%2FFunctions%2F816059161"
+                                                  data-filterable-set=":composeApp:dokkaHtml/androidMain"></a>
+                                <div class="table-row"
+                                     data-filterable-current=":composeApp:dokkaHtml/androidMain"
+                                     data-filterable-set=":composeApp:dokkaHtml/androidMain">
+                                    <div class="main-subrow keyValue ">
+                                        <div class=""><span class="inline-flex">
+                  <div><a href="exec-check-routine.html"><span>exec</span><wbr></wbr><span>Check</span><wbr></wbr><span><span>Routine</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon"
+                                   pointing-to="1719521823%2FFunctions%2F816059161"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+                                        <div>
+                                            <div class="title">
+                                                <div class="platform-hinted  with-platform-tabs"
+                                                     data-platform-hinted="data-platform-hinted">
+                                                    <div class="platform-bookmarks-row"
+                                                         data-toggle-list="data-toggle-list">
+                                                        <button class="platform-bookmark"
+                                                                data-filterable-current=":composeApp:dokkaHtml/androidMain"
+                                                                data-filterable-set=":composeApp:dokkaHtml/androidMain"
+                                                                data-active=""
+                                                                data-toggle=":composeApp:dokkaHtml/androidMain">
+                                                            android
+                                                        </button>
+                                                    </div>
+                                                    <div class="content sourceset-dependent-content"
+                                                         data-active=""
+                                                         data-togglable=":composeApp:dokkaHtml/androidMain">
+                                                        <div class="symbol monospace"><span
+                                                                class="token keyword">open </span><span
+                                                                class="token keyword">fun </span><a
+                                                                href="exec-check-routine.html"><span
+                                                                class="token function">execCheckRoutine</span></a><span
+                                                                class="token punctuation">(</span><span
+                                                                class="token punctuation">)</span>
+                                                        </div>
+                                                        <div class="brief ">Method to exec the
+                                                            routine to check if there are any
+                                                            notifications to send No-any params
+                                                            required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a data-name="716010237%2FFunctions%2F816059161"
+                                   anchor-label="scheduleAndExec"
+                                   id="716010237%2FFunctions%2F816059161"
+                                   data-filterable-set=":composeApp:dokkaHtml/androidMain"></a>
+                                <div class="table-row"
+                                     data-filterable-current=":composeApp:dokkaHtml/androidMain"
+                                     data-filterable-set=":composeApp:dokkaHtml/androidMain">
+                                    <div class="main-subrow keyValue ">
+                                        <div class=""><span class="inline-flex">
+                  <div><a href="schedule-and-exec.html"><span>schedule</span><wbr></wbr><span>And</span><wbr></wbr><span><span>Exec</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon"
+                                   pointing-to="716010237%2FFunctions%2F816059161"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+                                        <div>
+                                            <div class="title">
+                                                <div class="platform-hinted  with-platform-tabs"
+                                                     data-platform-hinted="data-platform-hinted">
+                                                    <div class="platform-bookmarks-row"
+                                                         data-toggle-list="data-toggle-list">
+                                                        <button class="platform-bookmark"
+                                                                data-filterable-current=":composeApp:dokkaHtml/androidMain"
+                                                                data-filterable-set=":composeApp:dokkaHtml/androidMain"
+                                                                data-active=""
+                                                                data-toggle=":composeApp:dokkaHtml/androidMain">
+                                                            android
+                                                        </button>
+                                                    </div>
+                                                    <div class="content sourceset-dependent-content"
+                                                         data-active=""
+                                                         data-togglable=":composeApp:dokkaHtml/androidMain">
+                                                        <div class="symbol monospace"><span
+                                                                class="token keyword">open </span><span
+                                                                class="token keyword">fun </span><a
+                                                                href="schedule-and-exec.html"><span
+                                                                class="token function">scheduleAndExec</span></a><span
+                                                                class="token punctuation">(</span><span
+                                                                class="token punctuation">)</span>
+                                                        </div>
+                                                        <div class="brief ">Method to schedule and
+                                                            exec the notifications check.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a data-name="-684089151%2FFunctions%2F816059161"
+                                   anchor-label="scheduleRoutine"
+                                   id="-684089151%2FFunctions%2F816059161"
+                                   data-filterable-set=":composeApp:dokkaHtml/androidMain"></a>
+                                <div class="table-row"
+                                     data-filterable-current=":composeApp:dokkaHtml/androidMain"
+                                     data-filterable-set=":composeApp:dokkaHtml/androidMain">
+                                    <div class="main-subrow keyValue ">
+                                        <div class=""><span class="inline-flex">
+                  <div><a href="schedule-routine.html"><span>schedule</span><wbr></wbr><span><span>Routine</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon"
+                                   pointing-to="-684089151%2FFunctions%2F816059161"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+                                        <div>
+                                            <div class="title">
+                                                <div class="platform-hinted  with-platform-tabs"
+                                                     data-platform-hinted="data-platform-hinted">
+                                                    <div class="platform-bookmarks-row"
+                                                         data-toggle-list="data-toggle-list">
+                                                        <button class="platform-bookmark"
+                                                                data-filterable-current=":composeApp:dokkaHtml/androidMain"
+                                                                data-filterable-set=":composeApp:dokkaHtml/androidMain"
+                                                                data-active=""
+                                                                data-toggle=":composeApp:dokkaHtml/androidMain">
+                                                            android
+                                                        </button>
+                                                    </div>
+                                                    <div class="content sourceset-dependent-content"
+                                                         data-active=""
+                                                         data-togglable=":composeApp:dokkaHtml/androidMain">
+                                                        <div class="symbol monospace"><span
+                                                                class="token keyword">open </span><span
+                                                                class="token keyword">fun </span><a
+                                                                href="schedule-routine.html"><span
+                                                                class="token function">scheduleRoutine</span></a><span
+                                                                class="token punctuation">(</span><span
+                                                                class="token punctuation">)</span>
+                                                        </div>
+                                                        <div class="brief ">Method to schedule the
+                                                            routine using the <span
+                                                                    data-unresolved-link="com.tecknobit.nova.helpers.utils/NotificationsReceiver.NotificationsHelper/workManager/#/PointingToDeclaration/">workManager</span>
+                                                            No-any params required
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <span class="go-to-top-icon"><a href="#content"
+                                                id="go-to-top-link"></a></span><span>(c) 2024 Tecknobit</span><span
+                    class="pull-right"><span>Generated by </span><a
+                    href="https://github.com/Kotlin/dokka"><span>dokka</span><span
+                    class="padded-icon"></span></a></span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

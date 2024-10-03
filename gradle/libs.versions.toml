@@ -26,6 +26,7 @@ review = "2.0.1"
 richeditorCompose = "1.0.0-rc07"
 workRuntime = "2.9.1"
 sqldelight = "2.0.2"
+dokka = "1.9.20"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -56,6 +57,7 @@ novacore = { module = "com.tecknobit.novacore:novacore", version.ref = "novacore
 precompose = { module = "moe.tlaster:precompose", version.ref = "precompose" }
 review = { module = "com.google.android.play:review", version.ref = "review" }
 review-ktx = { module = "com.google.android.play:review-ktx", version.ref = "review" }
+dokka-base = { module = "org.jetbrains.dokka:dokka-base", version.ref = "dokka" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -64,3 +66,4 @@ jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
