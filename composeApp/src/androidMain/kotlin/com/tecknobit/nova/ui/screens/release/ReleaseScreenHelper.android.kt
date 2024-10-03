@@ -8,8 +8,8 @@ import android.os.Environment.DIRECTORY_DOWNLOADS
 import android.os.Environment.getExternalStoragePublicDirectory
 import android.provider.OpenableColumns
 import com.tecknobit.apimanager.annotations.Wrapper
-import com.tecknobit.nova.getAssetUrl
 import com.tecknobit.nova.helpers.utils.AppContext
+import com.tecknobit.nova.ui.components.getAssetUrl
 import com.tecknobit.novacore.records.release.events.AssetUploadingEvent
 import io.github.vinceglb.filekit.core.PlatformFile
 import java.io.File

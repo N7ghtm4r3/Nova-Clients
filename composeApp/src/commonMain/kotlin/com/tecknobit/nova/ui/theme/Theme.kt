@@ -1,4 +1,4 @@
-package com.tecknobit.nova.theme
+package com.tecknobit.nova.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme

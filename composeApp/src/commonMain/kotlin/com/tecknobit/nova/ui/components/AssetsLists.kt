@@ -19,12 +19,21 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.tecknobit.nova.Logo
 import com.tecknobit.novacore.records.release.events.AssetUploadingEvent.AssetUploaded
 import java.io.File
 
+/**
+ * **BYTES_TO_MEGABYTE_RATE** -> conversion rate from bytes to megabytes
+ */
 private const val BYTES_TO_MEGABYTE_RATE = 1_000_000
 
+/**
+ * The assets list to upload to the server, the user can select which assets confirm and which remove
+ * from the uploading
+ *
+ * @param modifier: the modifier to apply to the [LazyColumn] container
+ * @param uploadingAssets: the assets to upload to the server
+ */
 @Composable
 @NonRestartableComposable
 fun AssetsToUpload(
@@ -50,6 +59,12 @@ fun AssetsToUpload(
     }
 }
 
+/**
+ * Component to display the details of the asset to upload
+ *
+ * @param uploadingAssets: the assets to upload to the server
+ * @param asset: the asset [File]
+ */
 @Composable
 @NonRestartableComposable
 private fun AssetToUpload(
@@ -93,6 +108,13 @@ private fun AssetToUpload(
     )
 }
 
+/**
+ * The assets list to download from the server, the user can select which assets confirm and which remove
+ * from the downloading
+ *
+ * @param modifier: the modifier to apply to the [LazyColumn] container
+ * @param selectionList: the list of the assets selectable for the download
+ */
 @Composable
 @NonRestartableComposable
 fun AssetsToDownload(
@@ -118,6 +140,12 @@ fun AssetsToDownload(
     }
 }
 
+/**
+ * Component to display the details of the asset to downland
+ *
+ * @param selectionList: the assets to download from the server
+ * @param asset: the asset [File]
+ */
 @Composable
 @NonRestartableComposable
 private fun AssetToDownload(

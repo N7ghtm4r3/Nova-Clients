@@ -7,6 +7,12 @@ import com.tecknobit.novacore.helpers.LocalSessionUtils.DATABASE_NAME
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
+/**
+ * The **DatabaseDriverFactory** class is useful to create the specific database driver for each
+ * platform
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class DatabaseDriverFactory {
 
@@ -19,16 +25,20 @@ actual class DatabaseDriverFactory {
 
     }
 
-    private lateinit var driver: SqlDriver
-
+    /**
+     * Function to create the driver
+     *
+     * No-any params required
+     *
+     * @return the driver specific for each platform as [SqlDriver]
+     */
     actual fun createDriver(): SqlDriver {
-        driver = JdbcSqliteDriver(DATABASE_PATH)
+        return JdbcSqliteDriver(DATABASE_PATH)
             .also {
                 runBlocking {
                     Nova.Schema.create(it).await()
                 }
             }
-        return driver
     }
 
 }

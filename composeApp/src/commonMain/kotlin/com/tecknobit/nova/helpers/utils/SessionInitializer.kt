@@ -1,6 +1,7 @@
 package com.tecknobit.nova.helpers.utils
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import com.tecknobit.equinox.Requester.Companion.RESPONSE_MESSAGE_KEY
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
@@ -13,28 +14,58 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * **fetchNotifications** -> whether fetch the notifications of the user or not
+ */
 @Volatile
 private var fetchNotifications: Boolean = true
 
+/**
+ * Function to get whether the notifications fetching is enabled
+ *
+ * No-any params required
+ *
+ * @return whether the notifications fetching is enabled as [Boolean]
+ */
 fun isNotificationsFetchingEnable(): Boolean {
     return fetchNotifications
 }
 
+/**
+ * Function to start the notifications fetching
+ *
+ * No-any params required
+ */
 fun startNotificationsFetching() {
     fetchNotifications = true
 }
 
+/**
+ * Function to start the notifications fetching
+ *
+ * No-any params required
+ */
 fun stopNotificationsFetching() {
     fetchNotifications = false
 }
 
-fun notificationsFetching(): Boolean {
-    return fetchNotifications
-}
-
+/**
+ * Function to check whether are available any updates for each platform and then launch the application
+ * which the correct first screen to display
+ *
+ * No-any params required
+ */
 @Composable
+@NonRestartableComposable
 expect fun CheckForUpdatesAndLaunch()
 
+/**
+ * Function to init the local session and the related instances
+ *
+ * No-any params required
+ *
+ * @return whether the local session has been initialized or not, so the user was not logged yet, as [Boolean]
+ */
 fun initSession(): Boolean {
     val activeSession = localSessionsHelper.activeSession
     val sessionInitialized = activeSession != null
@@ -62,6 +93,12 @@ fun initSession(): Boolean {
  */
 expect fun setLocale()
 
+/**
+ * Function to get the notifications of the user, this routine will continue whether the [fetchNotifications]
+ * is set on *true* and the current local session is active
+ *
+ * No-any params required
+ */
 @OptIn(DelicateCoroutinesApi::class)
 fun fetchNotifications() {
     GlobalScope.launch {
@@ -85,6 +122,11 @@ fun fetchNotifications() {
     }
 }
 
+/**
+ * Function to launch the application
+ *
+ * @param destinationScreen: the screen to display first
+ */
 fun launchApp(
     destinationScreen: String
 ) {

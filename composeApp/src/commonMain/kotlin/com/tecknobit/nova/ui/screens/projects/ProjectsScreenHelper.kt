@@ -24,9 +24,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tecknobit.nova.Logo
-import com.tecknobit.nova.getProjectLogoUrl
 import com.tecknobit.nova.navigator
+import com.tecknobit.nova.ui.components.Logo
+import com.tecknobit.nova.ui.components.getProjectLogoUrl
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECT_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.notifications

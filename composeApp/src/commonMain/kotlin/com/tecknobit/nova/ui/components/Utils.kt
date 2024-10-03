@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalResourceApi::class, ExperimentalResourceApi::class)
 
-package com.tecknobit.nova
+package com.tecknobit.nova.ui.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
@@ -23,8 +23,9 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.tecknobit.nova.theme.gray_background
+import com.tecknobit.nova.imageLoader
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.nova.ui.theme.gray_background
 import com.tecknobit.nova.ui.theme.tester.primaryLight
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.NovaUser.DEFAULT_PROFILE_PIC
@@ -365,6 +366,12 @@ fun UserRoleBadge(
     }
 }
 
+/**
+ * The content of the [UserRoleBadge]
+ *
+ * @param role: the role to use to create the badge
+ * @param badgeColor: the color to apply to the badge
+ */
 @Composable
 @NonRestartableComposable
 private fun UserRoleBadgeContent(

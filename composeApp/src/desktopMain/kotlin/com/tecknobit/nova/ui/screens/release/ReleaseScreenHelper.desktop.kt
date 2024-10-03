@@ -1,7 +1,7 @@
 package com.tecknobit.nova.ui.screens.release
 
 import com.tecknobit.apimanager.annotations.Wrapper
-import com.tecknobit.nova.getAssetUrl
+import com.tecknobit.nova.ui.components.getAssetUrl
 import com.tecknobit.novacore.records.release.events.AssetUploadingEvent
 import io.github.vinceglb.filekit.core.PlatformFile
 import java.awt.Desktop

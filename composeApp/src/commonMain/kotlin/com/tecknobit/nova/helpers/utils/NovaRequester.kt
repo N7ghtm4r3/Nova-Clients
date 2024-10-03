@@ -55,6 +55,17 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 
+/**
+ * The **NovaRequester** class is useful to communicate with the Nova's backend
+ *
+ * @param host: the host where is running the Nova's backend
+ * @param userId: the user identifier
+ * @param userToken: the user token
+ * @param debugMode: whether the requester is still in development and who is developing needs the log of the requester's
+ * workflow, if it is enabled all the details of the requests sent and the errors occurred will be printed in the console
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class NovaRequester(
     host: String,
     userId: String? = null,
@@ -64,7 +75,7 @@ class NovaRequester(
     host = host,
     userId = userId,
     userToken = userToken,
-    debugMode = true,
+    debugMode = debugMode,
     connectionTimeout = 2000,
     connectionErrorMessage = DEFAULT_CONNECTION_ERROR_MESSAGE,
     enableCertificatesValidation = true

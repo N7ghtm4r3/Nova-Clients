@@ -41,11 +41,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecknobit.equinoxcompose.components.EquinoxOutlinedTextField
 import com.tecknobit.nova.fontFamily
-import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.components.SplitText
 import com.tecknobit.nova.ui.components.SplitTextState
 import com.tecknobit.nova.ui.components.rememberSplitTextState
 import com.tecknobit.nova.ui.screens.NovaScreen
+import com.tecknobit.nova.ui.theme.gray_background
 import com.tecknobit.novacore.NovaInputValidator.isHostValid
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.host

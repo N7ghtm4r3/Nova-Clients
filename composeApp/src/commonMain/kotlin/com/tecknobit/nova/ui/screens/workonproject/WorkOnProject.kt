@@ -43,9 +43,9 @@ import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.tecknobit.equinoxcompose.components.EquinoxTextField
-import com.tecknobit.nova.getProjectLogoUrl
 import com.tecknobit.nova.imageLoader
 import com.tecknobit.nova.ui.components.MemberListItem
+import com.tecknobit.nova.ui.components.getProjectLogoUrl
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.release.getAsset
 import com.tecknobit.novacore.NovaInputValidator.isProjectNameValid

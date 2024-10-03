@@ -12,8 +12,8 @@ import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.tecknobit.nova.navigator
-import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.ADD_MEMBERS_SCREEN
+import com.tecknobit.nova.ui.theme.gray_background
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.project.Project.PROJECT_KEY
 import com.tecknobit.novacore.records.release.Release

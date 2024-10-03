@@ -12,12 +12,17 @@ import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tecknobit.nova.Logo
-import com.tecknobit.nova.UserRoleBadge
-import com.tecknobit.nova.getMemberProfilePicUrl
-import com.tecknobit.nova.theme.gray_background
+import com.tecknobit.nova.ui.theme.gray_background
 import com.tecknobit.novacore.records.NovaUser
 
+/**
+ * Component to display the information of a member of a project
+ *
+ * @param member: the member to display
+ * @param trailingContent: the trailing content for the [ListItem] container
+ * @param isTester: whether the member is a tester of that project
+ * @param onRoleClick: the action to execute when the [UserRoleBadge] is clicked
+ */
 @Composable
 @NonRestartableComposable
 fun MemberListItem(

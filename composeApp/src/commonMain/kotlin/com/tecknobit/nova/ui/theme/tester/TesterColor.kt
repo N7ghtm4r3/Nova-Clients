@@ -3,7 +3,7 @@ package com.tecknobit.nova.ui.theme.tester
 import androidx.compose.ui.graphics.Color
 
 /**
- * Set of default bug light theme colors
+ * Set of default tester light theme colors
  */
 val primaryLight = Color(0xFF3B693A)
 val onPrimaryLight = Color(0xFFFFFFFF)
@@ -41,6 +41,9 @@ val surfaceContainerLight = Color(0xFFECEFE6)
 val surfaceContainerHighLight = Color(0xFFE6E9E0)
 val surfaceContainerHighestLight = Color(0xFFE0E4DB)
 
+/**
+ * Set of default tester medium-contrast theme colors
+ */
 val primaryLightMediumContrast = Color(0xFF1F4C20)
 val onPrimaryLightMediumContrast = Color(0xFFFFFFFF)
 val primaryContainerLightMediumContrast = Color(0xFF517F4E)
@@ -77,6 +80,9 @@ val surfaceContainerLightMediumContrast = Color(0xFFECEFE6)
 val surfaceContainerHighLightMediumContrast = Color(0xFFE6E9E0)
 val surfaceContainerHighestLightMediumContrast = Color(0xFFE0E4DB)
 
+/**
+ * Set of default tester high-contrast theme colors
+ */
 val primaryLightHighContrast = Color(0xFF002906)
 val onPrimaryLightHighContrast = Color(0xFFFFFFFF)
 val primaryContainerLightHighContrast = Color(0xFF1F4C20)
@@ -113,6 +119,9 @@ val surfaceContainerLightHighContrast = Color(0xFFECEFE6)
 val surfaceContainerHighLightHighContrast = Color(0xFFE6E9E0)
 val surfaceContainerHighestLightHighContrast = Color(0xFFE0E4DB)
 
+/**
+ * Set of default tester dark theme colors
+ */
 val primaryDark = Color(0xFFA1D39A)
 val onPrimaryDark = Color(0xFF09390F)
 val primaryContainerDark = Color(0xFF235024)
@@ -149,6 +158,9 @@ val surfaceContainerDark = Color(0xFF1C211B)
 val surfaceContainerHighDark = Color(0xFF272B25)
 val surfaceContainerHighestDark = Color(0xFF323630)
 
+/**
+ * Set of default tester dark medium-contrast colors
+ */
 val primaryDarkMediumContrast = Color(0xFFA5D89E)
 val onPrimaryDarkMediumContrast = Color(0xFF001B03)
 val primaryContainerDarkMediumContrast = Color(0xFF6C9C68)
@@ -185,6 +197,9 @@ val surfaceContainerDarkMediumContrast = Color(0xFF1C211B)
 val surfaceContainerHighDarkMediumContrast = Color(0xFF272B25)
 val surfaceContainerHighestDarkMediumContrast = Color(0xFF323630)
 
+/**
+ * Set of default tester dark high-contrast colors
+ */
 val primaryDarkHighContrast = Color(0xFFF1FFEA)
 val onPrimaryDarkHighContrast = Color(0xFF000000)
 val primaryContainerDarkHighContrast = Color(0xFFA5D89E)

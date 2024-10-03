@@ -44,9 +44,9 @@ import com.mohamedrejeb.richeditor.annotation.ExperimentalRichTextApi
 import com.mohamedrejeb.richeditor.model.RichTextState
 import com.mohamedrejeb.richeditor.model.rememberRichTextState
 import com.mohamedrejeb.richeditor.ui.material3.RichText
-import com.tecknobit.nova.ReleaseStatusBadge
 import com.tecknobit.nova.navigator
 import com.tecknobit.nova.thinFontFamily
+import com.tecknobit.nova.ui.components.ReleaseStatusBadge
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.RELEASE_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.notifications

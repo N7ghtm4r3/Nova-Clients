@@ -1,4 +1,4 @@
-package com.tecknobit.nova.theme
+package com.tecknobit.nova.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

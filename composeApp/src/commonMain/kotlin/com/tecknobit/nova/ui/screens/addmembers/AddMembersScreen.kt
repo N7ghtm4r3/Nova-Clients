@@ -64,11 +64,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tecknobit.equinoxcompose.components.EquinoxOutlinedTextField
 import com.tecknobit.equinoxcompose.components.ErrorUI
-import com.tecknobit.nova.customerColor
 import com.tecknobit.nova.navigator
-import com.tecknobit.nova.theme.gray_background
+import com.tecknobit.nova.ui.components.customerColor
+import com.tecknobit.nova.ui.components.vendorColor
 import com.tecknobit.nova.ui.screens.NovaScreen
-import com.tecknobit.nova.vendorColor
+import com.tecknobit.nova.ui.theme.gray_background
 import com.tecknobit.novacore.NovaInputValidator.isEmailValid
 import com.tecknobit.novacore.records.NovaUser.Role
 import com.tecknobit.novacore.records.project.Project

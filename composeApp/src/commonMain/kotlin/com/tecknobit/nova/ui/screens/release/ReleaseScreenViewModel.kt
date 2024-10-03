@@ -10,7 +10,7 @@ import com.tecknobit.equinox.Requester.Companion.RESPONSE_STATUS_KEY
 import com.tecknobit.equinoxcompose.helpers.session.setHasBeenDisconnectedValue
 import com.tecknobit.equinoxcompose.helpers.session.setServerOfflineValue
 import com.tecknobit.equinoxcompose.helpers.viewmodels.EquinoxViewModel
-import com.tecknobit.nova.getReportUrl
+import com.tecknobit.nova.ui.components.getReportUrl
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.requester
 import com.tecknobit.novacore.NovaInputValidator.areRejectionReasonsValid
 import com.tecknobit.novacore.NovaInputValidator.isTagCommentValid

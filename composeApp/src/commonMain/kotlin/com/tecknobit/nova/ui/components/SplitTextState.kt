@@ -9,6 +9,11 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.SaverScope
 import androidx.compose.runtime.saveable.rememberSaveable
 
+/**
+ * The remember function used to create a [SplitTextState] for a [SplitText] component
+ *
+ * @param splits: the number of splits used to create the [SplitText] component
+ */
 @Composable
 fun rememberSplitTextState(
     splits: Int
@@ -25,13 +30,30 @@ fun rememberSplitTextState(
     return splitTextState.value
 }
 
+/**
+ * The **SplitTextState** class is useful to manage a [SplitText] component giving the details currently
+ * used in that component
+ *
+ * @param splits: he number of splits used to create the component
+ * @param initialSliceValues: the initial values of the slices
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class SplitTextState internal constructor(
     val splits: Int,
     val initialSliceValues: List<String> = List(splits) { "" }
 ) {
 
+    /**
+     * **textSlices** -> the array container of the each parts of the split text
+     */
     val textSlices = arrayListOf<MutableState<String>>()
 
+    /**
+     * Function to allocate the each slice of the [textSlices] with their values
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     fun CreateSlices() {
@@ -45,6 +67,12 @@ class SplitTextState internal constructor(
         }
     }
 
+    /**
+     * Function to get the complete text of the [SplitText] component
+     *
+     * No-any params required
+     * @return the each part of the [textSlices] as unique [String]
+     */
     fun getCompleteText(): String {
         var entireText = ""
         textSlices.forEach { slice ->
@@ -55,6 +83,12 @@ class SplitTextState internal constructor(
 
 }
 
+/**
+ * The **SplitTextSaver** custom saver allow the [SplitTextState] to save and restore correctly the
+ * values for the [SplitText] component
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 object SplitTextSaver : Saver<SplitTextState, Pair<Int, List<String>>> {
 
     /**

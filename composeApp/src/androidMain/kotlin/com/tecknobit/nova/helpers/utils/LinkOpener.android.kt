@@ -3,6 +3,11 @@ package com.tecknobit.nova.helpers.utils
 import android.content.Intent
 import android.net.Uri
 
+/**
+ * Function to open a link from **Android** platform
+ *
+ * @param url: the ulr of the link to open
+ */
 actual fun openLink(
     url: String
 ) {

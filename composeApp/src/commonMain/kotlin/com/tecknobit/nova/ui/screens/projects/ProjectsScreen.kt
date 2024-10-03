@@ -44,10 +44,10 @@ import coil3.request.crossfade
 import com.tecknobit.equinoxcompose.components.EmptyListUI
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
 import com.tecknobit.nova.imageLoader
-import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
 import com.tecknobit.nova.ui.screens.profile.navToProfile
+import com.tecknobit.nova.ui.theme.gray_background
 import com.tecknobit.novacore.records.project.Project
 import nova.composeapp.generated.resources.Res
 import nova.composeapp.generated.resources.logo

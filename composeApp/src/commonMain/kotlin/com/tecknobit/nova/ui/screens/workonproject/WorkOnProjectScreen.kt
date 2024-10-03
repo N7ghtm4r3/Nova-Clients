@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.graphics.Color
 import com.tecknobit.nova.navigator
-import com.tecknobit.nova.theme.gray_background
+import com.tecknobit.nova.ui.theme.gray_background
 import com.tecknobit.novacore.records.project.Project
 
 class WorkOnProjectScreen(

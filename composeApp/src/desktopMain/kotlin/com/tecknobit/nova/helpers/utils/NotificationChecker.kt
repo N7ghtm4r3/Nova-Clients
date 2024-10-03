@@ -47,7 +47,7 @@ class NotificationChecker {
     @OptIn(DelicateCoroutinesApi::class)
     fun execCheckRoutine() {
         GlobalScope.launch {
-            while (!notificationsFetching()) {
+            while (!isNotificationsFetchingEnable()) {
                 val localSessionHelper = LocalSessionHelper(DatabaseDriverFactory())
                 for (session in localSessionHelper.getSessions()) {
                     if (session.isHostSet) {

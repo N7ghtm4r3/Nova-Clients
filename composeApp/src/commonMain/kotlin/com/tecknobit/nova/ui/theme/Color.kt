@@ -1,4 +1,4 @@
-package com.tecknobit.nova.theme
+package com.tecknobit.nova.ui.theme
 import androidx.compose.ui.graphics.Color
 
 /**
@@ -69,7 +69,9 @@ val md_theme_dark_surfaceTint = Color(0xFFFFB86A)
 val md_theme_dark_outlineVariant = Color(0xFF50453A)
 val md_theme_dark_scrim = Color(0xFF000000)
 
-
+/**
+ * **seed** color used to create the Nova's theme
+ */
 val seed = Color(0xFFF2A242)
 
 /**

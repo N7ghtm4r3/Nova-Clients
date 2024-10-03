@@ -7,14 +7,25 @@ import com.tecknobit.nova.cache.Nova
 import com.tecknobit.nova.helpers.utils.AppContext
 import com.tecknobit.novacore.helpers.LocalSessionUtils.DATABASE_NAME
 
+/**
+ * The **DatabaseDriverFactory** class is useful to create the specific database driver for each
+ * platform
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 actual class DatabaseDriverFactory {
 
-    private lateinit var driver: SqlDriver
-
+    /**
+     * Function to create the driver
+     *
+     * No-any params required
+     *
+     * @return the driver specific for each platform as [SqlDriver]
+     */
     actual fun createDriver(): SqlDriver {
         val schema = Nova.Schema
-        driver = AndroidSqliteDriver(
+        return AndroidSqliteDriver(
             schema = schema,
             context = AppContext.get(),
             name = DATABASE_NAME,
@@ -24,7 +35,6 @@ actual class DatabaseDriverFactory {
                 }
             }
         )
-        return driver
     }
 
 }

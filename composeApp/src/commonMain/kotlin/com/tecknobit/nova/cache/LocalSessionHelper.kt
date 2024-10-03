@@ -11,16 +11,34 @@ import com.tecknobit.novacore.helpers.LocalSessionUtils.SESSIONS_TABLE
 import com.tecknobit.novacore.records.NovaUser
 import com.tecknobit.novacore.records.NovaUser.Role
 
+/**
+ * The **LocalSessionHelper** class is useful to manage the local sessions of the user, so manage the credentials
+ * of the user and all his/her personal data like profile pic, email and password
+ *
+ * @param databaseDriverFactory: the driver factory used to create the specific driver for each platform
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see LocalSessionUtils
+ */
 class LocalSessionHelper(
     val databaseDriverFactory: DatabaseDriverFactory
 ) : LocalSessionUtils {
 
+    /**
+     * **sqlDriver** -> the driver used by the [database] instance to work with the database
+     */
     private val sqlDriver: SqlDriver = databaseDriverFactory.createDriver()
 
+    /**
+     * **database** -> the database manager
+     */
     private var database = Nova(
         driver = sqlDriver
     )
 
+    /**
+     * **dbQuery** -> the queries manager
+     */
     private val dbQuery = database.novaQueries
 
     /**
@@ -65,7 +83,7 @@ class LocalSessionHelper(
     }
 
     /**
-     * Method to set the current active session as inactive <br></br>
+     * Method to set the current active session as inactive 
      *
      * No-any params required
      */
@@ -87,7 +105,8 @@ class LocalSessionHelper(
     }
 
     /**
-     * Method to list all the local sessions of the user. <br></br>
+     * Method to list all the local sessions of the user.
+     *
      * No-any params required
      *
      * @return the list of the local sessions of the user as [List] of [NovaSession]
@@ -126,7 +145,8 @@ class LocalSessionHelper(
     }
 
     /**
-     * Method to get the current active local session <br></br>
+     * Method to get the current active local session
+     *
      *
      * No-any params required
      * @return the local session as [NovaSession]
@@ -189,7 +209,11 @@ class LocalSessionHelper(
         }
     }
 
-    // TODO: TO COMMENT
+    /**
+     * Method to perform the logout action and clear the current local sessions stored
+     *
+     * No-any params required
+     */
     fun logout() {
         deleteAllSessions()
         FetcherManager.setActiveContext(this::class.java)
@@ -197,7 +221,7 @@ class LocalSessionHelper(
     }
 
     /**
-     * Method to delete all the local sessions, used when the user executes a logout or the account deletion <br></br>
+     * Method to delete all the local sessions, used when the user executes a logout or the account deletion 
      * No-any params required
      */
     override fun deleteAllSessions() {

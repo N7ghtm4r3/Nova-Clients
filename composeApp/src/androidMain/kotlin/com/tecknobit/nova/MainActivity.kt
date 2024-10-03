@@ -19,9 +19,9 @@ import com.tecknobit.equinoxcompose.helpers.session.setUpSession
 import com.tecknobit.nova.cache.LocalSessionHelper
 import com.tecknobit.nova.helpers.storage.DatabaseDriverFactory
 import com.tecknobit.nova.helpers.utils.launchApp
-import com.tecknobit.nova.theme.md_theme_light_primary
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.PROJECTS_SCREEN
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.localSessionsHelper
+import com.tecknobit.nova.ui.theme.md_theme_light_primary
 import io.github.vinceglb.filekit.core.FileKit
 
 class MainActivity : ComponentActivity() {

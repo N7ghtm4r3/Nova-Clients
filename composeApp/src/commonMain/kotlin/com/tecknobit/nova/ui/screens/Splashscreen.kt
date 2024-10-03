@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.sp
 import com.tecknobit.nova.cache.LocalSessionHelper
 import com.tecknobit.nova.helpers.utils.CheckForUpdatesAndLaunch
 import com.tecknobit.nova.helpers.utils.NovaRequester
-import com.tecknobit.nova.theme.md_theme_light_primary
+import com.tecknobit.nova.ui.theme.md_theme_light_primary
 import com.tecknobit.novacore.helpers.LocalSessionUtils.NovaSession
 import com.tecknobit.novacore.records.NovaNotification
 import nova.composeapp.generated.resources.Res

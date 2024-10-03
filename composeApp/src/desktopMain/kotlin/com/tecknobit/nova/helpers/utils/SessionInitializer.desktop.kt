@@ -3,6 +3,7 @@ package com.tecknobit.nova.helpers.utils
 import OctocatKDUConfig
 import UpdaterDialog
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,7 +19,14 @@ import nova.composeapp.generated.resources.app_version
 import org.jetbrains.compose.resources.stringResource
 import java.util.Locale
 
+/**
+ * Function to check whether are available any updates for **Desktop** platform with the [UpdaterDialog]
+ * component and then launch the application which the correct first screen to display
+ *
+ * No-any params required
+ */
 @Composable
+@NonRestartableComposable
 actual fun CheckForUpdatesAndLaunch() {
     var launchApp by remember { mutableStateOf(true) }
     UpdaterDialog(

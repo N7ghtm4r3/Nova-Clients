@@ -45,8 +45,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.annotations.TestOnly
 
+/**
+ * **focusManager** -> the focus manager
+ */
 private lateinit var focusManager: FocusManager
 
+/**
+ * Component to allow the user to insert a split text such OTP codes, PIN or any other texts of this type
+ *
+ * @param columnModifier: the modifier to apply to the [Column] container
+ * @param rowModifier: the modifier to apply to the [LazyRow] container
+ * @param splitsTextState: the state used to manage this component
+ * @param spacingBetweenBoxes: the spacing between the boxes
+ * @param boxShape: the shape to apply to the [SplitBox]
+ * @param boxTextStyle: the text style to use for the [SplitBox]'s text
+ * @param infoText: the text, if passed, to display as information about the text to insert in the
+ * component
+ */
 @Composable
 @NonRestartableComposable
 @TestOnly
@@ -95,6 +110,15 @@ fun SplitText(
     }
 }
 
+/**
+ * Single component to allow the user to a slice of the complete text of the [SplitText] component
+ *
+ * @param currentTextSlices: the array container of the each parts of the split text
+ * @param boxShape: the shape to apply to the [SplitBox]
+ * @param boxTextStyle: the text style to use for the [SplitBox]'s text
+ * @param textSlice: the slice of the complete text to fill
+ * @param currentBox: the index of the current box where the focus is applied
+ */
 @Composable
 @NonRestartableComposable
 @TestOnly
@@ -192,6 +216,13 @@ private fun SplitBox(
     }
 }
 
+/**
+ * Function to automatically all the [SplitBox] when the user copy the text to insert in the [SplitText]
+ *
+ * @param splits: the number of splits used to create the [SplitText] component
+ * @param currentTextSlices: the array container of the each parts of the split text
+ * @param slice: the complete text requested to copy in the component
+ */
 private fun pasteSlices(
     splits: Int,
     currentTextSlices: ArrayList<MutableState<String>>,

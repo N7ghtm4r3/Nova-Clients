@@ -3,7 +3,9 @@ package com.tecknobit.nova.helpers.utils
 import android.app.Activity
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.ui.platform.LocalContext
+import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateOptions
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
@@ -28,7 +30,14 @@ import com.tecknobit.novacore.records.release.Release.RELEASE_KEY
 import kotlinx.coroutines.delay
 import java.util.Locale
 
+/**
+ * Function to check whether are available any updates for **Android** platform and then launch the
+ * application which the correct first screen to display
+ *
+ * No-any params required
+ */
 @Composable
+@NonRestartableComposable
 actual fun CheckForUpdatesAndLaunch() {
     val intent = (LocalContext.current as Activity).intent
     LaunchedEffect(key1 = true) {
@@ -61,6 +70,12 @@ actual fun CheckForUpdatesAndLaunch() {
     }
 }
 
+/**
+ * Function to execute the updates checking with the [AppUpdateManager] and then, if there are not updates
+ * available, invoking the [initAndStartSession] method to start the application
+ *
+ * No-any params required
+ */
 private fun checkForUpdates() {
     appUpdateManager.appUpdateInfo.addOnSuccessListener { info ->
         val isUpdateAvailable = info.updateAvailability() == UPDATE_AVAILABLE
@@ -83,6 +98,11 @@ private fun checkForUpdates() {
     }
 }
 
+/**
+ * Function to initialized the local session and then select the first screen to display
+ *
+ * @param destinationScreen: the screen to display if the session is initialized
+ */
 private fun initAndStartSession(
     destinationScreen: String
 ) {

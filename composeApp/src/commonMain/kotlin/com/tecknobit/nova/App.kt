@@ -17,7 +17,6 @@ import coil3.addLastModifiedToFileCacheKey
 import coil3.compose.LocalPlatformContext
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.request.CachePolicy
-import com.tecknobit.nova.theme.NovaTheme
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.ADD_MEMBERS_DIALOG
 import com.tecknobit.nova.ui.screens.NovaScreen.Companion.ADD_MEMBERS_SCREEN
@@ -42,6 +41,7 @@ import com.tecknobit.nova.ui.screens.projects.ProjectsScreen
 import com.tecknobit.nova.ui.screens.release.ReleaseScreen
 import com.tecknobit.nova.ui.screens.workonproject.WorkOnProjectDialog
 import com.tecknobit.nova.ui.screens.workonproject.WorkOnProjectScreen
+import com.tecknobit.nova.ui.theme.NovaTheme
 import com.tecknobit.novacore.records.project.Project
 import com.tecknobit.novacore.records.project.Project.PROJECT_IDENTIFIER_KEY
 import com.tecknobit.novacore.records.project.Project.PROJECT_KEY
@@ -95,6 +95,11 @@ private val sslContext = SSLContext.getInstance("TLS")
  */
 lateinit var imageLoader: ImageLoader
 
+/**
+ * Common entry point of the **Nova** application
+ *
+ * No-any params required
+ */
 @Composable
 @Preview
 fun App() {
@@ -143,7 +148,7 @@ fun App() {
                 ) {
                     ProfileScreen().ShowContent()
                 }
-                dialog(
+                scene(
                     route = PROFILE_DIALOG
                 ) {
                     DialogScreen(
@@ -163,7 +168,7 @@ fun App() {
                         project = project
                     ).ShowContent()
                 }
-                dialog(
+                scene(
                     route = WORK_ON_PROJECT_DIALOG
                 ) { backstackEntry ->
                     val stateHolder = backstackEntry.stateHolder
@@ -173,7 +178,6 @@ fun App() {
                             project = project
                         )
                     )
-                    stateHolder.remove(PROJECT_KEY)
                 }
                 scene(
                     route = JOIN_PROJECT_SCREEN
@@ -182,7 +186,7 @@ fun App() {
                         enableScanOption = true
                     ).ShowContent()
                 }
-                dialog(
+                scene(
                     route = JOIN_PROJECT_DIALOG
                 ) {
                     DialogScreen(
@@ -199,7 +203,7 @@ fun App() {
                         projectId = projectId
                     ).ShowContent()
                 }
-                dialog(
+                scene(
                     route = ADD_MEMBERS_DIALOG
                 ) { backstackEntry ->
                     val stateHolder = backstackEntry.stateHolder
@@ -209,7 +213,6 @@ fun App() {
                             project = project
                         )
                     )
-                    stateHolder.remove(PROJECT_KEY)
                 }
                 scene(
                     route = ADD_MEMBERS_SCREEN
@@ -236,6 +239,11 @@ fun App() {
     }
 }
 
+/**
+ * Container to display an [EquinoxScreen] as dialog
+ *
+ * @param dialogScreen: the screen to display as dialog
+ */
 @Composable
 @NonRestartableComposable
 private fun DialogScreen(

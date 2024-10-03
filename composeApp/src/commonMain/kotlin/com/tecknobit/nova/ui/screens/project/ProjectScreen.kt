@@ -53,11 +53,11 @@ import com.tecknobit.equinoxcompose.components.EquinoxAlertDialog
 import com.tecknobit.equinoxcompose.components.EquinoxOutlinedTextField
 import com.tecknobit.equinoxcompose.helpers.session.ManagedContent
 import com.tecknobit.nova.navigator
-import com.tecknobit.nova.theme.TesterThemeColor
-import com.tecknobit.nova.theme.gray_background
 import com.tecknobit.nova.ui.components.MemberListItem
 import com.tecknobit.nova.ui.screens.NovaScreen
 import com.tecknobit.nova.ui.screens.Splashscreen.Companion.activeLocalSession
+import com.tecknobit.nova.ui.theme.TesterThemeColor
+import com.tecknobit.nova.ui.theme.gray_background
 import com.tecknobit.novacore.NovaInputValidator.areReleaseNotesValid
 import com.tecknobit.novacore.NovaInputValidator.isReleaseVersionValid
 import com.tecknobit.novacore.records.NovaUser
