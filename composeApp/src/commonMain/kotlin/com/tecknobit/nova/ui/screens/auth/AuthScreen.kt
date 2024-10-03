@@ -329,8 +329,8 @@ class AuthScreen : NovaScreen() {
     }
 
     /**
-     * Function to select and to adapt the [FormSection] if the user whether the user is a [Role.Customer]
-     * or is a [Role.Vendor]
+     * Function to select and to adapt the [FormSection] if the user whether the user is a [NovaUser.Role.Customer]
+     * or is a [NovaUser.Role.Vendor]
      *
      * No-any params required
      */

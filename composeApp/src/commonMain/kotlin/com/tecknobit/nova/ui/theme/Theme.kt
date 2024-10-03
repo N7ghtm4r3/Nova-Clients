@@ -245,7 +245,7 @@ val BlueSchemeColors = lightColorScheme(
 )
 
 /**
- * **TesterThemeColor** the color scheme for the [Role.Tester]
+ * **TesterThemeColor** the color scheme for the [NovaUser.Role.Tester]
  */
 val TesterThemeColor = lightColorScheme(
     primary = primaryLight,

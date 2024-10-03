@@ -1,6 +1,6 @@
 @file:OptIn(
     ExperimentalMaterial3Api::class, ExperimentalComposeApi::class,
-    ExperimentalResourceApi::class
+    ExperimentalResourceApi::class, ExperimentalRichTextApi::class
 )
 
 package com.tecknobit.nova.ui.screens.release
@@ -60,6 +60,7 @@ import androidx.compose.runtime.ExperimentalComposeApi
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.TestOnly
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -167,7 +168,16 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import java.io.File
 
-@OptIn(ExperimentalRichTextApi::class)
+/**
+ * The [ReleaseScreen] class is used to retrieve and display the data of a release
+ *
+ * @param projectId: the identifier of the project
+ * @param releaseId: the identifier of the release
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ * @see NovaScreen
+ */
 class ReleaseScreen(
     private val projectId: String,
     private val releaseId: String
@@ -175,20 +185,38 @@ class ReleaseScreen(
 
     companion object {
 
+        /**
+         * *viewModel* -> the support view model to manage the requests to the backend
+         */
         private val viewModel = ReleaseScreenViewModel(
             snackbarHostState = snackbarHostState
         )
 
     }
 
+    /**
+     * *launcher* -> the launcher used to pick the assets to upload
+     */
     private lateinit var launcher: PickerResultLauncher
 
+    /**
+     * **release** -> the release currently shown
+     */
     private lateinit var release: State<Release?>
 
+    /**
+     * *amITester* -> whether the [activeLocalSession] is a [NovaUser.Role.Tester]
+     */
     private lateinit var amITester: MutableState<Boolean>
 
+    /**
+     * *releaseProject* -> the project where the release is attached
+     */
     private lateinit var releaseProject: Project
 
+    /**
+     * *releaseStatus* -> the status of the release
+     */
     private var releaseStatus: ReleaseStatus = New
 
     /**
@@ -244,6 +272,11 @@ class ReleaseScreen(
         )
     }
 
+    /**
+     * The section where is displayed the title of the release
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun ReleaseTitle() {
@@ -261,6 +294,12 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The section where are displayed the actions available for the [release], these actions change
+     * in base of the role of the [activeLocalSession]
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun Actions() {
@@ -294,6 +333,11 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The [EquinoxAlertDialog] to warn the user about the deletion the current [release]
+     *
+     * No-any params required
+     */
     @Composable
     private fun DeleteRelease() {
         EquinoxAlertDialog(
@@ -321,6 +365,12 @@ class ReleaseScreen(
         )
     }
 
+    /**
+     * The custom [FloatingActionButton] to execute different actions on the [release] such upload
+     * new assets or promote it
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun FAButton() {
@@ -406,6 +456,12 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The dialog where the user can comment the uploaded assets and confirm or remove some assets
+     * before to confirm their upload
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun UploadAssets() {
@@ -423,6 +479,11 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The inner section of the [UploadingSummary] where are displayed the assets chosen to be uploaded
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun UploadingSummary() {
@@ -471,6 +532,12 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The inner section of the [UploadingSummary] where is displayed the result of the uploading of
+     * the assets
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun UploadingResult() {
@@ -513,6 +580,13 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * Function to get the title for the [PromoteRelease] section
+     *
+     * @param lastEventStatus: the last event occurred in the current [release]
+     *
+     * @return the title as [StringResource]
+     */
     @Composable
     @NonRestartableComposable
     private fun getPromotionTitle(
@@ -525,6 +599,13 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * Function to get the information for the [PromoteRelease] section
+     *
+     * @param lastEventStatus: the last event occurred in the current [release]
+     *
+     * @return the warn text and the status chosen as [Pair] of [StringResource] and [ReleaseStatus]
+     */
     private fun getPromotionInfo(
         lastEventStatus: ReleaseStatus
     ): Pair<StringResource, ReleaseStatus> {
@@ -554,6 +635,12 @@ class ReleaseScreen(
         return promotionInfo
     }
 
+    /**
+     * Selector to chose the promotion path to follow for the current [release], so promote as the
+     * [ReleaseStatus.Latest] directly or follow the release statuses from [Alpha] and then [Beta]
+     *
+     * @param onStatusChange: the action to execute when the status changes
+     */
     @Composable
     @NonRestartableComposable
     private fun PromotionPathSelector(
@@ -604,6 +691,11 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * Section where are displayed the events occurred in the current [release]
+     *
+     * @param paddingValues: the padding values to apply to the section
+     */
     @Composable
     @NonRestartableComposable
     private fun EventsSection(
@@ -639,6 +731,12 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The dedicated section to display the details about a [ReleaseEvent]
+     *
+     * @param event: the event to display
+     * @param position: the position of the event in the container list
+     */
     @Composable
     @NonRestartableComposable
     private fun ReleaseEvent(
@@ -700,6 +798,11 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The section where is displayed the title of the event
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun EventTitle(
@@ -714,6 +817,11 @@ class ReleaseScreen(
         )
     }
 
+    /**
+     * The dedicated section to display the details about an [AssetUploadingEvent]
+     *
+     * @param event: the event to display
+     */
     @Composable
     @NonRestartableComposable
     private fun UploadingEventInfo(
@@ -789,6 +897,12 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The custom dialog where the user can select the assets to download
+     *
+     * @param show: whether the dialog is visible or not
+     * @param assetsUploaded: the list of the current assets available to be downloaded
+     */
     @Composable
     @NonRestartableComposable
     private fun ChoseAssetsToDownload(
@@ -811,6 +925,12 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The inner section of the [ChoseAssetsToDownload] where the user can select the assets to download
+     *
+     * @param show: whether the dialog is visible or not
+     * @param assetsUploaded: the list of the current assets available to be downloaded
+     */
     @Composable
     @NonRestartableComposable
     private fun AssetsSelector(
@@ -860,6 +980,11 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The informative dialog to display the status about the assets downloading
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun DownloadAssets() {
@@ -878,6 +1003,11 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The informative section to display the result status about the assets uploading or downloading
+     *
+     * @param info: the info text to display
+     */
     @Composable
     @NonRestartableComposable
     private fun WaitingManagementResult(
@@ -910,6 +1040,11 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The [EquinoxAlertDialog] where the user can comment the assets uploaded
+     *
+     * @param event: the event where the assets are attached
+     */
     @Composable
     @NonRestartableComposable
     private fun CommentAssetsUploaded(
@@ -968,6 +1103,12 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The inner session of the [CommentRelease] where the user can select if the release is [Approved]
+     * or [Rejected]
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun StatusSelector() {
@@ -995,6 +1136,14 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The custom button to approve or reject the release
+     *
+     * @param isApproved: whether the release is approved
+     * @param statusColor: the color of the button
+     * @param text: the text of the button
+     * @param onClick: the action to execute when the user click on the button
+     */
     @Composable
     @NonRestartableComposable
     private fun StatusButton(
@@ -1028,6 +1177,11 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The section dedicated to display the rejection details about the [release]
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun RejectionSection() {
@@ -1070,6 +1224,12 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The custom button useful to display the reason about the selection of that specific [ReleaseTag]
+     * or to fill that button
+     *
+     * @param tag: the tag to fill or display its reasons
+     */
     @Composable
     @NonRestartableComposable
     private fun RejectedTagButton(
@@ -1117,6 +1277,11 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * The section dedicated to display the details about a [RejectedReleaseEvent]
+     *
+     * @param event: the event to display
+     */
     @Composable
     @NonRestartableComposable
     private fun RejectedReleaseEventInfo(
@@ -1258,7 +1423,10 @@ class ReleaseScreen(
         }
     }
 
-    // TODO: WARN IN THE DOCU THAT WILL BE REPLACED WITH THE EQUINOX ONE
+    @TestOnly
+    @Deprecated(
+        message = "Will be replaced with the Equinox's one"
+    )
     @Composable
     @NonRestartableComposable
     private fun NovaAlertDialog(
@@ -1311,11 +1479,21 @@ class ReleaseScreen(
         }
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been created
+     *
+     * No-any params required
+     */
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(this::class.java)
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been started
+     *
+     * No-any params required
+     */
     override fun onStart() {
         super.onStart()
         viewModel.getRelease(
@@ -1355,6 +1533,11 @@ class ReleaseScreen(
         viewModel.suspendRefresher()
     }
 
+    /**
+     * Function to collect or instantiate the states of the screen
+     *
+     * No-any params required
+     */
     @Composable
     override fun CollectStates() {
         super.CollectStates()

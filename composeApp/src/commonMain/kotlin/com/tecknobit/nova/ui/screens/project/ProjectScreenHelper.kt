@@ -59,6 +59,13 @@ import nova.composeapp.generated.resources.creation_date
 import nova.composeapp.generated.resources.release_notes
 import org.jetbrains.compose.resources.stringResource
 
+/**
+ * Component to display and arrange correctly from each platform the releases in the UI
+ *
+ * @param paddingValues: the padding values to apply to the section
+ * @param project: the project where the release are attached
+ * @param onEdit: the action to execute when the user request to edit a release
+ */
 @Composable
 @NonRestartableComposable
 expect fun Releases(
@@ -67,6 +74,14 @@ expect fun Releases(
     onEdit: (Release) -> Unit
 )
 
+/**
+ * Component to display the details about a release
+ *
+ * @param fillMaxHeight: whether the container [OutlinedCard] must fill the max height
+ * @param project: the project where the release are attached
+ * @param release: the release to display
+ * @param onEdit: the action to execute when the user request to edit a release
+ */
 @Composable
 @NonRestartableComposable
 fun ReleaseItem(
@@ -220,6 +235,13 @@ fun ReleaseItem(
     )
 }
 
+/**
+ * Section to read the notes of a release in a full-size format
+ *
+ * @param expand: whether hide or hidden the section
+ * @param releaseVersion: the version of the release
+ * @param releaseNotes: the notes of the release
+ */
 @Composable
 @NonRestartableComposable
 private fun ExpandReleaseNotes(
@@ -260,6 +282,11 @@ private fun ExpandReleaseNotes(
     }
 }
 
+/**
+ * Function to navigate to the section where the user can add member to a project
+ *
+ * @param project: the project where add the members
+ */
 expect fun addMembers(
     project: Project
 )

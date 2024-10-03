@@ -19,28 +19,62 @@ import javax.net.ssl.X509TrustManager
  */
 private val sslContext = SSLContext.getInstance("TLS")
 
+/**
+ * **HTTPS_PROTOCOL** -> the HTTPS protocol text
+ */
 private const val HTTPS_PROTOCOL = "https"
 
+/**
+ * Function to get the asset's path
+ *
+ * @param asset: the asset from fetch its path
+ *
+ * @return the asset path as [String]
+ */
 expect fun getAsset(
     asset: PlatformFile?
 ): String?
 
+/**
+ * Function to download the assets uploaded
+ *
+ * @param assetsUploaded: the list of the assets uploaded
+ */
 @Wrapper
 expect fun downloadAssetsUploaded(
     assetsUploaded: List<AssetUploaded>
 )
 
+/**
+ * Function to download a [Release]'s report
+ *
+ * @param report: the report url
+ */
 @Wrapper
 expect fun downloadReport(
     report: String
 )
 
+/**
+ * Wrapper function to download the assets uploaded
+ *
+ * @param containerDirectoryPath: the directory container where save the assets downloaded
+ * @param getAssetName: function to invoke to get the name of the asset
+ * @param assets: the list of the assets uploaded
+ */
 expect fun downloadAssets(
     containerDirectoryPath: String,
     getAssetName: (Int) -> String,
     assets: List<String>
 )
 
+/**
+ * Function to perform the assets download
+ *
+ * @param containerDirectoryPath: the directory container where save the assets downloaded
+ * @param getAssetName: function to invoke to get the name of the asset
+ * @param assets: the list of the assets uploaded
+ */
 fun performAssetsDownload(
     containerDirectoryPath: String,
     getAssetName: (Int) -> String,
@@ -80,6 +114,11 @@ fun performAssetsDownload(
     }
 }
 
+/**
+ * Function to open an asset downloaded
+ *
+ * @param asset: the asset to open
+ */
 expect fun openAsset(
     asset: File
 )

@@ -17,6 +17,13 @@ import java.io.FileOutputStream
 import java.io.InputStream
 import kotlin.math.min
 
+/**
+ * Function to get the asset's path
+ *
+ * @param asset: the asset from fetch its path
+ *
+ * @return the asset path as [String]
+ */
 actual fun getAsset(
     asset: PlatformFile?
 ): String? {
@@ -29,6 +36,13 @@ actual fun getAsset(
     return null
 }
 
+/**
+ * Function to get the complete file path of an file
+ *
+ * @param context: the context where the file is needed
+ * @param uri: the uri of the file
+ * @return the path of the file as [String]
+ */
 private fun getFilePath(
     context: Context,
     uri: Uri
@@ -64,6 +78,11 @@ private fun getFilePath(
     return file.path
 }
 
+/**
+ * Function to download the assets uploaded
+ *
+ * @param assetsUploaded: the list of the assets uploaded
+ */
 @Wrapper
 actual fun downloadAssetsUploaded(
     assetsUploaded: List<AssetUploadingEvent.AssetUploaded>
@@ -75,6 +94,11 @@ actual fun downloadAssetsUploaded(
     )
 }
 
+/**
+ * Function to download a [Release]'s report
+ *
+ * @param report: the report url
+ */
 @Wrapper
 actual fun downloadReport(
     report: String
@@ -86,6 +110,13 @@ actual fun downloadReport(
     )
 }
 
+/**
+ * Wrapper function to download the assets uploaded
+ *
+ * @param containerDirectoryPath: the directory container where save the assets downloaded
+ * @param getAssetName: function to invoke to get the name of the asset
+ * @param assets: the list of the assets uploaded
+ */
 actual fun downloadAssets(
     containerDirectoryPath: String,
     getAssetName: (Int) -> String,
@@ -98,6 +129,11 @@ actual fun downloadAssets(
     )
 }
 
+/**
+ * Function to open an asset downloaded
+ *
+ * @param asset: the asset to open
+ */
 actual fun openAsset(
     asset: File
 ) {

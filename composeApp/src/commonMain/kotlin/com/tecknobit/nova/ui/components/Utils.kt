@@ -299,12 +299,12 @@ fun ReleaseStandardEvent.getMessage(): StringResource {
 }
 
 /**
- * **customerColor** -> color for the [Role.Customer]
+ * **customerColor** -> color for the [NovaUser.Role.Customer]
  */
 val customerColor = Alpha.createColor()
 
 /**
- * **vendorColor** -> color for the [Role.Vendor]
+ * **vendorColor** -> color for the [NovaUser.Role.Vendor]
  */
 val vendorColor = Beta.createColor()
 
@@ -313,7 +313,7 @@ val vendorColor = Beta.createColor()
  *
  * @param background: the background color to use, default is [gray_background]
  * @param role: the role to use to create the badge
- * @param onRoleClick: the click action to mark the user as [Role.Tester] if allowed
+ * @param onRoleClick: the click action to mark the user as [NovaUser.Role.Tester] if allowed
  */
 @Composable
 fun UserRoleBadge(

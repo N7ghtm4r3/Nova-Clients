@@ -19,6 +19,13 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/**
+ * Component to display and arrange correctly from each platform the releases in the UI
+ *
+ * @param paddingValues: the padding values to apply to the section
+ * @param project: the project where the release are attached
+ * @param onEdit: the action to execute when the user request to edit a release
+ */
 @NonRestartableComposable
 @Composable
 actual fun Releases(
@@ -50,6 +57,11 @@ actual fun Releases(
     }
 }
 
+/**
+ * Function to navigate to the section where the user can add member to a project
+ *
+ * @param project: the project where add the members
+ */
 actual fun addMembers(
     project: Project
 ) {

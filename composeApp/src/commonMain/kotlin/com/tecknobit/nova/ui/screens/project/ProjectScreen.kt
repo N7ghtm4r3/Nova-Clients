@@ -79,20 +79,38 @@ import nova.composeapp.generated.resources.release_version
 import nova.composeapp.generated.resources.wrong_release_notes
 import nova.composeapp.generated.resources.wrong_release_version
 
+/**
+ * The [ProjectScreen] class is used to retrieve and display the data of a project
+ *
+ * @param projectId: the identifier of the project
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see EquinoxScreen
+ * @see NovaScreen
+ */
 class ProjectScreen(
     private val projectId: String
 ) : NovaScreen() {
 
     companion object {
 
+        /**
+         * *viewModel* -> the support view model to manage the requests to the backend
+         */
         private val viewModel = ProjectScreenViewModel(
             snackbarHostState = snackbarHostState
         )
 
     }
 
+    /**
+     * **project** -> the project currently shown
+     */
     private lateinit var project: State<Project?>
-    
+
+    /**
+     * **amITheProjectAuthor** -> whether the current user of the [activeLocalSession] is the author of the [project]
+     */
     private var amITheProjectAuthor: Boolean = false
 
     /**
@@ -161,6 +179,11 @@ class ProjectScreen(
         )
     }
 
+    /**
+     * The section where is displayed the title of the project
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun ProjectTitle() {
@@ -189,6 +212,12 @@ class ProjectScreen(
         }
     }
 
+    /**
+     * The section where are displayed the actions available for the [project], these actions change
+     * in base of the role of the [activeLocalSession]
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun Actions() {
@@ -232,6 +261,11 @@ class ProjectScreen(
         WarnAlertDialog()
     }
 
+    /**
+     * The section where display the members, with their details, of the [project]
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun ProjectMembers() {
@@ -255,6 +289,11 @@ class ProjectScreen(
         }
     }
 
+    /**
+     * The details of the project member
+     *
+     * @param member: the member to display his/her details
+     */
     @Composable
     @NonRestartableComposable
     private fun Member(
@@ -296,6 +335,12 @@ class ProjectScreen(
         }
     }
 
+    /**
+     * The information about a mark as tester request do for a member
+     *
+     * @param show: whether show that warning
+     * @param member: the member to mark as [NovaUser.Role.Tester]
+     */
     @Composable
     @NonRestartableComposable
     private fun MarkUserAsTester(
@@ -327,6 +372,11 @@ class ProjectScreen(
         }
     }
 
+    /**
+     * The [EquinoxAlertDialog] to warn the user about the deletion or leaving the current [project]
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun WarnAlertDialog() {
@@ -363,6 +413,11 @@ class ProjectScreen(
         )
     }
 
+    /**
+     * The section to display the releases of the project
+     *
+     * @param paddingValues: the padding values to apply to the section
+     */
     @Composable
     @NonRestartableComposable
     private fun ReleasesSection(
@@ -385,6 +440,11 @@ class ProjectScreen(
         }
     }
 
+    /**
+     * Section to add a new release
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun AddRelease() {
@@ -430,6 +490,11 @@ class ProjectScreen(
         )
     }
 
+    /**
+     * Section to editing an existing release
+     *
+     * No-any params required
+     */
     @Composable
     @NonRestartableComposable
     private fun EditRelease() {
@@ -490,11 +555,21 @@ class ProjectScreen(
         )
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been created
+     *
+     * No-any params required
+     */
     override fun onCreate() {
         super.onCreate()
         viewModel.setActiveContext(this::class.java)
     }
 
+    /**
+     * Function invoked when the [ShowContent] composable has been started
+     *
+     * No-any params required
+     */
     override fun onStart() {
         super.onStart()
         viewModel.getProject(
@@ -533,6 +608,11 @@ class ProjectScreen(
         viewModel.suspendRefresher()
     }
 
+    /**
+     * Function to collect or instantiate the states of the screen
+     *
+     * No-any params required
+     */
     @Composable
     override fun CollectStates() {
         super.CollectStates()

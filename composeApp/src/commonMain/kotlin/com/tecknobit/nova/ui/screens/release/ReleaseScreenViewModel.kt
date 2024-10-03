@@ -3,8 +3,10 @@ package com.tecknobit.nova.ui.screens.release
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.ViewModel
 import com.tecknobit.apimanager.apis.sockets.SocketManager.StandardResponseCode
 import com.tecknobit.apimanager.apis.sockets.SocketManager.StandardResponseCode.valueOf
+import com.tecknobit.equinox.FetcherManager.FetcherManagerWrapper
 import com.tecknobit.equinox.Requester.Companion.RESPONSE_MESSAGE_KEY
 import com.tecknobit.equinox.Requester.Companion.RESPONSE_STATUS_KEY
 import com.tecknobit.equinoxcompose.helpers.session.setHasBeenDisconnectedValue
@@ -28,40 +30,99 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.io.File
 
+/**
+ * The **ReleaseScreenViewModel** class is the support class used by the [ReleaseScreen] to execute
+ * the requests to refresh and work on a release
+ *
+ * @param snackbarHostState: the host to launch the snackbar messages
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ * @see ViewModel
+ * @see FetcherManagerWrapper
+ * @see EquinoxViewModel
+ *
+ */
 class ReleaseScreenViewModel(
     snackbarHostState: SnackbarHostState
 ) : EquinoxViewModel(
     snackbarHostState = snackbarHostState
 ) {
 
+    /**
+     * **uploadingAssetsComment** -> the comment about the assets that have to be uploaded
+     */
     lateinit var uploadingAssetsComment: MutableState<String>
 
+    /**
+     * **uploadingAssetsCommentError** -> whether the [uploadingAssetsComment] field is not valid
+     */
     lateinit var uploadingAssetsCommentError: MutableState<Boolean>
 
+    /**
+     * **requestedToUpload** -> whether the user requested to upload new assets
+     */
     lateinit var requestedToUpload: MutableState<Boolean>
 
+    /**
+     * **requestedToDownload** -> whether the user requested to download the test assets
+     */
     lateinit var requestedToDownload: MutableState<Boolean>
 
+    /**
+     * **waitingAssetsManagement** -> whether the [requestedToUpload] or [requestedToDownload] have
+     * been triggered
+     */
     lateinit var waitingAssetsManagement: MutableState<Boolean>
 
+    /**
+     * **uploadingStatus** -> status about the uploading
+     */
     lateinit var uploadingStatus: MutableState<StandardResponseCode?>
 
+    /**
+     * **assetsToUpload** -> the assets selected for the download
+     */
     lateinit var assetsToUpload: SnapshotStateList<File>
 
+    /**
+     * **commentAsset** -> whether the assets has been commented
+     */
     lateinit var commentAsset: MutableState<Boolean>
 
+    /**
+     * **isApproved** -> whether the assets has been approved
+     */
     lateinit var isApproved: MutableState<Boolean>
 
+    /**
+     * **reasons** -> the reasons of a rejection of the assets
+     */
     lateinit var reasons: MutableState<String>
 
+    /**
+     * **reasonsError** -> whether the [reasons] field is not valid
+     */
     lateinit var reasonsError: MutableState<Boolean>
 
+    /**
+     * **rejectedTags** -> the rejection tags selected
+     */
     lateinit var rejectedTags: SnapshotStateList<ReleaseTag>
 
+    /**
+     * **rejectedTagDescription** -> the description for a rejection tag
+     */
     lateinit var rejectedTagDescription: MutableState<String>
 
+    /**
+     * **rejectedTagDescriptionError** -> whether the [rejectedTagDescription] field is not valid
+     */
     lateinit var rejectedTagDescriptionError: MutableState<Boolean>
 
+    /**
+     * **closeAction** -> action to invoke when the dialog to approve or reject the assets has been
+     * closed
+     */
     val closeAction = {
         isApproved.value = true
         reasons.value = ""
@@ -71,13 +132,25 @@ class ReleaseScreenViewModel(
         commentAsset.value = false
     }
 
+    /**
+     * **_release** -> the release currently shown
+     */
     private val _release = MutableStateFlow<Release?>(
         value = null
     )
     val release: StateFlow<Release?> = _release
 
+    /**
+     * **releaseDeleted** -> whether the release has been deleted
+     */
     private var releaseDeleted = false
 
+    /**
+     * Function to refresh the [_release]
+     *
+     * @param projectId: the identifier of the project
+     * @param releaseId: the identifier of the release
+     */
     fun getRelease(
         projectId: String,
         releaseId: String
@@ -114,6 +187,12 @@ class ReleaseScreenViewModel(
         )
     }
 
+    /**
+     * Function to upload new asset for a [_release]
+     *
+     * @param projectId: the identifier of the project
+     * @param releaseId: the identifier of the release
+     */
     fun uploadAssets(
         projectId: String,
         releaseId: String,
@@ -143,6 +222,11 @@ class ReleaseScreenViewModel(
         }
     }
 
+    /**
+     * Function to reset the instance used during the [uploadAssets] phase
+     *
+     * No-any params required
+     */
     fun resetUploadingInstances() {
         assetsToUpload.clear()
         uploadingStatus.value = null
@@ -151,6 +235,12 @@ class ReleaseScreenViewModel(
         restartRefresher()
     }
 
+    /**
+     * Function to download the test assets
+     *
+     * @param assetsUploaded: the assets uploaded to download
+     * @param onSuccess: the action to execute when the download terminated
+     */
     fun downloadTestAssets(
         assetsUploaded: List<AssetUploaded>,
         onSuccess: () -> Unit = {}
@@ -167,11 +257,22 @@ class ReleaseScreenViewModel(
         }
     }
 
+    /**
+     * Function to reset the instance used during the [downloadTestAssets] phase
+     *
+     * No-any params required
+     */
     fun resetDownloadingInstances() {
         requestedToDownload.value = false
         waitingAssetsManagement.value = false
     }
 
+    /**
+     * Function to execute the request to create a report for the current [_release]
+     *
+     * @param projectId: the identifier of the project
+     * @param releaseId: the identifier of the release
+     */
     fun createAndDownloadReport(
         projectId: String,
         releaseId: String
@@ -195,6 +296,13 @@ class ReleaseScreenViewModel(
         )
     }
 
+    /**
+     * Function to execute the request to delete the current [_release]
+     *
+     * @param projectId: the identifier of the project
+     * @param releaseId: the identifier of the release
+     * @param onSuccess: the action to execute when the request has been successful
+     */
     fun deleteRelease(
         projectId: String,
         releaseId: String,
@@ -215,6 +323,13 @@ class ReleaseScreenViewModel(
         )
     }
 
+    /**
+     * Function to execute the request to comment assets uploaded in an event
+     *
+     * @param projectId: the identifier of the project
+     * @param releaseId: the identifier of the release
+     * @param event: the event where the assets are attached
+     */
     fun commentAssetsUploaded(
         projectId: String,
         releaseId: String,
@@ -258,6 +373,15 @@ class ReleaseScreenViewModel(
         }
     }
 
+    /**
+     * Function to execute the request to fill a [ReleaseTag] of a release rejection
+     *
+     * @param projectId: the identifier of the project
+     * @param releaseId: the identifier of the release
+     * @param event: the event where the assets are attached
+     * @param tag: the tag to fill
+     * @param onSuccess: the action to execute when the request has been successful
+     */
     fun fillRejectedTag(
         projectId: String,
         releaseId: String,
@@ -288,6 +412,14 @@ class ReleaseScreenViewModel(
         )
     }
 
+    /**
+     * Function to execute the promote the current relase
+     *
+     * @param projectId: the identifier of the project
+     * @param releaseId: the identifier of the release
+     * @param newStatus: the new status to apply to the [_release]
+     * @param onResponse: the action to execute when received a response
+     */
     fun promoteRelease(
         projectId: String,
         releaseId: String,

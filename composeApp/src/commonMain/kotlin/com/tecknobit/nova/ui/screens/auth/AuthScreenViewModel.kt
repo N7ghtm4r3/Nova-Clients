@@ -144,7 +144,7 @@ class AuthScreenViewModel(
     }
 
     /**
-     * Function to execute the sign-up authentication request as [Role.Customer],
+     * Function to execute the sign-up authentication request as [NovaUser.Role.Customer],
      * if successful the [activeLocalSession] will be initialized with the data inserted
      *
      * @param language: the language of the user
@@ -169,7 +169,7 @@ class AuthScreenViewModel(
     }
 
     /**
-     * Function to execute the sign-up authentication request as [Role.Vendor],
+     * Function to execute the sign-up authentication request as [NovaUser.Role.Vendor],
      * if successful the [activeLocalSession] will be initialized with the data received
      *
      * @param language: the language of the user
