@@ -122,11 +122,23 @@ android {
 
 compose.desktop {
     application {
-        mainClass = "MainKt"
+        mainClass = "com.tecknobit.nova.MainKt"
         nativeDistributions {
             targetFormats(Deb, Pkg, Exe)
-            modules("java.compiler", "java.instrument", "java.management", "java.naming", "java.net.http", "java.prefs",
-                "java.rmi", "java.scripting", "java.sql", "jdk.jfr", "jdk.unsupported")
+            modules(
+                "java.compiler",
+                "java.instrument",
+                "java.management",
+                "java.net.http",
+                "java.prefs",
+                "java.rmi",
+                "java.scripting",
+                "java.security.jgss",
+                "java.sql.rowset",
+                "jdk.jfr",
+                "jdk.security.auth",
+                "jdk.unsupported"
+            )
             packageName = "Nova"
             packageVersion = "1.0.1"
             packageName = "Nova"
@@ -144,7 +156,6 @@ compose.desktop {
                 upgradeUuid = UUID.randomUUID().toString()
             }
             linux {
-                modules("jdk.security.auth")
                 iconFile.set(project.file("src/commonMain/resources/logo.png"))
                 packageName = "com-tecknobit-nova"
                 debMaintainer = "infotecknobitcompany@gmail.com"
