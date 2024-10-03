@@ -32,6 +32,12 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import java.io.File
 
+/**
+ * The [main] function is used as entry point of Nova's application for Desktop
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ *
+ */
 fun main() = application {
     val isOpen = remember { mutableStateOf(true) }
     if (isOpen.value) {
@@ -45,6 +51,12 @@ fun main() = application {
     }
 }
 
+/**
+ * The section of the application when the [isOpen] is set on **true**, this represents the foreground
+ * status and the normal workflow
+ *
+ * @param isOpen: the state used to manage the [WindowMode] or [TrayMode]
+ */
 @Composable
 @NonRestartableComposable
 private fun WindowMode(
@@ -75,6 +87,12 @@ private fun InitInstances() {
     )
 }
 
+/**
+ * The section of the application when the [isOpen] is set on **false**, this represents the background
+ * status and the workflow to receive the notifications for the user
+ *
+ * @param isOpen: the state used to manage the [WindowMode] or [TrayMode]
+ */
 @Composable
 @NonRestartableComposable
 private fun ApplicationScope.TrayMode(
@@ -100,6 +118,11 @@ private fun ApplicationScope.TrayMode(
     )
 }
 
+/**
+ * Function to init the [NotifierManager] to use when the [TrayMode] is active
+ *
+ * No-any params required
+ */
 private fun initNotifier() {
     stopNotificationsFetching()
     NotifierManager.initialize(

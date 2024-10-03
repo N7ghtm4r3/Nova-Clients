@@ -35,8 +35,17 @@ import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.getString
 import org.json.JSONException
 
+/**
+ * The [NotificationChecker] class is useful to check any notifications available to send to the user
+ * while the desktop application is hidden
+ *
+ * @author N7ghtm4r3 - Tecknobit
+ */
 class NotificationChecker {
 
+    /**
+     * **notifier** the notifier used to send the local notifications
+     */
     private val notifier = NotifierManager.getLocalNotifier()
 
     /**
@@ -145,6 +154,13 @@ class NotificationChecker {
         }
     }
 
+    /**
+     * Function to get the payload data about the [notification] parameter
+     *
+     * @param notification: the notification from build a payload
+     *
+     * @return the payload as [Map] of [String] of [String]
+     */
     private fun getPayload(
         notification: NovaNotification
     ): Map<String, String> {
